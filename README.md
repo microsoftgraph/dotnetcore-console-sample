@@ -1,5 +1,14 @@
+# console-dotnetcore-sample
 
-# Contributing
+## Configuration
+
+1. Rename the `appsettings.json.example` file to `appsettings.json`.
+1. Edit `appsettings.json`:
+    1. Replace `YOUR_APP_ID_HERE` with your application ID from the App Registration Portal.
+    1. Replace `YOUR_APP_SECRET_HERE` with your application password from the App Registration Portal.
+    1. Replace `YOUR_TENANT_ID_HERE` with your tenant ID.
+
+## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
