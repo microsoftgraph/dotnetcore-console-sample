@@ -1,0 +1,2 @@
+# Set behaviour for all files, in case developers don't have core.autocrlf set.
+* text=auto

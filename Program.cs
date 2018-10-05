@@ -5,6 +5,9 @@ using Microsoft.Identity.Client;
 using Microsoft.Graph;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.FileExtensions;
+using Microsoft.Extensions.Configuration.Json;
 
 namespace ConsoleGraphTest
 {
@@ -12,10 +15,18 @@ namespace ConsoleGraphTest
     {
         static void Main(string[] args)
         {
-            var clientId = "80609421-5b89-47eb-a42c-5aacd3ef8943";
-            var clientSecret = "szjwBD9167^=@bwmXZXXV2-";
+            // Load appsettings.json
+            var config = LoadAppSettings();
+            if (null == config)
+            {
+                Console.WriteLine("Missing or invalid appsettings.json file. Please see README.md for configuration instructions.");
+                return;
+            }
+
+            var clientId = config["applicationId"];
+            var clientSecret = config["applicationSecret"];
             var redirectUri = "https://localhost:8042";
-            var authority = "https://login.microsoftonline.com/d05889e3-29af-4ce4-8312-9029d4c26b1d/v2.0";
+            var authority = $"https://login.microsoftonline.com/{config["tenantId"]}/v2.0";
             List<string> scopes = new List<string>();
             scopes.Add("https://graph.microsoft.com/.default");
 
@@ -50,6 +61,31 @@ namespace ConsoleGraphTest
             var httpResult = client.GetStringAsync(Uri).Result;
 
             Console.WriteLine(httpResult);
+        }
+
+        private static IConfigurationRoot LoadAppSettings()
+        {
+            try
+            {
+                var config = new ConfigurationBuilder()
+                .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", false, true)
+                .Build();
+
+                // Validate required settings
+                if (string.IsNullOrEmpty(config["applicationId"]) ||
+                    string.IsNullOrEmpty(config["applicationSecret"]) ||
+                    string.IsNullOrEmpty(config["tenantId"]))
+                {
+                    return null;
+                }
+
+                return config;
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                return null;
+            }
         }
     }
 }
