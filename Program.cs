@@ -86,12 +86,6 @@ namespace ConsoleGraphTest
             return _httpClient;
         }
 
-        // private static string GetAccessToken()
-        // {
-            
-
-        // }
-
         private static IConfigurationRoot LoadAppSettings()
         {
             try
