@@ -1,4 +1,4 @@
-# console-dotnetcore-sample
+# dotnetcore-console-sample
 
 ## Configuration
 
