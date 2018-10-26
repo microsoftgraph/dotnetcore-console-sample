@@ -44,30 +44,19 @@ namespace ConsoleGraphTest
 
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
         {
-            var clientId = config["applicationId"];
-            var clientSecret = config["applicationSecret"];
-            var redirectUri = config["redirectUri"];
-            var authority = $"https://login.microsoftonline.com/{config["tenantId"]}/v2.0";
-
-            List<string> scopes = new List<string>();
-            scopes.Add("https://graph.microsoft.com/.default");
-
-            var cca = new ConfidentialClientApplication(clientId, authority, redirectUri, new ClientCredential(clientSecret), null, null);
-            var authResult = cca.AcquireTokenForClientAsync(scopes).Result;
-
-            _graphServiceClient = new GraphServiceClient(new DelegateAuthenticationProvider((requestMessage) =>
-            {
-                requestMessage
-                    .Headers
-                    .Authorization = new AuthenticationHeaderValue("bearer", authResult.AccessToken);
-
-                return Task.FromResult(0);
-            }));
-
+            var authenticationProvider = CreateAuthorizationProvider(config);
+            _graphServiceClient = new GraphServiceClient(authenticationProvider);
             return _graphServiceClient;
         }
 
         private static HttpClient GetAuthenticatedHTTPClient(IConfigurationRoot config)
+        {
+            var authenticationProvider = CreateAuthorizationProvider(config);
+            _httpClient = new HttpClient(new AuthHandler(authenticationProvider, new HttpClientHandler()));
+            return _httpClient;
+        }
+        
+        private static IAuthenticationProvider CreateAuthorizationProvider(IConfigurationRoot config)
         {
             var clientId = config["applicationId"];
             var clientSecret = config["applicationSecret"];
@@ -78,12 +67,7 @@ namespace ConsoleGraphTest
             scopes.Add("https://graph.microsoft.com/.default");
 
             var cca = new ConfidentialClientApplication(clientId, authority, redirectUri, new ClientCredential(clientSecret), null, null);
-            var authResult = cca.AcquireTokenForClientAsync(scopes).Result;
-
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Add("Authorization", "bearer " + authResult.AccessToken);
-
-            return _httpClient;
+            return new MsalAuthenticationProvider(cca, scopes.ToArray());
         }
 
         private static IConfigurationRoot LoadAppSettings()
