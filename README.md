@@ -1,11 +1,10 @@
 # dotnetcore-console-sample
 
-## NOTE
+> ## NOTE
 
 This repo is a work in progress and as such does not have a complete README at this time.  Once ready there will be instructions similar to the [ASP.Net Getting Started lab](https://github.com/microsoftgraph/msgraph-training-aspnetmvcapp/blob/master/Lab.md) for registering an Azure AD application, granting permissions, etc.  For the time being do not treat this as a complete sample.  Thank you for your patience.
 
 - [dotnetcore-console-sample](#dotnetcore-console-sample)
-    - [NOTE](#note)
     - [Prerequisites](#prerequisites)
     - [Step 1: Create a .Net Core Console Application](#step-1-create-a-net-core-console-application)
     - [Step 2: Register a web application with the Application Registration Portal](#step-2-register-a-web-application-with-the-application-registration-portal)
@@ -54,43 +53,50 @@ dotnet add package Microsoft.Extensions.Configuration.Json
 
 ## Step 2: Register a web application with the Application Registration Portal
 
-In this exercise, you will create a new Azure AD web application registration using the Application Registry Portal (ARP).
+In this exercise, you will create a new Azure AD web application registration using the new Azure AD App Registrations UI (in preview as of the time of publish Oct 2018).
 
-1. Open a browser and navigate to the [Application Registration Portal](https://apps.dev.microsoft.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account**.
+1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account**.
 
-1. Select **Add an app** at the top of the page.
+1. Click Azure Active Directory from the left-hand navigation menu.
 
-    > **Note:** If you see more than one **Add an app** button on the page, select the one that corresponds to the **Converged apps** list.
+1. Select **App registrations (Preview)** from the current blade navigation pane.
 
-1. On the **Register your application** page, set the **Application Name** to **.NET Core Graph Tutorial** and select **Create**.
+    > **Note:** All information and example screenshots are using the preview versions of this registration portal and are subject to change.  We will attempt to update this documentation to match after the portal is generally available (GA).
 
-    ![Screenshot of creating a new app in the App Registration Portal website](Images/arp-create-app-01.png)
+1. Click **New registration** from the current blade content.
 
-1. On the **.NET Core Graph Tutorial Registration** page, under the **Properties** section, copy the **Application Id** as you will need it later.
+1. On the **Register an application** page, specify the following values:
 
-    ![Screenshot of newly created application's ID](Images/arp-create-app-02.png)
+    - **Name** = .NET Core Graph Tutorial
+    - **Supported account types** = \<choose the value that applies to your needs\>
+    - **Redirect URI** - https://localhost:8080
 
-1. Scroll down to the **Application Secrets** section.
+    > **Note:** Ensure that the Redirect URI value is unique within your domain.  This value can be changed at a later time and does not need to point to a hosted URI.
 
-    1. Select **Generate New Password**.
-    1. In the **New password generated** dialog, copy the contents of the box as you will need it later.
+    ![Screenshot of creating a new app in the Azure AD App Registration Portal website](Images/aad-create-app-01.png)
 
-        > **Important:** This password is never shown again, so make sure you copy it now.
+2. On the **.NET Core Graph Tutorial** page, copy the **Application (client) ID** as you will need it later.
 
-    ![Screenshot of newly created application's password](Images/arp-create-app-03.png)
+    ![Screenshot of newly created application's ID](Images/aad-create-app-02.png)
 
-1. Scroll down to the **Platforms** section.
+1. Select **Certificates & Secrets** from the current blade navigation pane.
 
-    1. Select **Add Platform**.
-    1. In the **Add Platform** dialog, select **Web**.
+    1. Select **New client secret**.
+    1. On the **Add a client secret** dialog, specify the following values:
 
-        ![Screenshot creating a platform for the app](Images/arp-create-app-04.png)
+        - **Description** = Secret1
+        - **Expires** = In 1 year
 
-    1. In the **Web** platform box, enter a URL you copied from the Visual Studio project's properties for the **Redirect URLs**.
+    1. Click **Add**.
 
-        ![Screenshot of the newly added Web platform for the application](Images/arp-create-app-05.png)
+    ![Screenshot of creating application client secret](Images/aad-create-app-03.png)
 
-1. Scroll to the bottom of the page and select **Save**.
+
+    1. After the screen has updated with the newly created client secret copy the **VALUE** of the client secret as you will need it later.
+
+        > **Important:** This secret string is never shown again, so make sure you copy it now.
+
+    ![Screenshot of newly created application's client secret](Images/aad-create-app-04.png)
 
 ## Step 3: Extend the app for Azure AD Authentication
 
@@ -129,7 +135,7 @@ Inside the `Program` class add static references to the `GraphServiceClient`.  T
 private static GraphServiceClient _graphServiceClient;
 ```
 
-Add a new method `LoadAppSettings` with the following definition.  This method retrieves the configuration values from a separate file.  This allows updating the configuration (client Id, client secret, etc. independently of the code itself.)  This is a general best practice when possible to separate configuration from code.
+Add a new method `LoadAppSettings` with the following definition.  This method retrieves the configuration values from a separate file.  This allows updating the configuration (client Id, client secret, etc.) independently of the code itself.  This is a general best practice when possible to separate configuration from code.
 
 ```cs
 private static IConfigurationRoot LoadAppSettings()
