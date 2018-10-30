@@ -9,6 +9,7 @@ This repo is a work in progress and as such does not have a complete README at t
     - [Step 1: Create a .Net Core Console Application](#step-1-create-a-net-core-console-application)
     - [Step 2: Register a web application with the Application Registration Portal](#step-2-register-a-web-application-with-the-application-registration-portal)
     - [Step 3: Extend the app for Azure AD Authentication](#step-3-extend-the-app-for-azure-ad-authentication)
+        - [Create helper classes](#create-helper-classes)
     - [Step 4: Extend the app for Microsoft Graph](#step-4-extend-the-app-for-microsoft-graph)
         - [Get user information from tenant](#get-user-information-from-tenant)
     - [Contributing](#contributing)
@@ -110,6 +111,99 @@ In this step you will extend the application from the previous step to support a
 
 > **Important:** If you're using source control such as git, now would be a good time to exclude the `appsettings.json` file from source control to avoid inadvertently leaking your app ID and secret.
 
+### Create helper classes
+
+1. Create a new folder called `Helpers`
+1. Create a new file in the `Helpers` folder called `AuthHandler.cs`
+1. Replace the contents of `AuthHandler.cs` with the following code:
+
+```cs
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using Microsoft.Identity.Client;
+using Microsoft.Graph;
+using Microsoft.Extensions.Configuration;
+using System.Linq;
+using System.Threading;
+
+namespace ConsoleGraphTest
+{
+    // This class allows an implementation of IAuthenticationProvider to be inserted into the DelegatingHandler
+    // pipeline of an HttpClient instance.  In future versions of GraphSDK, many cross-cutting concernts will
+    // be implemented as DelegatingHandlers.  This AuthHandler will come in the box.
+    public class AuthHandler : DelegatingHandler {
+        private IAuthenticationProvider _authenticationProvider;
+
+        public AuthHandler(IAuthenticationProvider authenticationProvider, HttpMessageHandler innerHandler) 
+        {
+            InnerHandler = innerHandler;
+            _authenticationProvider = authenticationProvider;
+        }
+
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) 
+        {
+            await _authenticationProvider.AuthenticateRequestAsync(request);
+            return await base.SendAsync(request,cancellationToken);
+        }
+    }
+}
+```
+
+1. Create a new file in the `Helpers` folder called `MsalAuthenticationProvider.cs`
+1. Replace the contents of `MsalAuthenticationProvider.cs` with the following code:
+
+```cs
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using Microsoft.Identity.Client;
+using Microsoft.Graph;
+using Microsoft.Extensions.Configuration;
+using System.Linq;
+
+namespace ConsoleGraphTest
+{
+    // This class encapsulates the details of getting a token from MSAL and exposes it via the 
+    // IAuthenticationProvider interface so that GraphServiceClient or AuthHandler can use it.
+    // A significantly enhanced version of this class will in the future be available from
+    // the GraphSDK team.  It will supports all the types of Client Application as defined by MSAL.
+    public class MsalAuthenticationProvider : IAuthenticationProvider
+    {
+        private ConfidentialClientApplication _clientApplication;
+        private string[] _scopes;
+
+        public MsalAuthenticationProvider(ConfidentialClientApplication clientApplication, string[] scopes) {
+            _clientApplication = clientApplication;
+            _scopes = scopes;
+        }
+
+        /// <summary>
+        /// Update HttpRequestMessage with credentials
+        /// </summary>
+        public async Task AuthenticateRequestAsync(HttpRequestMessage request)
+        {
+            var token = await GetTokenAsync();
+            request.Headers.Authorization = new AuthenticationHeaderValue("bearer", token);
+        }
+
+        /// <summary>
+        /// Acquire Token 
+        /// </summary>
+        public async Task<string> GetTokenAsync()
+        {
+            AuthenticationResult authResult = null;
+            authResult = await _clientApplication.AcquireTokenForClientAsync(_scopes);
+            return authResult.AccessToken;
+        }
+    }
+}
+```
+
 ## Step 4: Extend the app for Microsoft Graph
 
 In this step you will incorporate the Microsoft Graph into the application. For this application, you will use the [Microsoft Graph Client Library for .NET](https://github.com/microsoftgraph/msgraph-sdk-dotnet) to make calls to Microsoft Graph.
@@ -129,10 +223,11 @@ using Microsoft.Graph;
 using Microsoft.Extensions.Configuration;
 ```
 
-Inside the `Program` class add static references to the `GraphServiceClient`.  This static variable will be used to instantiate the client used to make calls against the Microsoft Graph.
+Inside the `Program` class add static references to `GraphServiceClient` and `HttpClient`.  These static variables can be used to instantiate the clients used to make calls against the Microsoft Graph.
 
 ```cs
 private static GraphServiceClient _graphServiceClient;
+private static HttpClient _httpClient;
 ```
 
 Add a new method `LoadAppSettings` with the following definition.  This method retrieves the configuration values from a separate file.  This allows updating the configuration (client Id, client secret, etc.) independently of the code itself.  This is a general best practice when possible to separate configuration from code.
@@ -165,10 +260,10 @@ private static IConfigurationRoot LoadAppSettings()
 }
 ```
 
-Add a new method `GetAuthenticatedGraphClient` with the following definition.  This method creates an instance of the `GraphServiceClient` from the static reference.  The `GraphServiceClient` instance uses the configuration returned from previous method.
+Add a new method `CreateAuthorizationProvider` that will be used in later methods to instantiate the clients used for making calls against the Microsoft Graph.  This method uses the configuration data with a `ConfidentialClientApplication`.
 
 ```cs
-private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
+private static IAuthenticationProvider CreateAuthorizationProvider(IConfigurationRoot config)
 {
     var clientId = config["applicationId"];
     var clientSecret = config["applicationSecret"];
@@ -179,18 +274,29 @@ private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot
     scopes.Add("https://graph.microsoft.com/.default");
 
     var cca = new ConfidentialClientApplication(clientId, authority, redirectUri, new ClientCredential(clientSecret), null, null);
-    var authResult = cca.AcquireTokenForClientAsync(scopes).Result;
+    return new MsalAuthenticationProvider(cca, scopes.ToArray());
+}
+```
 
-    _graphServiceClient = new GraphServiceClient(new DelegateAuthenticationProvider((requestMessage) =>
-    {
-        requestMessage
-          .Headers
-          .Authorization = new AuthenticationHeaderValue("bearer", authResult.AccessToken);
+Add a new method `GetAuthenticatedGraphClient` with the following definition.  This method creates an instance of the `GraphServiceClient` from the static reference.  The `GraphServiceClient` instance uses the configuration returned from previous method.
 
-        return Task.FromResult(0);
-    }));
-
+```cs
+private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
+{
+    var authenticationProvider = CreateAuthorizationProvider(config);
+    _graphServiceClient = new GraphServiceClient(authenticationProvider);
     return _graphServiceClient;
+}
+```
+
+Add a new method `GetAuthenticatedHTTPClient` with the following definition.  This method creates an instance of the `HTTPClient` from the static reference.  The `HTTPClient` instance uses the configuration returned from previous method.
+
+```cs
+private static HttpClient GetAuthenticatedHTTPClient(IConfigurationRoot config)
+{
+    var authenticationProvider = CreateAuthorizationProvider(config);
+    _httpClient = new HttpClient(new AuthHandler(authenticationProvider, new HttpClientHandler()));
+    return _httpClient;
 }
 ```
 
