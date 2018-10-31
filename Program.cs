@@ -32,13 +32,15 @@ namespace ConsoleGraphTest
             };
 
             var graphResult = graphClient.Users.Request(options).GetAsync().Result;
-            Console.WriteLine(graphResult);
+            Console.WriteLine("Graph SDK Result");
+            Console.WriteLine(graphResult[0].DisplayName);
 
             //Direct query using HTTPClient (for beta endpoint calls or not available in Graph SDK)
             HttpClient httpClient = GetAuthenticatedHTTPClient(config);
             Uri Uri = new Uri("https://graph.microsoft.com/v1.0/users?$top=1");
             var httpResult = httpClient.GetStringAsync(Uri).Result;
 
+            Console.WriteLine("HTTP Result");
             Console.WriteLine(httpResult);
         }
 
