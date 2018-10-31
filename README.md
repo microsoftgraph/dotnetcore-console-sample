@@ -72,11 +72,13 @@ In this exercise, you will create a new Azure AD web application registration us
     - **Supported account types** = \<choose the value that applies to your needs\>
     - **Redirect URI** - https://localhost:8080
 
-    > **Note:** Ensure that the Redirect URI value is unique within your domain.  This value can be changed at a later time and does not need to point to a hosted URI.
+    > **Note:** Ensure that the Redirect URI value is unique within your domain.  This value can be changed at a later time and does not need to point to a hosted URI.  If the example URI above is already used please choose a unique value.
 
     ![Screenshot of creating a new app in the Azure AD App Registration Portal website](Images/aad-create-app-01.png)
 
-1. On the **.NET Core Graph Tutorial** page, copy the **Application (client) ID** as you will need it later.
+    1. Copy the **Redirect URI** as you will need it later.
+
+1. On the **.NET Core Graph Tutorial** page, copy the **Application (client) ID** and **Directory (tenant) ID** as you will need both later.
 
     ![Screenshot of newly created application's ID](Images/aad-create-app-02.png)
 
@@ -117,15 +119,18 @@ In this exercise, you will create a new Azure AD web application registration us
 
     ![Screenshot of granting admin consent for newly added permission](Images/aad-create-app-07.png)
 
+    1. Click **Yes**.
+
 ## Step 3: Extend the app for Azure AD Authentication
 
 In this step you will extend the application from the previous step to support authentication with Azure AD. This is required to obtain the necessary OAuth access token to call the Microsoft Graph. In this step you will integrate the [Microsoft Authentication Library](https://www.nuget.org/packages/Microsoft.Identity.Client/) library into the application.
 
 1. Rename the `appsettings.json.example` file to `appsettings.json`.
 1. Edit `appsettings.json`:
-    1. Replace `YOUR_APP_ID_HERE` with your application ID from the App Registration Portal.
-    2. Replace `YOUR_APP_SECRET_HERE` with your application password from the App Registration Portal.
-    3. Replace `YOUR_TENANT_ID_HERE` with your tenant ID.
+    1. Replace `YOUR_APP_ID_HERE` with your application ID.
+    1. Replace `YOUR_APP_SECRET_HERE` with your application secret.
+    1. Replace `YOUR_TENANT_ID_HERE` with your tenant (domain) ID.
+    1. Replace `YOUR_REDIRECT_URI_HERE` with your application redirect URI.
 
 > **Important:** If you're using source control such as git, now would be a good time to exclude the `appsettings.json` file from source control to avoid inadvertently leaking your app ID and secret.
 
