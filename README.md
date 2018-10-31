@@ -76,7 +76,7 @@ In this exercise, you will create a new Azure AD web application registration us
 
     ![Screenshot of creating a new app in the Azure AD App Registration Portal website](Images/aad-create-app-01.png)
 
-2. On the **.NET Core Graph Tutorial** page, copy the **Application (client) ID** as you will need it later.
+1. On the **.NET Core Graph Tutorial** page, copy the **Application (client) ID** as you will need it later.
 
     ![Screenshot of newly created application's ID](Images/aad-create-app-02.png)
 
@@ -92,12 +92,30 @@ In this exercise, you will create a new Azure AD web application registration us
 
     ![Screenshot of creating application client secret](Images/aad-create-app-03.png)
 
-
     1. After the screen has updated with the newly created client secret copy the **VALUE** of the client secret as you will need it later.
 
         > **Important:** This secret string is never shown again, so make sure you copy it now.
 
     ![Screenshot of newly created application's client secret](Images/aad-create-app-04.png)
+
+1. Select **API permissions** from the current blade navigation pane.
+
+    1. Click **Add a permission** from the current blade content.
+    1. On the **Request API permissions** flyout select **Microsoft Graph**.
+
+    ![Screenshot of selecting Microsoft Graph permission to add to app registration](Images/aad-create-app-05.png)
+
+    3. Select **Application permissions**.
+    4. In the "Select permissions" search box type "User".
+    5. Select **User.Read.All** from the filtered list.
+
+    ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-06.png)
+
+    6. Click **Add permissions** at the bottom of flyout.
+
+1. Back on the API permissions content blade, click **Grant admin consent for \<name of tenant\>**.
+
+    ![Screenshot of granting admin consent for newly added permission](Images/aad-create-app-07.png)
 
 ## Step 3: Extend the app for Azure AD Authentication
 
