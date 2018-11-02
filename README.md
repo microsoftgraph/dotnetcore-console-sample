@@ -31,7 +31,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 Create a folder for the console application.  Open the command line and navigate to this folder.  Run the following command:
 
 ```
-dotnet new console
+dotnet new ConsoleGraphTest
 ```
 
 Before moving on, install the following NuGet packages that you will use later.
@@ -45,7 +45,7 @@ Before moving on, install the following NuGet packages that you will use later.
 Run the following commands to install these NuGet packages:
 
 ```
-dotnet add package Microsoft.Identity.Client
+dotnet add package Microsoft.Identity.Client -v 2.1.0-preview
 dotnet add package Microsoft.Graph
 dotnet add package Microsoft.Extensions.Configuration
 dotnet add package Microsoft.Extensions.Configuration.FileExtensions
@@ -99,6 +99,23 @@ In this exercise, you will create a new Azure AD web application registration us
 
     ![Screenshot of newly created application's client secret](Images/aad-create-app-04.png)
 
+1. The app registration will need to be granted the necessary permissions to read users via the API. Select **API Permissions** from the currrent blade navigation.
+
+    1. Click the **Add a permission** button
+    1. Click on the **Microsoft Graph** option
+    1. Click on **Application permissions**
+    1. Expand the **User** section
+    1. Select the User.Read.All permission
+    1. Click **Add permissions**
+
+        > **Important** As this is using application permissions Admin consent must be obtained.
+
+    ![Screeshot of application permissions without consent](Images/aad-create-app-05.png)
+
+    1. Click the **Grant admin consent for <domain>** button
+    1. Click on **Yes** in the blade that pops up
+        > **Important** Admin consent automatically grants consent on behalf of all users in the tenant, take care when using this option.
+
 ## Step 3: Extend the app for Azure AD Authentication
 
 In this step you will extend the application from the previous step to support authentication with Azure AD. This is required to obtain the necessary OAuth access token to call the Microsoft Graph. In this step you will integrate the [Microsoft Authentication Library](https://www.nuget.org/packages/Microsoft.Identity.Client/) library into the application.
@@ -137,13 +154,13 @@ namespace ConsoleGraphTest
     public class AuthHandler : DelegatingHandler {
         private IAuthenticationProvider _authenticationProvider;
 
-        public AuthHandler(IAuthenticationProvider authenticationProvider, HttpMessageHandler innerHandler) 
+        public AuthHandler(IAuthenticationProvider authenticationProvider, HttpMessageHandler innerHandler)
         {
             InnerHandler = innerHandler;
             _authenticationProvider = authenticationProvider;
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) 
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             await _authenticationProvider.AuthenticateRequestAsync(request);
             return await base.SendAsync(request,cancellationToken);
@@ -168,7 +185,7 @@ using System.Linq;
 
 namespace ConsoleGraphTest
 {
-    // This class encapsulates the details of getting a token from MSAL and exposes it via the 
+    // This class encapsulates the details of getting a token from MSAL and exposes it via the
     // IAuthenticationProvider interface so that GraphServiceClient or AuthHandler can use it.
     // A significantly enhanced version of this class will in the future be available from
     // the GraphSDK team.  It will supports all the types of Client Application as defined by MSAL.
@@ -192,7 +209,7 @@ namespace ConsoleGraphTest
         }
 
         /// <summary>
-        /// Acquire Token 
+        /// Acquire Token
         /// </summary>
         public async Task<string> GetTokenAsync()
         {
@@ -321,7 +338,7 @@ List<QueryOption> options = new List<QueryOption>
 };
 
 var graphResult = graphClient.Users.Request(options).GetAsync().Result;
-Console.WriteLine(graphResult);
+Console.WriteLine(graphResult[0].UserPrincipalName);
 ```
 
 This completes all file edits and additions.  Ensure all files are saved.  Run the following commands from the command line:

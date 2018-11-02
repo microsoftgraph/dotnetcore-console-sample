@@ -32,7 +32,7 @@ namespace ConsoleGraphTest
             };
 
             var graphResult = graphClient.Users.Request(options).GetAsync().Result;
-            Console.WriteLine(graphResult);
+            Console.WriteLine(graphResult[0].UserPrincipalName);
 
             //Direct query using HTTPClient (for beta endpoint calls or not available in Graph SDK)
             HttpClient httpClient = GetAuthenticatedHTTPClient(config);
@@ -55,7 +55,7 @@ namespace ConsoleGraphTest
             _httpClient = new HttpClient(new AuthHandler(authenticationProvider, new HttpClientHandler()));
             return _httpClient;
         }
-        
+
         private static IAuthenticationProvider CreateAuthorizationProvider(IConfigurationRoot config)
         {
             var clientId = config["applicationId"];
