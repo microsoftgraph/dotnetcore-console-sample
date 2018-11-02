@@ -28,7 +28,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 ## Step 1: Create a .Net Core Console Application
 
-Create a folder for the console application.  Open the command line and navigate to this folder.  Run the following command:
+Create a folder called `ConsoleGraphTest` for the console application.  Open the command line and navigate to this folder.  Run the following command:
 
 ```
 dotnet new console
@@ -45,7 +45,7 @@ Before moving on, install the following NuGet packages that you will use later.
 Run the following commands to install these NuGet packages:
 
 ```
-dotnet add package Microsoft.Identity.Client
+dotnet add package Microsoft.Identity.Client -v 2.1.0-preview
 dotnet add package Microsoft.Graph
 dotnet add package Microsoft.Extensions.Configuration
 dotnet add package Microsoft.Extensions.Configuration.FileExtensions
@@ -160,13 +160,13 @@ namespace ConsoleGraphTest
     public class AuthHandler : DelegatingHandler {
         private IAuthenticationProvider _authenticationProvider;
 
-        public AuthHandler(IAuthenticationProvider authenticationProvider, HttpMessageHandler innerHandler) 
+        public AuthHandler(IAuthenticationProvider authenticationProvider, HttpMessageHandler innerHandler)
         {
             InnerHandler = innerHandler;
             _authenticationProvider = authenticationProvider;
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) 
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             await _authenticationProvider.AuthenticateRequestAsync(request);
             return await base.SendAsync(request,cancellationToken);
@@ -191,7 +191,7 @@ using System.Linq;
 
 namespace ConsoleGraphTest
 {
-    // This class encapsulates the details of getting a token from MSAL and exposes it via the 
+    // This class encapsulates the details of getting a token from MSAL and exposes it via the
     // IAuthenticationProvider interface so that GraphServiceClient or AuthHandler can use it.
     // A significantly enhanced version of this class will in the future be available from
     // the GraphSDK team.  It will supports all the types of Client Application as defined by MSAL.
@@ -215,7 +215,7 @@ namespace ConsoleGraphTest
         }
 
         /// <summary>
-        /// Acquire Token 
+        /// Acquire Token
         /// </summary>
         public async Task<string> GetTokenAsync()
         {

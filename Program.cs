@@ -57,7 +57,7 @@ namespace ConsoleGraphTest
             _httpClient = new HttpClient(new AuthHandler(authenticationProvider, new HttpClientHandler()));
             return _httpClient;
         }
-        
+
         private static IAuthenticationProvider CreateAuthorizationProvider(IConfigurationRoot config)
         {
             var clientId = config["applicationId"];
