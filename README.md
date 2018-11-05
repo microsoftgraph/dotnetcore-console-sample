@@ -28,6 +28,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 ## Step 1: Create a .Net Core Console Application
 
+1. Create a folder called `ConsoleGraphTest` for the console application.
 1. Create a folder for the console application.
 
     > **Note:** For the purposes of this sample the project folder was named **ConsoleGraphTest**. If you choose a different folder name ensure that the namespace for files matches.
