@@ -19,6 +19,7 @@ This repo is a work in progress and as such does not have a complete README at t
 To complete this sample you need the following:
 
 - [Visual Studio Code](https://code.visualstudio.com/) installed on your development machine. If you do not have Visual Studio Code, visit the previous link for download options. (**Note:** This tutorial was written with Visual Studio Code version 1.28.2. The steps in this guide may work with other versions, but that has not been tested.)
+- [C# extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp)
 - Either a personal Microsoft account with a mailbox on Outlook.com, or a Microsoft work or school account.
 
 If you don't have a Microsoft account, there are a couple of options to get a free account:
@@ -29,7 +30,6 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 ## Step 1: Create a .Net Core Console Application
 
 1. Create a folder called `ConsoleGraphTest` for the console application.
-1. Create a folder for the console application.
 
     > **Note:** For the purposes of this sample the project folder was named **ConsoleGraphTest**. If you choose a different folder name ensure that the namespace for files matches.
 
@@ -47,7 +47,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
     - Microsoft.Extensions.Configuration.FileExtensions
     - Microsoft.Extensions.Configuration.Json
 
-1. Run the following commands to install these NuGet packages:
+    Run the following commands to install these NuGet packages:
 
     ```
     dotnet add package Microsoft.Identity.Client --version 2.3.1-preview
@@ -153,7 +153,7 @@ In this step you will extend the application from the previous step to support a
 
 1. Edit `appsettings.json` and fill in the values obtained in previous step on the Azure AD Portal app registration UI:
     1. Replace `YOUR_APP_ID_HERE` with your application ID.
-    1. Replace `YOUR_APP_SECRET_HERE` with your application secret.
+    1. Replace `YOUR_APP_SECRET_HERE` with your client secret (VALUE from Secret1 in previous steps).
     1. Replace `YOUR_TENANT_ID_HERE` with your tenant (domain) ID.
     1. Replace `YOUR_REDIRECT_URI_HERE` with your application redirect URI.
 
