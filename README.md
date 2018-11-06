@@ -1,9 +1,5 @@
 # dotnetcore-console-sample
 
-> ## NOTE
-
-This repo is a work in progress and as such does not have a complete README at this time.  Once ready there will be instructions similar to the [ASP.Net Getting Started lab](https://github.com/microsoftgraph/msgraph-training-aspnetmvcapp/blob/master/Lab.md) for registering an Azure AD application, granting permissions, etc.  For the time being do not treat this as a complete sample.  Thank you for your patience.
-
 - [dotnetcore-console-sample](#dotnetcore-console-sample)
     - [Prerequisites](#prerequisites)
     - [Step 1: Create a .Net Core Console Application](#step-1-create-a-net-core-console-application)
