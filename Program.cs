@@ -42,6 +42,40 @@ namespace ConsoleGraphTest
 
             Console.WriteLine("HTTP Result");
             Console.WriteLine(httpResult);
+            const string alias = "sdk_test";
+            const string domain = "gavinbignite.com";
+            var userToAdd = BuildUserToAdd("SDK Test User", alias, domain, "ChangeThis!0");
+            var added = graphClient.Users.Request().AddAsync(userToAdd).Result;
+            Console.WriteLine("Graph SDK Add Result");
+            Console.WriteLine(added.DisplayName);
+
+            
+            List<QueryOption> queryOptions = new List<QueryOption>
+            {
+                new QueryOption("$filter", $@"mailNickname eq '{alias}'")
+            };
+
+            var newUserResult = graphClient.Users.Request(queryOptions).GetAsync().Result;
+            Console.WriteLine(newUserResult[0].DisplayName);
+            Console.WriteLine(newUserResult[0].UserPrincipalName);
+        }
+
+        private static User BuildUserToAdd(string displayName, string alias, string domain, string password) 
+        {
+            var passwordProfile = new PasswordProfile
+            {
+                Password = password,
+                ForceChangePasswordNextSignIn = true
+            };
+            var user = new User
+            {
+                DisplayName = displayName,
+                UserPrincipalName = $@"{alias}@{domain}",
+                MailNickname = alias,
+                AccountEnabled = true,
+                PasswordProfile = passwordProfile
+            };
+            return user;
         }
 
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)

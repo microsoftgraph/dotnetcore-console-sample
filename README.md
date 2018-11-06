@@ -388,7 +388,7 @@ In this step you will incorporate the Microsoft Graph into the application. For 
     Console.WriteLine(httpResult);
     ```
 
-This completes all file edits and additions.  Ensure all files are saved.  In order to test the console application run the following commands from the command line:
+This completes our first set of file edits and additions.  Ensure all files are saved.  In order to test the console application run the following commands from the command line:
 
 ```
 dotnet build
@@ -400,6 +400,64 @@ Consider what this code is doing.
 - The `GetAuthenticatedGraphClient` function initializes a `GraphServiceClient` with an authentication provider that calls `AcquireTokenForClientAsync`.
 - In the `Main` function:
   - The graph endpoint that will be called is `/v1.0/users/$top=1`.
+- The `HttpClient` call with a manually constructed url and the `GraphServiceClient` sdk call are functionaly equivalent, which you choose to use in your applications will depend on your team practices, coding styles and target languages.
+
+1. Now let's extend this code to provision a new user.
+
+1. Inside the `Program` class add a new method `Build` with the following definition.  This method creates an instance of the `User` class with all required fields provided. This user will enableded and be required to change their password upon their next login.
+
+    ```cs
+    private static User BuildUserToAdd(string displayName, string alias, string domain, string password) 
+    {
+        var passwordProfile = new PasswordProfile
+        {
+            Password = password,
+            ForceChangePasswordNextSignIn = true
+        };
+        var user = new User
+        {
+            DisplayName = displayName,
+            UserPrincipalName = $@"{alias}@{domain}",
+            MailNickname = alias,
+            AccountEnabled = true,
+            PasswordProfile = passwordProfile
+        };
+        return user;
+    }
+    ```
+1. Continuing in the `Main` method add the following to pass the build the new user and then created in Azure Active Directory
+
+    ```cs
+    const string alias = "sdk_test";
+    const string domain = "<tenant>.onmicrosoft.com";
+    var userToAdd = BuildUserToAdd("SDK Test User", alias, domain, "ChangeThis!0");
+    var added = graphClient.Users.Request().AddAsync(userToAdd).Result;
+    Console.WriteLine("Graph SDK Add Result");
+    Console.WriteLine(added.DisplayName);
+    ```
+    > **Important** the value supplied as the alias must be unique for your Azure Active Directory tenant and the domain parameter must match one of the domains associated with your Azure Active Directory tenant.
+
+1. Continuing in the `Main` method add the following to query for the newly added user
+
+    ```cs
+    List<QueryOption> queryOptions = new List<QueryOption>
+    {
+        new QueryOption("$filter", $@"mailNickname eq '{alias}'")
+    };
+
+    var newUserResult = graphClient.Users.Request(queryOptions).GetAsync().Result;
+    Console.WriteLine(newUserResult[0].DisplayName);
+    Console.WriteLine(newUserResult[0].UserPrincipalName);
+    ```
+
+The console application is now able to provision new users into Azure Active Directory. In order to test the console application run the following commands from the command line:
+
+```
+dotnet build
+dotnet run
+```
+
+After running this you have provisioned a new user into Azure Active Directory and are able to locate that newly added user account using an OData `$filter`. 
 
 ## Contributing
 
