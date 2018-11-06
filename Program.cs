@@ -43,12 +43,11 @@ namespace ConsoleGraphTest
             Console.WriteLine("HTTP Result");
             Console.WriteLine(httpResult);
             const string alias = "sdk_test";
-            const string domain = "gavinbignite.com";
+            const string domain = "<tenant>.onmicrosoft.com";
             var userToAdd = BuildUserToAdd("SDK Test User", alias, domain, "ChangeThis!0");
             var added = graphClient.Users.Request().AddAsync(userToAdd).Result;
             Console.WriteLine("Graph SDK Add Result");
             Console.WriteLine(added.DisplayName);
-
             
             List<QueryOption> queryOptions = new List<QueryOption>
             {
