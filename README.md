@@ -1,9 +1,12 @@
 # dotnetcore-console-sample
 
+The instructions in this README will recreate the console application in this repo from scratch.  If you prefer to clone the repo you may complete the sample by executing Step 2 (app registration) and Step 3 (only the create configuration file portion).
+
     - [Prerequisites](#prerequisites)
     - [Step 1: Create a .Net Core Console Application](#step-1-create-a-net-core-console-application)
     - [Step 2: Register a web application with the new Azure AD Portal App Registration](#step-2-register-a-web-application-with-the-new-azure-ad-portal-app-registration)
     - [Step 3: Extend the app for Azure AD Authentication](#step-3-extend-the-app-for-azure-ad-authentication)
+        - [Create configuration file](#create-configuration-file)
         - [Create helper classes](#create-helper-classes)
     - [Step 4: Extend the app for Microsoft Graph](#step-4-extend-the-app-for-microsoft-graph)
         - [Get user information from tenant](#get-user-information-from-tenant)
@@ -93,7 +96,7 @@ In this exercise, you will create an Azure AD app registration using the new Azu
     1. Click **New client secret**.
     1. On the **Add a client secret** dialog, specify the following values:
 
-        - **Description** = Secret1
+        - **Description** = ConsoleGraphTest App Secret
         - **Expires** = In 1 year
 
     1. Click **Add**.
@@ -114,7 +117,7 @@ In this exercise, you will create an Azure AD app registration using the new Azu
         ![Screenshot of selecting Microsoft Graph permission to add to app registration](Images/aad-create-app-05.png)
 
     1. Select **Application permissions**.
-    1. In the "Select permissions" search box type "User".
+    1. In the "Select permissions" search box type "User.Read.All".
     1. Select **User.Read.All** from the filtered list.
 
         ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-06.png)
@@ -128,6 +131,8 @@ In this exercise, you will create an Azure AD app registration using the new Azu
     1. Click **Yes**.
 
 ## Step 3: Extend the app for Azure AD Authentication
+
+### Create configuration file
 
 In this step you will extend the application from the previous step to support authentication with Azure AD. This is required to obtain the necessary OAuth access token to call the Microsoft Graph. In this step you will integrate the [Microsoft Authentication Library](https://www.nuget.org/packages/Microsoft.Identity.Client/) library into the application.
 
