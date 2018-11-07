@@ -2,6 +2,7 @@
 
 The instructions in this README will recreate the console application in this repo from scratch.  If you prefer to clone the repo you may complete the sample by executing Step 2 (app registration) and Step 3 (only the create configuration file portion).
 
+- [dotnetcore-console-sample](#dotnetcore-console-sample)
     - [Prerequisites](#prerequisites)
     - [Step 1: Create a .Net Core Console Application](#step-1-create-a-net-core-console-application)
     - [Step 2: Register a web application with the new Azure AD Portal App Registration](#step-2-register-a-web-application-with-the-new-azure-ad-portal-app-registration)
@@ -11,7 +12,7 @@ The instructions in this README will recreate the console application in this re
     - [Step 4: Extend the app for Microsoft Graph](#step-4-extend-the-app-for-microsoft-graph)
         - [Get user information from tenant](#get-user-information-from-tenant)
     - [Contributing](#contributing)
-
+  
 ## Prerequisites
 
 To complete this sample you need the following:
