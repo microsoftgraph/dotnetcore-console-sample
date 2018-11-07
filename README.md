@@ -2,8 +2,11 @@
 
 This repository will contain several samples showing how to interact with Microsoft Graph using the .Net core SDK.  
 These samples have been created as part of the [30 days of Microsoft Graph](https://aka.ms/30DaysMSGraph) blog series.
+Each of the samples builds from a common base project, in order to sucessfully build a sample you must first complete the setup required in the base project for that application type.
 
 ## Table of Contents
+### Console Applications
+- [Base console application setup](./base-console-app)
 - [Day 16 - Create a new user](./day16-create-user)
 
 ## Contributing
