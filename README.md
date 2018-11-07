@@ -1,6 +1,5 @@
 # dotnetcore-console-sample
 
-- [dotnetcore-console-sample](#dotnetcore-console-sample)
     - [Prerequisites](#prerequisites)
     - [Step 1: Create a .Net Core Console Application](#step-1-create-a-net-core-console-application)
     - [Step 2: Register a web application with the new Azure AD Portal App Registration](#step-2-register-a-web-application-with-the-new-azure-ad-portal-app-registration)
@@ -17,11 +16,10 @@ To complete this sample you need the following:
 - [Visual Studio Code](https://code.visualstudio.com/) installed on your development machine. If you do not have Visual Studio Code, visit the previous link for download options. (**Note:** This tutorial was written with Visual Studio Code version 1.28.2. The steps in this guide may work with other versions, but that has not been tested.)
 - [.Net Core SDK](https://www.microsoft.com/net/download/dotnet-core/2.1#sdk-2.1.403). (**Note** This tutorial was written with .Net Core SDK 2.1.403.  The steps in this guide may work with other versions, but that has not been tested.)
 - [C# extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp)
-- Either a personal Microsoft account with a mailbox on Outlook.com, or a Microsoft work or school account.
+- A Microsoft work or school account.
 
-If you don't have a Microsoft account, there are a couple of options to get a free account:
+If you don't have a Microsoft work or school account there is an option to get a free account:
 
-- You can [sign up for a new personal Microsoft account](https://signup.live.com/signup?wa=wsignin1.0&rpsnv=12&ct=1454618383&rver=6.4.6456.0&wp=MBI_SSL_SHARED&wreply=https://mail.live.com/default.aspx&id=64855&cbcxt=mai&bk=1454618383&uiflavor=web&uaid=b213a65b4fdc484382b6622b3ecaa547&mkt=E-US&lc=1033&lic=1).
 - You can [sign up for the Office 365 Developer Program](https://developer.microsoft.com/office/dev-program) to get a free Office 365 subscription.
 
 ## Step 1: Create a .Net Core Console Application
@@ -56,7 +54,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 ## Step 2: Register a web application with the new Azure AD Portal App Registration
 
-In this exercise, you will create an Azure AD app registration using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
+In this exercise, you will create an Azure AD app registration using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).  Even though this sample is building a console application you will be creating a web application app registration as that is required by the client credential authentication flow described here.
 
 1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
@@ -83,6 +81,8 @@ In this exercise, you will create an Azure AD app registration using the new Azu
     ![Screenshot of creating a new app in the Azure AD App Registration Portal website](Images/aad-create-app-01.png)
 
     1. Copy the **Redirect URI** as you will need it later.
+    
+    1. Click **Register**.
 
 1. On the **.NET Core Graph Tutorial** page, copy the **Application (client) ID** and **Directory (tenant) ID** as you will need both later.
 
