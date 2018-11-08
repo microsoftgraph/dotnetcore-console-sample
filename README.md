@@ -8,6 +8,7 @@ Each of the samples builds from a common base project, in order to sucessfully b
 ### Console Applications
 - [Base console application setup](./base-console-app)
 - [Day 16 - Create a new user](./day16-create-user)
+- [Day NN - Template](./dayNN-template)
 
 ## Contributing
 
