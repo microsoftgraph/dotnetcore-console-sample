@@ -4,6 +4,8 @@
     - [Prerequisites](#prerequisites)
     - [Step 1: Update the App Registration permissions](#step-1-update-the-app-rgistration-permissions)
     - [Step 2: Extend the app to create users](#step-2-extend-the-app-to-create-users)
+        - [Create the UserHelper class](#create-the-userhelper-class)
+        - [Extend program to create users](#extend-program-to-create-users)
 
 ## Prerequisites
 
@@ -58,53 +60,95 @@ As this exercise requires new permissions the App Registration needs to be updat
 
 ## Step 2: Extend the app to create users
 
-In this step you will add calls to the console application created in the [Base Console Application Setup](../base-console-app/) to provision a new user.
+In this step you will create a UserHelper class that encapsulates the logic for creating users and finding user objects by alias and then add calls to the console application created in the [Base Console Application Setup](../base-console-app/) to provision a new user.
 
-1. Inside the `Program` class add a new method `Build` with the following definition.  This method creates an instance of the `User` class with all required fields provided. This user will enableded and be required to change their password upon their next login.
+### Create UserHelper class
+
+1. Create a new file in the `Helpers` folder called `UserHelper.cs`.
+1. Replace the contents of `UserHelper.cs` with the following code:
 
     ```cs
-    private static User BuildUserToAdd(string displayName, string alias, string domain, string password) 
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Microsoft.Graph;
+
+    namespace ConsoleGraphTest
     {
-        var passwordProfile = new PasswordProfile
+        public class UserHelper
         {
-            Password = password,
-            ForceChangePasswordNextSignIn = true
-        };
-        var user = new User
-        {
-            DisplayName = displayName,
-            UserPrincipalName = $@"{alias}@{domain}",
-            MailNickname = alias,
-            AccountEnabled = true,
-            PasswordProfile = passwordProfile
-        };
-        return user;
+            private GraphServiceClient _graphClient;
+            public UserHelper(GraphServiceClient graphClient)
+            {
+                if (null == graphClient) throw new ArgumentNullException(nameof(graphClient));
+                _graphClient = graphClient;
+            }
+
+            public async Task CreateUser(string displayName, string alias, string domain, string password)
+            {
+                var userToAdd = BuildUserToAdd(displayName, alias, domain, password);
+                await _graphClient.Users.Request().AddAsync(userToAdd);
+            }
+
+            public async Task<User> FindByAlias(string alias)
+            {
+                List<QueryOption> queryOptions = new List<QueryOption>
+                {
+                    new QueryOption("$filter", $@"mailNickname eq '{alias}'")
+                };
+
+                var userResult = await _graphClient.Users.Request(queryOptions).GetAsync();
+                if (userResult.Count != 1) throw new ApplicationException($"Unable to find a user with the alias {alias}");
+                return userResult[0];
+            }
+
+            private static User BuildUserToAdd(string displayName, string alias, string domain, string password)
+            {
+                var passwordProfile = new PasswordProfile
+                {
+                    Password = password,
+                    ForceChangePasswordNextSignIn = true
+                };
+                var user = new User
+                {
+                    DisplayName = displayName,
+                    UserPrincipalName = $@"{alias}@{domain}",
+                    MailNickname = alias,
+                    AccountEnabled = true,
+                    PasswordProfile = passwordProfile
+                };
+                return user;
+            }
+        }
     }
     ```
-1. Continuing in the `Main` method add the following to pass the build the new user and then created in Azure Active Directory
+This class contains the code to create a minimal user profile given the alias, domain, display name and password for a new user account and a method to load a user object from Microsoft Graph given an alias.
+
+### Extend program to create users
+
+1. Inside the `Program` class add a new method `CreateAndFindNewUser` with the following definition.  This method creates a new User in Azure Active Directory using the UserHelper class. This user will enableded and be required to change their password upon their next login.
 
     ```cs
-    const string alias = "sdk_test";
-    const string domain = "<tenant>.onmicrosoft.com";
-    var userToAdd = BuildUserToAdd("SDK Test User", alias, domain, "ChangeThis!0");
-    var added = graphClient.Users.Request().AddAsync(userToAdd).Result;
-    Console.WriteLine("Graph SDK Add Result");
-    Console.WriteLine(added.DisplayName);
+    private static void CreateAndFindNewUser()
+    {
+        const string alias = "sdk_test";
+        const string domain = "<tenant>.onmicrosoft.com";
+        var userHelper = new UserHelper(_graphServiceClient);
+        userHelper.CreateUser("SDK Test User", alias, domain, "ChangeThis!0").GetAwaiter().GetResult();
+        var user = userHelper.FindByAlias(alias).Result;
+        // Console writes for demo purposes
+        Console.WriteLine(user.DisplayName);
+        Console.WriteLine(user.UserPrincipalName);       
+    }
     ```
     > **Important** the value supplied as the alias must be unique for your Azure Active Directory tenant and the domain parameter must match one of the domains associated with your Azure Active Directory tenant.
 
-1. Continuing in the `Main` method add the following to query for the newly added user
+1. Continuing in the `Main` method add the following code to call the new method.
 
     ```cs
-    List<QueryOption> queryOptions = new List<QueryOption>
-    {
-        new QueryOption("$filter", $@"mailNickname eq '{alias}'")
-    };
-
-    var newUserResult = graphClient.Users.Request(queryOptions).GetAsync().Result;
-    Console.WriteLine(newUserResult[0].DisplayName);
-    Console.WriteLine(newUserResult[0].UserPrincipalName);
+    CreateAndFindNewUser();
     ```
+1. Save all files.
 
 The console application is now able to provision new users into Azure Active Directory. In order to test the console application run the following commands from the command line:
 

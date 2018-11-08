@@ -42,39 +42,20 @@ namespace ConsoleGraphTest
 
             Console.WriteLine("HTTP Result");
             Console.WriteLine(httpResult);
-            const string alias = "sdk_test";
-            const string domain = "<tenant>.onmicrosoft.com";
-            var userToAdd = BuildUserToAdd("SDK Test User", alias, domain, "ChangeThis!0");
-            var added = graphClient.Users.Request().AddAsync(userToAdd).Result;
-            Console.WriteLine("Graph SDK Add Result");
-            Console.WriteLine(added.DisplayName);
-            
-            List<QueryOption> queryOptions = new List<QueryOption>
-            {
-                new QueryOption("$filter", $@"mailNickname eq '{alias}'")
-            };
-
-            var newUserResult = graphClient.Users.Request(queryOptions).GetAsync().Result;
-            Console.WriteLine(newUserResult[0].DisplayName);
-            Console.WriteLine(newUserResult[0].UserPrincipalName);
+     
+            CreateAndFindNewUser();
         }
 
-        private static User BuildUserToAdd(string displayName, string alias, string domain, string password) 
+        private static void CreateAndFindNewUser()
         {
-            var passwordProfile = new PasswordProfile
-            {
-                Password = password,
-                ForceChangePasswordNextSignIn = true
-            };
-            var user = new User
-            {
-                DisplayName = displayName,
-                UserPrincipalName = $@"{alias}@{domain}",
-                MailNickname = alias,
-                AccountEnabled = true,
-                PasswordProfile = passwordProfile
-            };
-            return user;
+            const string alias = "sdk_test";
+            const string domain = "<tenant>.onmicrosoft.com";
+            var userHelper = new UserHelper(_graphServiceClient);
+            userHelper.CreateUser("SDK Test User", alias, domain, "ChangeThis!0").GetAwaiter().GetResult();
+            var user = userHelper.FindByAlias(alias).Result;
+            // Console writes for demo purposes
+            Console.WriteLine(user.DisplayName);
+            Console.WriteLine(user.UserPrincipalName);       
         }
 
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
