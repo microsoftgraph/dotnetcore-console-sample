@@ -7,12 +7,12 @@ using Microsoft.Graph;
 using Microsoft.Identity.Client;
 
 namespace ConsoleGraphTest {
-    public class PublicAuthenticationProvider : IAuthenticationProvider
+    public class DeviceCodeFlowAuthorizationProvider : IAuthenticationProvider
     {
         private readonly PublicClientApplication _application;
         private readonly List<string> _scopes;
         private string _authToken;
-        public PublicAuthenticationProvider(PublicClientApplication application, List<string> scopes) {
+        public DeviceCodeFlowAuthorizationProvider(PublicClientApplication application, List<string> scopes) {
             _application = application;
             _scopes = scopes;
         }

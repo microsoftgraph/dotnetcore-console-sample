@@ -138,7 +138,7 @@ namespace ConsoleGraphTest
             scopes.Add("https://graph.microsoft.com/.default");
 
             var cca = new PublicClientApplication(clientId, authority);
-            return new PublicAuthenticationProvider(cca, scopes);
+            return new DeviceCodeFlowAuthorizationProvider(cca, scopes);
         }
 
         private static IConfigurationRoot LoadAppSettings()
