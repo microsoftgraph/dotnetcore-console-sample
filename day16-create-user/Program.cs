@@ -42,20 +42,20 @@ namespace ConsoleGraphTest
 
             Console.WriteLine("HTTP Result");
             Console.WriteLine(httpResult);
-     
-            CreateAndFindNewUser();
+
+            CreateAndFindNewUser(config);
         }
 
-        private static void CreateAndFindNewUser()
+        private static void CreateAndFindNewUser(IConfigurationRoot config)
         {
             const string alias = "sdk_test";
-            const string domain = "<tenant>.onmicrosoft.com";
+            string domain = config["domain"];
             var userHelper = new UserHelper(_graphServiceClient);
             userHelper.CreateUser("SDK Test User", alias, domain, "ChangeThis!0").GetAwaiter().GetResult();
             var user = userHelper.FindByAlias(alias).Result;
             // Console writes for demo purposes
             Console.WriteLine(user.DisplayName);
-            Console.WriteLine(user.UserPrincipalName);       
+            Console.WriteLine(user.UserPrincipalName);
         }
 
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
@@ -99,7 +99,8 @@ namespace ConsoleGraphTest
                 if (string.IsNullOrEmpty(config["applicationId"]) ||
                     string.IsNullOrEmpty(config["applicationSecret"]) ||
                     string.IsNullOrEmpty(config["redirectUri"]) ||
-                    string.IsNullOrEmpty(config["tenantId"]))
+                    string.IsNullOrEmpty(config["tenantId"]) ||
+                    string.IsNullOrEmpty(config["domain"]))
                 {
                     return null;
                 }

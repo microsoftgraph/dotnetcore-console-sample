@@ -52,7 +52,7 @@ As this exercise requires new permissions the App Registration needs to be updat
 
     1. Click **Add permissions** at the bottom of flyout.
 
-1. Back on the API permissions content blade, click **Grant admin consent for \<name of tenant\>**.  
+1. Back on the API permissions content blade, click **Grant admin consent for \<name of tenant\>**.
 **need new screenshot here**
     ![Screenshot of granting admin consent for newly added permission](Images/aad-create-app-07.png)
 
@@ -129,24 +129,24 @@ This class contains the code to create a minimal user profile given the alias, d
 1. Inside the `Program` class add a new method `CreateAndFindNewUser` with the following definition.  This method creates a new User in Azure Active Directory using the UserHelper class. This user will enableded and be required to change their password upon their next login.
 
     ```cs
-    private static void CreateAndFindNewUser()
+    private static void CreateAndFindNewUser(IConfigurationRoot config)
     {
         const string alias = "sdk_test";
-        const string domain = "<tenant>.onmicrosoft.com";
+        string domain = config["domain"];
         var userHelper = new UserHelper(_graphServiceClient);
         userHelper.CreateUser("SDK Test User", alias, domain, "ChangeThis!0").GetAwaiter().GetResult();
         var user = userHelper.FindByAlias(alias).Result;
         // Console writes for demo purposes
         Console.WriteLine(user.DisplayName);
-        Console.WriteLine(user.UserPrincipalName);       
+        Console.WriteLine(user.UserPrincipalName);
     }
     ```
-    > **Important** the value supplied as the alias must be unique for your Azure Active Directory tenant and the domain parameter must match one of the domains associated with your Azure Active Directory tenant.
+    > **Important** the value supplied as the alias must be unique for your Azure Active Directory tenant.
 
 1. Continuing in the `Main` method add the following code to call the new method.
 
     ```cs
-    CreateAndFindNewUser();
+    CreateAndFindNewUser(config);
     ```
 1. Save all files.
 
@@ -157,4 +157,4 @@ dotnet build
 dotnet run
 ```
 
-After running this you have provisioned a new user into Azure Active Directory and are able to locate that newly added user account using an OData `$filter`. 
+After running this you have provisioned a new user into Azure Active Directory and are able to locate that newly added user account using an OData `$filter`.

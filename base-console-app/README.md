@@ -143,7 +143,8 @@ In this step you will extend the application from the previous step to support a
         "applicationId": "YOUR_APP_ID_HERE",
         "applicationSecret": "YOUR_APP_SECRET_HERE",
         "tenantId": "YOUR_TENANT_ID_HERE",
-        "redirectUri": "YOUR_REDIRECT_URI_HERE"
+        "redirectUri": "YOUR_REDIRECT_URI_HERE",
+        "domain": "YOUR_DOMAIN_HERE"
     }
     ```
 
@@ -152,6 +153,7 @@ In this step you will extend the application from the previous step to support a
     1. Replace `YOUR_APP_SECRET_HERE` with your client secret (VALUE from Secret1 in previous steps).
     1. Replace `YOUR_TENANT_ID_HERE` with your tenant (domain) ID.
     1. Replace `YOUR_REDIRECT_URI_HERE` with your application redirect URI.
+    1. Replace `YOUR_DOMAIN_HERE` with a vaild domain for your Azure Active Directory instance, e.g. contoso.onmicrosoft.com or contoso.com
 
 > **Important:** If you're using source control such as git, now would be a good time to exclude the `appsettings.json` file from source control to avoid inadvertently leaking your app ID and secret.
 
@@ -292,7 +294,8 @@ In this step you will incorporate the Microsoft Graph into the application. For 
             if (string.IsNullOrEmpty(config["applicationId"]) ||
                 string.IsNullOrEmpty(config["applicationSecret"]) ||
                 string.IsNullOrEmpty(config["redirectUri"]) ||
-                string.IsNullOrEmpty(config["tenantId"]))
+                string.IsNullOrEmpty(config["tenantId"]) ||
+                string.IsNullOrEmpty(config["domain"]))
             {
                 return null;
             }
