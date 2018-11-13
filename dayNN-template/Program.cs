@@ -42,7 +42,6 @@ namespace ConsoleGraphTest
 
             Console.WriteLine("HTTP Result");
             Console.WriteLine(httpResult);
-
             // Call your method wrapping construction and calls to the helper
             MyHelperCall();
         }
