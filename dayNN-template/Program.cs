@@ -77,13 +77,13 @@ namespace ConsoleGraphTest
             var clientId = config["applicationId"];
             var clientSecret = config["applicationSecret"];
             var redirectUri = config["redirectUri"];
-            var authority = $"https://login.microsoftonline.com/{config["tenantId"]}/v2.0";
+            var authority = $"https://login.microsoftonline.com/{config["tenantId"]}";
 
             List<string> scopes = new List<string>();
             scopes.Add("https://graph.microsoft.com/.default");
 
-            var cca = new ConfidentialClientApplication(clientId, authority, redirectUri, new ClientCredential(clientSecret), null, null);
-            return new MsalAuthenticationProvider(cca, scopes.ToArray());
+            var cca = new PublicClientApplication(clientId, authority);
+            return new DeviceCodeFlowAuthorizationProvider(cca, scopes);
         }
 
         private static IConfigurationRoot LoadAppSettings()
