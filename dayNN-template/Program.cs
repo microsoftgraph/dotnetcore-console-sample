@@ -42,7 +42,7 @@ namespace ConsoleGraphTest
 
             Console.WriteLine("HTTP Result");
             Console.WriteLine(httpResult);
-     
+
             // Call your method wrapping construction and calls to the helper
             MyHelperCall();
         }
@@ -55,7 +55,7 @@ namespace ConsoleGraphTest
             var user = userHelper.FindByAlias(alias).Result;
             // Add some console writes for demo purposes if necessary
             Console.WriteLine(user.DisplayName);
-            Console.WriteLine(user.UserPrincipalName);       
+            Console.WriteLine(user.UserPrincipalName);
         }
 
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
@@ -99,7 +99,8 @@ namespace ConsoleGraphTest
                 if (string.IsNullOrEmpty(config["applicationId"]) ||
                     string.IsNullOrEmpty(config["applicationSecret"]) ||
                     string.IsNullOrEmpty(config["redirectUri"]) ||
-                    string.IsNullOrEmpty(config["tenantId"]))
+                    string.IsNullOrEmpty(config["tenantId"]) ||
+                    string.IsNullOrEmpty(config["domain"]))
                 {
                     return null;
                 }
