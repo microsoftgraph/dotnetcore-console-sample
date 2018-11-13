@@ -30,31 +30,35 @@ namespace ConsoleGraphTest
             //Query using Graph SDK (preferred when possible)
             var graphClient = GetAuthenticatedGraphClient(config);
 
-            await ListCurrentPlans(graphClient);
-
             //Getting the first group we can find to create a plan
-            var group = (await graphClient.Groups.Request(new List<QueryOption> {
-                new QueryOption("$top", "1")
-            }).GetAsync()).FirstOrDefault();
+            var groupId = (await graphClient.Me.GetMemberGroups(false).Request().PostAsync()).FirstOrDefault();
 
-            if(group != null) {
+            if(groupId != null) {
                 var users = await graphClient.Users.Request(new List<QueryOption> {
                         new QueryOption("$top", "3")
                     }).GetAsync();
                 
-                var planId = await CreatePlannerPlan(graphClient, users, group.Id);
-                var bucketId = await CreatePlannerBucket(graphClient, planId);
-                await CreatePlannerTask(graphClient, users, planId, bucketId);
+                var planId = await GetAndListCurrentPlans(graphClient, groupId) ?? await CreatePlannerPlan(graphClient, users, groupId);
+                var bucketId = await CreatePlannerBucket(graphClient, groupId, planId);
+                await CreatePlannerTask(graphClient, users, groupId, planId, bucketId);
             }
         }
-        private static async Task ListCurrentPlans(GraphServiceClient graphClient) {
-            //Querying plans in current tenant
-            var plans = await graphClient.Planner.Plans.Request(new List<QueryOption>
+        private static async Task<string> GetAndListCurrentPlans(GraphServiceClient graphClient, string groupId) {
+            //Querying plans in current group
+            var plans = await graphClient.Groups[groupId].Planner.Plans.Request(new List<QueryOption>
             {
                 new QueryOption("$orderby", "Title asc")
             }).GetAsync();
-            Console.WriteLine($"Number of plans in current tenant: {plans.Count}");
-            Console.Write(plans.Select(x => $"-- {x.Title}").Aggregate((x,y) => $"{x}\n{y}"));
+            if (plans.Any())
+            {
+                Console.WriteLine($"Number of plans in current tenant: {plans.Count}");
+                Console.Write(plans.Select(x => $"-- {x.Title}").Aggregate((x, y) => $"{x}\n{y}"));
+                return plans.First().Id;
+            } else
+            {
+                Console.WriteLine("No existing plan");
+                return string.Empty;
+            }
         }
         private static async Task<string> CreatePlannerPlan(GraphServiceClient graphClient, IEnumerable<User> users, string groupId) {
             // Getting users to share the plan with
@@ -78,30 +82,33 @@ namespace ConsoleGraphTest
             Console.WriteLine($"Added a new plan {createdPlan.Id}");
             return createdPlan.Id;
         }
-        private static async Task<string> CreatePlannerBucket(GraphServiceClient graphClient, string planId) {
+        private static async Task<string> CreatePlannerBucket(GraphServiceClient graphClient, string groupId, string planId) {
             // Creating a new bucket within the plan
-            var createdBucket = await graphClient.Planner.Plans[planId].Buckets.Request().AddAsync(
+            var createdBucket = await graphClient.Planner.Buckets.Request().AddAsync(
                 new PlannerBucket {
                     Name = "my first bucket",
-                    OrderHint = 1.ToString()
+                    OrderHint = " !",
+                    PlanId = planId
                 }
             );
             Console.WriteLine($"Added new bucket {createdBucket.Name} to plan");
             return createdBucket.Id;
         }
-        private static async Task CreatePlannerTask(GraphServiceClient graphClient, IEnumerable<User> users, string planId, string bucketId){
+        private static async Task CreatePlannerTask(GraphServiceClient graphClient, IEnumerable<User> users, string groupId, string planId, string bucketId){
             // Preparing the assignment for the task
             var assignments = new PlannerAssignments ();
             users.ToList().ForEach( x=> assignments.AddAssignee(x.Id));
             // Creating a task within the bucket
-            var createdTask = await graphClient.Planner.Plans[planId].Buckets[bucketId].Tasks.Request().AddAsync(
+            var createdTask = await graphClient.Planner.Tasks.Request().AddAsync(
                 new PlannerTask {
                     DueDateTime = DateTimeOffset.UtcNow.AddDays(7),
                     Title = "Do the dishes",
                     Details = new PlannerTaskDetails {
                         Description = "Do the dishes that are remaining in the sink"
                     },
-                    Assignments = assignments
+                    Assignments = assignments,
+                    PlanId = planId,
+                    BucketId = bucketId
                 }
             );
             Console.WriteLine($"Added new task {createdTask.Title} to bucket");
@@ -125,13 +132,13 @@ namespace ConsoleGraphTest
             var clientId = config["applicationId"];
             var clientSecret = config["applicationSecret"];
             var redirectUri = config["redirectUri"];
-            var authority = $"https://login.microsoftonline.com/{config["tenantId"]}/v2.0";
+            var authority = $"https://login.microsoftonline.com/{config["tenantId"]}";
 
             List<string> scopes = new List<string>();
             scopes.Add("https://graph.microsoft.com/.default");
 
-            var cca = new ConfidentialClientApplication(clientId, authority, redirectUri, new ClientCredential(clientSecret), null, null);
-            return new MsalAuthenticationProvider(cca, scopes.ToArray());
+            var cca = new PublicClientApplication(clientId, authority);
+            return new PublicAuthenticationProvider(cca, scopes);
         }
 
         private static IConfigurationRoot LoadAppSettings()
