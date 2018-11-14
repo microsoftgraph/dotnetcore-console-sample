@@ -26,35 +26,17 @@ namespace ConsoleGraphTest
 
             //Query using Graph SDK (preferred when possible)
             GraphServiceClient graphClient = GetAuthenticatedGraphClient(config);
-            List<QueryOption> options = new List<QueryOption>
-            {
-                new QueryOption("$top", "1")
-            };
-
-            var graphResult = graphClient.Users.Request(options).GetAsync().Result;
-            Console.WriteLine("Graph SDK Result");
-            Console.WriteLine(graphResult[0].DisplayName);
-
-            //Direct query using HTTPClient (for beta endpoint calls or not available in Graph SDK)
-            HttpClient httpClient = GetAuthenticatedHTTPClient(config);
-            Uri Uri = new Uri("https://graph.microsoft.com/v1.0/users?$top=1");
-            var httpResult = httpClient.GetStringAsync(Uri).Result;
-
-            Console.WriteLine("HTTP Result");
-            Console.WriteLine(httpResult);
-            // Call your method wrapping construction and calls to the helper
-            MyHelperCall();
+            AddLicenseToUser(config);
         }
 
-        // Add a private method to do any necessary setup and make calls to your helper
-        private static void MyHelperCall()
+        private static void AddLicenseToUser(IConfigurationRoot config)
         {
-            const string alias = "sdk_test";
-            var userHelper = new MyHelper(_graphServiceClient);
-            var user = userHelper.FindByAlias(alias).Result;
-            // Add some console writes for demo purposes if necessary
-            Console.WriteLine(user.DisplayName);
-            Console.WriteLine(user.UserPrincipalName);
+            const string upn = "lidiah@m365x974797.onmicrosoft.com";
+            var licenseHelper = new LicenseHelper(_graphServiceClient);
+            var user = licenseHelper.GetUser(upn).Result;
+
+            var sku = licenseHelper.GetLicense().Result;
+            licenseHelper.AddLicense(user.Id, sku.SkuId).GetAwaiter().GetResult();
         }
 
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
