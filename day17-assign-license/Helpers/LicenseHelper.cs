@@ -5,17 +5,8 @@ using Microsoft.Graph;
 
 namespace ConsoleGraphTest
 {
-    /**
-     * Please rename your helper class to match it's purpose
-     */
     public class LicenseHelper
     {
-
-        /**
-         * Inject either a GraphServiceClient or an HttpClient (with Authentiation supplied)
-         * Which you choose to use will depend on your scenario but the GraphServiceClient should be used where practical
-         * Please delete the constructor you don't use
-         */
         private GraphServiceClient _graphClient;
         
         public LicenseHelper(GraphServiceClient graphClient)
@@ -26,7 +17,7 @@ namespace ConsoleGraphTest
 
         public async Task<User> GetUser(string UPN)
         {
-            var user = await _graphClient.Users[UPN].Request().GetAsync();   
+            var user = await _graphClient.Users[UPN].Request().GetAsync();
             return user;
         }
 

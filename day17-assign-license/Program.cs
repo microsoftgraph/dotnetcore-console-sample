@@ -10,7 +10,7 @@ namespace ConsoleGraphTest
     class Program
     {
         private static GraphServiceClient _graphServiceClient;
-        private static HttpClient _httpClient;
+        //private static HttpClient _httpClient;
 
         static void Main(string[] args)
         {
@@ -29,7 +29,9 @@ namespace ConsoleGraphTest
 
         private static void AddLicenseToUser(IConfigurationRoot config)
         {
-            const string upn = "lidiah@m365x974797.onmicrosoft.com";
+            string alias = "lidiah";
+            string domain = config["domain"];
+            string upn = $"{alias}@{domain}";
             var licenseHelper = new LicenseHelper(_graphServiceClient);
             var user = licenseHelper.GetUser(upn).Result;
 
