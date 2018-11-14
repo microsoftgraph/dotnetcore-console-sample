@@ -65,6 +65,7 @@ namespace ConsoleGraphTest
             var redirectUri = config["redirectUri"];
             var authority = $"https://login.microsoftonline.com/{config["tenantId"]}/v2.0";
 
+            //this specific scope means that application will default to what is defined in the application registration rather than using dynamic scopes
             List<string> scopes = new List<string>();
             scopes.Add("https://graph.microsoft.com/.default");
 
