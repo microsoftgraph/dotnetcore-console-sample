@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using Microsoft.Identity.Client;
 using Microsoft.Graph;
 using Microsoft.Extensions.Configuration;
@@ -44,13 +42,6 @@ namespace ConsoleGraphTest
             var authenticationProvider = CreateAuthorizationProvider(config);
             _graphServiceClient = new GraphServiceClient(authenticationProvider);
             return _graphServiceClient;
-        }
-
-        private static HttpClient GetAuthenticatedHTTPClient(IConfigurationRoot config)
-        {
-            var authenticationProvider = CreateAuthorizationProvider(config);
-            _httpClient = new HttpClient(new AuthHandler(authenticationProvider, new HttpClientHandler()));
-            return _httpClient;
         }
 
         private static IAuthenticationProvider CreateAuthorizationProvider(IConfigurationRoot config)
