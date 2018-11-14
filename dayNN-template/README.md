@@ -27,7 +27,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 ## Step 1: Update the App Registration permissions
 
-As this exercise requires new permissions the App Registration needs to be updated to include the **User.Read.All (delegated)** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
+As this exercise requires new permissions the App Registration needs to be updated to include the **User.Read.All** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
 1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
@@ -68,7 +68,7 @@ As this exercise requires new permissions the App Registration needs to be updat
 
 ## Step 3: Implement the Device Code Flow in the application
 
-In this step you will create a UserHelper class that encapsulates the logic for creating users and finding user objects by alias and then add calls to the console application created in the [Base Console Application Setup](../base-console-app/) to provision a new user.
+In this step you will create a Helper method that encapsulates the logic for listing existing plans and then add calls to the console application created in the [Base Console Application Setup](../base-console-app/).
 
 ### Create the DeviceCodeFlowAuthorizationProvider class
 

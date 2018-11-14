@@ -2,5 +2,6 @@
   "applicationId": "YOUR_APP_ID_HERE",
   "applicationSecret": "YOUR_APP_SECRET_HERE",
   "tenantId": "YOUR_TENANT_ID_HERE",
-  "redirectUri": "YOUR_REDIRECT_URI_HERE"
+  "redirectUri": "YOUR_REDIRECT_URI_HERE",
+  "domain": "YOUR_DOMAIN_HERE"
 }
