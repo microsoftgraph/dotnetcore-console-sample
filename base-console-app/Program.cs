@@ -85,7 +85,8 @@ namespace ConsoleGraphTest
                 if (string.IsNullOrEmpty(config["applicationId"]) ||
                     string.IsNullOrEmpty(config["applicationSecret"]) ||
                     string.IsNullOrEmpty(config["redirectUri"]) ||
-                    string.IsNullOrEmpty(config["tenantId"]))
+                    string.IsNullOrEmpty(config["tenantId"]) ||
+                    string.IsNullOrEmpty(config["domain"]))
                 {
                     return null;
                 }

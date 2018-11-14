@@ -54,7 +54,7 @@ As this exercise requires new permissions the App Registration needs to be updat
 
     1. Click **Add permissions** at the bottom of flyout.
 
-1. Back on the API permissions content blade, click **Grant admin consent for \<name of tenant\>**.  
+1. Back on the API permissions content blade, click **Grant admin consent for \<name of tenant\>**.
 **need new screenshot here**
     ![Screenshot of granting admin consent for newly added permission](Images/new-image-needed.png)
 
@@ -97,4 +97,4 @@ dotnet build
 dotnet run
 ```
 
-Summary of what the thing that can be done is. 
+Summary of what the thing that can be done is.
