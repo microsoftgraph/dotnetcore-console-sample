@@ -57,7 +57,7 @@ namespace ConsoleGraphTest
             } else
             {
                 Console.WriteLine("No existing plan");
-                return string.Empty;
+                return null;
             }
         }
         private static async Task<string> CreatePlannerPlan(GraphServiceClient graphClient, IEnumerable<User> users, string groupId) {
@@ -137,8 +137,8 @@ namespace ConsoleGraphTest
             List<string> scopes = new List<string>();
             scopes.Add("https://graph.microsoft.com/.default");
 
-            var cca = new PublicClientApplication(clientId, authority);
-            return new DeviceCodeFlowAuthorizationProvider(cca, scopes);
+            var pca = new PublicClientApplication(clientId, authority);
+            return new DeviceCodeFlowAuthorizationProvider(pca, scopes);
         }
 
         private static IConfigurationRoot LoadAppSettings()
