@@ -1,13 +1,13 @@
-# Day NN - Scenario Template
+# Day NN - Using the Device Code Flow to Authenticate Users
 
-> When adding Images, save them in the Images folder for your day
-
-- [Day NN - Scenario Template](#day-nn-scenario-template)
+- [Day NN - Using the Device Code Flow to Authenticate Users](#day-using-the-device-code-flow-to-authenticate-users)
     - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-rgistration-permissions)
-    - [Step 2: Extend the app to yyy](#step-2-extend-the-app-to-yyy)
-        - [Create the MyHelper class](#create-the-myhelper-class)
-        - [Extend program to yyy](#extend-program-to-yyy)
+    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+    - [Step 2: Enable your application for Device Code Flow](#step-2-enable-your-application-for-device-code-flow)
+    - [Step 3: Implement the Device Code Flow in the application](#step-3-implement-the-device-code-flow-in-the-application)
+        - [Create the DeviceCodeFlowAuthorizationProvider class](#create-the-devicecodeflowauthorizationprovider-class)
+        - [Extend program to leverage this new authentication flow](#extend-program-to-leverage-this-new-authentication-flow)
+        - [Update the reference to the MSAL library](#update-the-reference-to-the-msal-library)
 
 ## Prerequisites
 
@@ -27,7 +27,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 ## Step 1: Update the App Registration permissions
 
-As this exercise requires new permissions the App Registration needs to be updated to include the **\<New-Permission-Here\>** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
+As this exercise requires new permissions the App Registration needs to be updated to include the **User.Read.All (delegated)** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
 1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
@@ -46,55 +46,100 @@ As this exercise requires new permissions the App Registration needs to be updat
 
         ![Screenshot of selecting Microsoft Graph permission to add to app registration](Images/aad-create-app-05.png)
 
-    1. Select **Application permissions**.
+    1. Select **Delegated permissions**.
     1. In the "Select permissions" search box type "\<Start of permission string\>".
-    1. Select **\<New-Permission-Here\>** from the filtered list.
+    1. Select **User.Read.All** from the filtered list.
 
-        ![Screenshot of adding application permission for User.Read.All permission](Images/new-image-needed.png)
+        ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-01.png)
 
     1. Click **Add permissions** at the bottom of flyout.
 
 1. Back on the API permissions content blade, click **Grant admin consent for \<name of tenant\>**.  
-**need new screenshot here**
-    ![Screenshot of granting admin consent for newly added permission](Images/new-image-needed.png)
+    ![Screenshot of granting admin consent for newly added permission](Images/aad-create-app-02.png)
 
-    1. Click **Yes**.
+    1. Click **Yes**.  
 
-## Step 2: Extend the app to yyy
+    > **Note:** Make sur you do not have any application permission already selected, it will make the request fail. If you do have some, remove them before granting the new permissions.
+
+## Step 2: Enable your application for Device Code Flow
+1. On the application registration view from the last step, click on **Manifest**.
+2. Set the `allowPublicClient` property to `true`.
+3. Click on `Save`
+
+## Step 3: Implement the Device Code Flow in the application
 
 In this step you will create a UserHelper class that encapsulates the logic for creating users and finding user objects by alias and then add calls to the console application created in the [Base Console Application Setup](../base-console-app/) to provision a new user.
 
-### Create the MyHelper class
+### Create the DeviceCodeFlowAuthorizationProvider class
 
-1. Create a new file in the `Helpers` folder called `MyHelperFileName.cs`.
-1. Replace the contents of `MyHelperFileName.cs` with the following code:
+1. Create a new file in the `Helpers` folder called `DeviceCodeFlowAuthorizationProvider.cs`.
+1. Replace the contents of `DeviceCodeFlowAuthorizationProvider.cs` with the following code:
 
     ```cs
-    // Your code here
+    using System;
+    using System.Collections.Generic;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
+    using System.Threading.Tasks;
+    using Microsoft.Graph;
+    using Microsoft.Identity.Client;
+
+    namespace ConsoleGraphTest {
+        public class DeviceCodeFlowAuthorizationProvider : IAuthenticationProvider
+        {
+            private readonly PublicClientApplication _application;
+            private readonly List<string> _scopes;
+            private string _authToken;
+            public DeviceCodeFlowAuthorizationProvider(PublicClientApplication application, List<string> scopes) {
+                _application = application;
+                _scopes = scopes;
+            }
+            public async Task AuthenticateRequestAsync(HttpRequestMessage request)
+            {
+                if(string.IsNullOrEmpty(_authToken))
+                {
+                    var result = await _application.AcquireTokenWithDeviceCodeAsync(_scopes, callback => {
+                        Console.WriteLine(callback.Message);
+                        return Task.FromResult(0);
+                    });
+                    _authToken = result.AccessToken;
+                }
+                request.Headers.Authorization = new AuthenticationHeaderValue("bearer", _authToken);
+            }
+        }
+    }
     ```
-This class contains the code to ....
+This class contains the code to implement the device code flow requests when the `GraphServiceClient` requires an access token.
 
-### Extend program to yyy
+### Extend program to leverage this new authentication flow
 
-1. Inside the `Program` class add a new method `YourMethod` with the following definition.  This method creates a new User in Azure Active Directory using the UserHelper class. This user will enableded and be required to change their password upon their next login.
+1. Inside the `Program` class replace the last lines of the method `YourMethod` with the following lines.  This replaces references to leverage the Device Code Flow.
 
     ```cs
-    // Your code here
+        var authority = $"https://login.microsoftonline.com/{config["tenantId"]}";
+
+        List<string> scopes = new List<string>();
+        scopes.Add("https://graph.microsoft.com/.default");
+
+        var cca = new PublicClientApplication(clientId, authority);
+        return new DeviceCodeFlowAuthorizationProvider(cca, scopes);
     ```
     > **Important** Any key things to note where the developer might run into issues.
 
-1. Continuing in the `Main` method add the following code to call the new method.
-
-    ```cs
-    YourMethod();
-    ```
-1. Save all files.
-
-The console application is now able to \<do some new thing\>. In order to test the console application run the following commands from the command line:
+### Update the reference to the MSAL library
+At the time of the writing, the Device Code Flow flow is only implemented in preview versions of the library.
+1. Inside the `ConsoleGraphTest.csproj` file replace the following line
+```xml
+<PackageReference Include="Microsoft.Identity.Client" Version="2.1.0-preview" /> 
+```
+by 
+```xml
+<PackageReference Include="Microsoft.Identity.Client" Version="2.4.0-preview" /> 
+```
+2. In a command line type the following command `dotnet restore`.
+The console application is now able to leverage the Device Code Flow which will allow the user to be identified and the context to bear a delegated context. In order to test the console application run the following commands from the command line:
 
 ```
 dotnet build
 dotnet run
 ```
-
-Summary of what the thing that can be done is. 
