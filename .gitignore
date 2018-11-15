@@ -331,3 +331,6 @@ ASALocalRun/
 
 # App settings
 appsettings.json
+
+# Visual Studio Code
+*/.vscode
