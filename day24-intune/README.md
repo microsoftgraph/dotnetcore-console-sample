@@ -1,6 +1,6 @@
-# Day NN - Using the Device Code Flow to Authenticate Users
+# Day 24 - Device and App Management with Intune
 
-- [Day NN - Using the Device Code Flow to Authenticate Users](#day-using-the-device-code-flow-to-authenticate-users)
+- [Day 24 - Device and App Management with Intune](#day-device-and-app-management-with-intune)
     - [Prerequisites](#prerequisites)
     - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
     - [Step 2: Enable your application for Device Code Flow](#step-2-enable-your-application-for-device-code-flow)
@@ -27,7 +27,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 ## Step 1: Update the App Registration permissions
 
-As this exercise requires new permissions the App Registration needs to be updated to include the **User.Read.All (delegated)** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
+As this exercise requires new permissions the App Registration needs to be updated to include the **DeviceManagementApps.ReadWrite.All)**, **DeviceManagementConfiguration.ReadWrite.All**, and **DeviceManagementManagedDevices.Read.All** permissions using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
 1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
@@ -47,8 +47,8 @@ As this exercise requires new permissions the App Registration needs to be updat
         ![Screenshot of selecting Microsoft Graph permission to add to app registration](Images/aad-create-app-05.png)
 
     1. Select **Delegated permissions**.
-    1. In the "Select permissions" search box type "\<Start of permission string\>".
-    1. Select **User.Read.All** from the filtered list.
+    1. In the "Select permissions" search box type "DeviceManagement>".
+    1. Select **DeviceManagementApps.ReadWrite.All)**, **DeviceManagementConfiguration.ReadWrite.All**, and **DeviceManagementManagedDevices.Read.All** from the filtered list.
 
         ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-01.png)
 
