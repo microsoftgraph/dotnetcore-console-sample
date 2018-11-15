@@ -1,13 +1,16 @@
-# Day NN - Getting your Team organized with Planner through the Microsoft Graph
+# Day 23 - Getting your Team organized with Planner through the Microsoft Graph
 
 > When adding Images, save them in the Images folder for your day
 
-- [Day NN - Getting your Team organized with Planner through the Microsoft Graph](#day-nn-scenario-template)
+- [Day 23 - Getting your Team organized with Planner through the Microsoft Graph](#day-23-getting-your-team-organized-with-planner-through-the-microsoft-graph)
     - [Prerequisites](#prerequisites)
     - [Step 1: Update the App Registration permissions](#step-1-update-the-app-rgistration-permissions)
-    - [Step 2: Extend the app to yyy](#step-2-extend-the-app-to-yyy)
-        - [Create the MyHelper class](#create-the-myhelper-class)
-        - [Extend program to yyy](#extend-program-to-yyy)
+    - [Step 2: Ensure that you are part of an Office 365 group](#step-2-ensure-that-you-are-part-of-an-office-365-group)
+    - [Step 3: Enable your application for Device Code Flow](#step-3-enable-your-application-for-device-code-flow)
+    - [Step 4: Extend the app to List existing Planner Plans](#step-4-extend-the-app-to-list-existing-planner-plans)
+        - [Extend program to List existing Planner Plans](#extend-program-to-list-existing-planner-plans)
+        - [Extend program to add a Bucket](#extend-program-to-add-a-bucket)
+        - [Extend program to add a Task](#extend-program-to-add-a-task)
 
 ## Prerequisites
 
@@ -46,11 +49,11 @@ As this exercise requires new permissions the App Registration needs to be updat
 
         ![Screenshot of selecting Microsoft Graph permission to add to app registration](Images/aad-create-app-05.png)
 
-    1. Select **Application permissions**.
+    1. Select **Delegated permissions**.
     1. In the "Select permissions" search box type "\<Start of permission string\>".
     1. Select **Group.ReadWrite.All** from the filtered list.
 
-        ![Screenshot of adding application permission for Group.ReadWrite.All permission](Images/aad-add-planner-permissions.png)
+        ![Screenshot of adding Delegated permission for Group.ReadWrite.All permission](Images/aad-add-planner-permissions.png)
 
     1. Click **Add permissions** at the bottom of flyout.
 
@@ -60,110 +63,130 @@ As this exercise requires new permissions the App Registration needs to be updat
 
     1. Click **Yes**.
 
-## Step 2: Extend the app to List existing Planner Plans
+    > **Note:** Make sur you do not have any application permission already selected, it will make the request fail. If you do have some, remove them before granting the new permissions.
 
-In this step you will create a Helper method that encapsulates the logic for listing existing plans and then add calls to the console application created in the [Base Console Application Setup](../base-console-app/).
+
+## Step 2: Ensure that you are part of an Office 365 group
+Planner relies on the Office 365 group infrastructure to function properly. Please make sure you [create a group](https://support.office.com/en-us/article/Create-a-group-in-Outlook-04d0c9cf-6864-423c-a380-4fa858f27102).
+
+## Step 3: Enable your application for Device Code Flow
+1. On the application registration view from the last step, click on **Manifest**.
+2. Set the `allowPublicClient` property to `true`.
+3. Click on `Save`
+
+## Step 4: Extend the app to List existing Planner Plans
+
+In this step you will create a Helper method that encapsulates the logic for listing existing plans and then add calls to the console application created in the [Device Code Flow](../day22-devicecode/).
 
 ### Extend program to List existing Planner Plans
 
-1. Inside the `Program` class add a new method `ListCurrentPlans` with the following definition.  This method lists all the current plans in the tenant.
+1. Inside the `Program` class update the method `Main` with the following definition.  This method will leverage a Helper we will create next
 
     ```cs
-    private static async Task ListCurrentPlans(GraphServiceClient graphClient) {
-        //Querying plans in current tenant
-        var plans = await graphClient.Planner.Plans.Request(new List<QueryOption>
+    static void Main(string[] args)
+    {
+        // Load appsettings.json
+        var config = LoadAppSettings();
+        if (null == config)
         {
-            new QueryOption("$orderby", "Title asc")
-        }).GetAsync();
-        Console.WriteLine($"Number of plans in current tenant: {plans.Count}");
-        Console.Write(plans.Select(x => $"-- {x.Title}").Aggregate((x,y) => $"{x}\n{y}"));
+            Console.WriteLine("Missing or invalid appsettings.json file. Please see README.md for configuration instructions.");
+            return;
+        }
+
+        var GraphServiceClient = GetAuthenticatedGraphClient(config);
+        var plannerHelper = new PlannerHelper(GraphServiceClient);
+        plannerHelper.PlannerHelperCall().GetAwaiter().GetResult();
     }
     ```
-1. Inside the `Program` class add the main helper method `PlannerHelperCall` with the following definition.
-We will build on this method during the exercice.
+1. Inside the `Helpers` folder add a class `PlannerHelper.cs` with the following definition.
+We will build on this class during the exercice. 
+As it is defined, the helper will list current plans for the first group it can find, and create one if none exist.
 
     ```cs
-    private static async Task PlannerHelperCall(IConfigurationRoot config) {
-        //Query using Graph SDK (preferred when possible)
-        var graphClient = GetAuthenticatedGraphClient(config);
-
-        await ListCurrentPlans(graphClient);
-    }
-    ```
-
-1. Continuing in the `Main` method add the following code to call the new method.
-
-    ```cs
-    PlannerHelperCall(config).GetAwaiter().GetResult();
-    ```
-1. Above the `Program` class, add a reference to Linq adding this line.
-
-    ```cs
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
-    ```
-1. Save all files.
+    using System.Threading.Tasks;
+    using Microsoft.Graph;
 
-The console application is now able to list the plans in the tenant. In order to test the console application run the following commands from the command line:
+    namespace ConsoleGraphTest
+    {
+        // This class allows an implementation of IAuthenticationProvider to be inserted into the DelegatingHandler
+        // pipeline of an HttpClient instance.  In future versions of GraphSDK, many cross-cutting concernts will
+        // be implemented as DelegatingHandlers.  This AuthHandler will come in the box.
+        public class PlannerHelper
+        {
+            private readonly GraphServiceClient _graphClient;
+            public PlannerHelper(GraphServiceClient graphClient)
+            {
+                _graphClient = graphClient ?? throw new ArgumentNullException(nameof(graphClient));
+            }
+            public async Task PlannerHelperCall()
+            {
+                //Getting the first group we can find to create a plan
+                var groupId = (await _graphClient.Me.GetMemberGroups(false).Request().PostAsync()).FirstOrDefault();
 
-```
-dotnet build
-dotnet run
-```
+                if (groupId != null)
+                {
+                    var users = await _graphClient.Users.Request(new List<QueryOption> {
+                            new QueryOption("$top", "3")
+                        }).GetAsync();
 
-### Extend program to Create a plan
-
-1. Inside the `Program` class add a new method `CreatePlannerPlan` with the following definition.  This method create a new plan in the tenant.
-
-    ```cs
-    private static async Task<string> CreatePlannerPlan(GraphServiceClient graphClient, IEnumerable<User> users, string groupId) {
-        // Getting users to share the plan with
-        var sharedWith = new PlannerUserIds();
-        users.ToList().ForEach(x => sharedWith.Add(x.Id));
-
-        // Creating a new planner plan
-        var createdPlan = await graphClient.Planner.Plans.Request().AddAsync(
-            new PlannerPlan {
-                Title = $"My new Plan {Guid.NewGuid().ToString()}",
-                Owner = groupId,
-                Details = new PlannerPlanDetails {
-                    SharedWith = sharedWith,
-                    CategoryDescriptions = new PlannerCategoryDescriptions {
-                        Category1 = "my first category",
-                        Category2 = "my second category"
-                    },
+                    var planId = await GetAndListCurrentPlans(groupId) ?? await CreatePlannerPlan(users, groupId);
                 }
             }
-        );
-        Console.WriteLine($"Added a new plan {createdPlan.Id}");
-        return createdPlan.Id;
-    }
-    ```
-1. Inside the `Program` class update the main helper method `PlannerHelperCall` with the following definition.
+            private async Task<string> GetAndListCurrentPlans(string groupId)
+            {
+                //Querying plans in current group
+                var plans = await _graphClient.Groups[groupId].Planner.Plans.Request(new List<QueryOption>
+                {
+                    new QueryOption("$orderby", "Title asc")
+                }).GetAsync();
+                if (plans.Any())
+                {
+                    Console.WriteLine($"Number of plans in current tenant: {plans.Count}");
+                    Console.Write(plans.Select(x => $"-- {x.Title}").Aggregate((x, y) => $"{x}\n{y}"));
+                    return plans.First().Id;
+                }
+                else
+                {
+                    Console.WriteLine("No existing plan");
+                    return null;
+                }
+            }
+            private async Task<string> CreatePlannerPlan(IEnumerable<User> users, string groupId)
+            {
+                // Getting users to share the plan with
+                var sharedWith = new PlannerUserIds();
+                users.ToList().ForEach(x => sharedWith.Add(x.Id));
 
-    ```cs
-    private static async Task PlannerHelperCall(IConfigurationRoot config) {
-            //Query using Graph SDK (preferred when possible)
-            var graphClient = GetAuthenticatedGraphClient(config);
-
-            await ListCurrentPlans(graphClient);
-
-            //Getting the first group we can find to create a plan
-            var group = (await graphClient.Groups.Request(new List<QueryOption> {
-                new QueryOption("$top", "1")
-            }).GetAsync()).FirstOrDefault();
-
-            if(group != null) {
-                var users = await graphClient.Users.Request(new List<QueryOption> {
-                        new QueryOption("$top", "3")
-                    }).GetAsync();
-                
-                var planId = await CreatePlannerPlan(graphClient, users, group.Id);
+                // Creating a new planner plan
+                var createdPlan = await _graphClient.Planner.Plans.Request().AddAsync(
+                    new PlannerPlan
+                    {
+                        Title = $"My new Plan {Guid.NewGuid().ToString()}",
+                        Owner = groupId,
+                        Details = new PlannerPlanDetails
+                        {
+                            SharedWith = sharedWith,
+                            CategoryDescriptions = new PlannerCategoryDescriptions
+                            {
+                                Category1 = "my first category",
+                                Category2 = "my second category"
+                            },
+                        }
+                    }
+                );
+                Console.WriteLine($"Added a new plan {createdPlan.Id}");
+                return createdPlan.Id;
             }
         }
+    }
     ```
+
 1. Save all files.
 
-The console application is now able add new plans in the tenant. In order to test the console application run the following commands from the command line:
+The console application is now able to list the plans in the group and create one if none exist. In order to test the console application run the following commands from the command line:
 
 ```
 dotnet build
@@ -172,44 +195,28 @@ dotnet run
 
 ### Extend program to add a Bucket
 
-1. Inside the `Program` class add a new method `CreatePlannerBucket` with the following definition. This method adds a new bucket to a plan.
+1. Inside the `PlannerHelper` class add a new method `CreatePlannerBucket` with the following definition. This method adds a new bucket to a plan.
 
     ```cs
-    private static async Task<string> CreatePlannerBucket(GraphServiceClient graphClient, string planId) {
+    private async Task<string> CreatePlannerBucket(string groupId, string planId)
+    {
         // Creating a new bucket within the plan
-        var createdBucket = await graphClient.Planner.Plans[planId].Buckets.Request().AddAsync(
-            new PlannerBucket {
+        var createdBucket = await _graphClient.Planner.Buckets.Request().AddAsync(
+            new PlannerBucket
+            {
                 Name = "my first bucket",
-                OrderHint = 1.ToString()
+                OrderHint = " !",
+                PlanId = planId
             }
         );
         Console.WriteLine($"Added new bucket {createdBucket.Name} to plan");
         return createdBucket.Id;
     }
     ```
-1. Inside the `Program` class update the main helper method `PlannerHelperCall` with the following definition.
+1. Inside the `PlannerHelper` add the following line at the end of the `PlannerHelperCall` method.
 
     ```cs
-    private static async Task PlannerHelperCall(IConfigurationRoot config) {
-            //Query using Graph SDK (preferred when possible)
-            var graphClient = GetAuthenticatedGraphClient(config);
-
-            await ListCurrentPlans(graphClient);
-
-            //Getting the first group we can find to create a plan
-            var group = (await graphClient.Groups.Request(new List<QueryOption> {
-                new QueryOption("$top", "1")
-            }).GetAsync()).FirstOrDefault();
-
-            if(group != null) {
-                var users = await graphClient.Users.Request(new List<QueryOption> {
-                        new QueryOption("$top", "3")
-                    }).GetAsync();
-                
-                var planId = await CreatePlannerPlan(graphClient, users, group.Id);
-                var bucketId = await CreatePlannerBucket(graphClient, planId);
-            }
-        }
+    var bucketId = await CreatePlannerBucket(groupId, planId);
     ```
 1. Save all files.
 
@@ -222,51 +229,36 @@ dotnet run
 
 ### Extend program to add a Task
 
-1. Inside the `Program` class add a new method `CreatePlannerTask` with the following definition. This method adds a new task to a bucket.
+1. Inside the `PlannerHelper` class add a new method `CreatePlannerTask` with the following definition. This method adds a new task to a bucket.
 
     ```cs
-    private static async Task CreatePlannerTask(GraphServiceClient graphClient, IEnumerable<User> users, string planId, string bucketId){
+    private async Task CreatePlannerTask(IEnumerable<User> users, string groupId, string planId, string bucketId)
+    {
         // Preparing the assignment for the task
-        var assignments = new PlannerAssignments ();
-        users.ToList().ForEach( x=> assignments.AddAssignee(x.Id));
+        var assignments = new PlannerAssignments();
+        users.ToList().ForEach(x => assignments.AddAssignee(x.Id));
         // Creating a task within the bucket
-        var createdTask = await graphClient.Planner.Plans[planId].Buckets[bucketId].Tasks.Request().AddAsync(
-            new PlannerTask {
+        var createdTask = await _graphClient.Planner.Tasks.Request().AddAsync(
+            new PlannerTask
+            {
                 DueDateTime = DateTimeOffset.UtcNow.AddDays(7),
                 Title = "Do the dishes",
-                Details = new PlannerTaskDetails {
+                Details = new PlannerTaskDetails
+                {
                     Description = "Do the dishes that are remaining in the sink"
                 },
-                Assignments = assignments
+                Assignments = assignments,
+                PlanId = planId,
+                BucketId = bucketId
             }
         );
         Console.WriteLine($"Added new task {createdTask.Title} to bucket");
     }
     ```
-1. Inside the `Program` class update the main helper method `PlannerHelperCall` with the following definition.
+1. Inside the `PlannerHelper` class update the `PlannerHelperCall` method to add the following line at the end.
 
     ```cs
-    private static async Task PlannerHelperCall(IConfigurationRoot config) {
-            //Query using Graph SDK (preferred when possible)
-            var graphClient = GetAuthenticatedGraphClient(config);
-
-            await ListCurrentPlans(graphClient);
-
-            //Getting the first group we can find to create a plan
-            var group = (await graphClient.Groups.Request(new List<QueryOption> {
-                new QueryOption("$top", "1")
-            }).GetAsync()).FirstOrDefault();
-
-            if(group != null) {
-                var users = await graphClient.Users.Request(new List<QueryOption> {
-                        new QueryOption("$top", "3")
-                    }).GetAsync();
-                
-                var planId = await CreatePlannerPlan(graphClient, users, group.Id);
-                var bucketId = await CreatePlannerBucket(graphClient, planId);
-                await CreatePlannerTask(graphClient, users, planId, bucketId);
-            }
-        }
+    await CreatePlannerTask(users, groupId, planId, bucketId);
     ```
 1. Save all files.
 
