@@ -63,16 +63,17 @@ As this exercise requires new permissions the App Registration needs to be updat
 
     1. Click **Yes**.
 
-    > **Note:** Make sur you do not have any application permission already selected, it will make the request fail. If you do have some, remove them before granting the new permissions.
-
+    > **Note:** Make sure you do not have any application permission already selected, it will make the request fail. If you do have some, remove them before granting the new permissions.
 
 ## Step 2: Ensure that you are part of an Office 365 group
+
 Planner relies on the Office 365 group infrastructure to function properly. Please make sure you [create a group](https://support.office.com/en-us/article/Create-a-group-in-Outlook-04d0c9cf-6864-423c-a380-4fa858f27102).
 
 ## Step 3: Enable your application for Device Code Flow
+
 1. On the application registration view from the last step, click on **Manifest**.
-2. Set the `allowPublicClient` property to `true`.
-3. Click on `Save`
+1. Set the `allowPublicClient` property to `true`.
+1. Click on `Save`
 
 ## Step 4: Extend the app to List existing Planner Plans
 
@@ -99,7 +100,8 @@ In this step you will create a Helper method that encapsulates the logic for lis
     }
     ```
 1. Inside the `Helpers` folder add a class `PlannerHelper.cs` with the following definition.
-We will build on this class during the exercice. 
+
+We will build on this class during the exercise.
 As it is defined, the helper will list current plans for the first group it can find, and create one if none exist.
 
     ```cs
@@ -268,4 +270,3 @@ The console application is now able add new tasks to a bucket. In order to test 
 dotnet build
 dotnet run
 ```
-
