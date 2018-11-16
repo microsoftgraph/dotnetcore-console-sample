@@ -91,13 +91,7 @@ namespace ConsoleGraphTest
             return new MobileAppAssignment
             {
                 Intent = InstallIntent.Available,
-                Target = new AllLicensedUsersAssignmentTarget
-                {
-                    AdditionalData = new Dictionary<string, object>
-                    {
-                        {"@odata.type", "microsoft.graph.allLicensedUsersAssignmentTarget" }
-                    }
-                }
+                Target = new AllLicensedUsersAssignmentTarget()
             };
         }
 
@@ -105,13 +99,7 @@ namespace ConsoleGraphTest
         {
             return new DeviceConfigurationAssignment
             {
-                Target = new AllDevicesAssignmentTarget
-                {
-                    AdditionalData = new Dictionary<string, object>
-                    {
-                        {"@odata.type", "microsoft.graph.allDevicesAssignmentTarget" }
-                    }
-                }
+                Target = new AllDevicesAssignmentTarget()
             };
         }
     }
