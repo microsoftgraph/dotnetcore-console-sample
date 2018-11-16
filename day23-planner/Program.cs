@@ -23,7 +23,8 @@ namespace ConsoleGraphTest
             }
 
             var GraphServiceClient = GetAuthenticatedGraphClient(config);
-            PlannerHelper.PlannerHelperCall(GraphServiceClient).GetAwaiter().GetResult();
+            var plannerHelper = new PlannerHelper(GraphServiceClient);
+            plannerHelper.PlannerHelperCall().GetAwaiter().GetResult();
         }
         
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
