@@ -1,13 +1,14 @@
 # Day 24 - Device and App Management with Intune
 
 - [Day 24 - Device and App Management with Intune](#day-device-and-app-management-with-intune)
-    - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
-    - [Step 2: Enable your application for Device Code Flow](#step-2-enable-your-application-for-device-code-flow)
-    - [Step 3: Implement the Device Code Flow in the application](#step-3-implement-the-device-code-flow-in-the-application)
-        - [Create the DeviceCodeFlowAuthorizationProvider class](#create-the-devicecodeflowauthorizationprovider-class)
-        - [Extend program to leverage this new authentication flow](#extend-program-to-leverage-this-new-authentication-flow)
-        - [Update the reference to the MSAL library](#update-the-reference-to-the-msal-library)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+  - [Step 2: Extend the program to list Managed Devices for a User](#step-2-extend-the-program-to-list-managed-devices-for-a-user)
+  - [Step 3: Extend the program to publish a web app](#step-3-extend-the-program-to-publish-a-web-app)
+  - [Step 4: Extend the program to assign an app to all users](#step-4-extend-the-program-to-assign-an-app-to-all-users)
+  - [Step 5: Extend the program to create a Device Configuration Policy](#step-5-extend-the-program-to-create-a-device-configuration-policy)
+  - [Step 6: Extend the program to assign a Device Configuration Policy to all devices](#step-6-extend-the-program-to-assign-a-Device-Configuration-Policy-to-all-devices)
+
 
 ## Prerequisites
 
@@ -17,13 +18,9 @@ To complete this sample you need the following:
 - [Visual Studio Code](https://code.visualstudio.com/) installed on your development machine. If you do not have Visual Studio Code, visit the previous link for download options. (**Note:** This tutorial was written with Visual Studio Code version 1.28.2. The steps in this guide may work with other versions, but that has not been tested.)
 - [.Net Core SDK](https://www.microsoft.com/net/download/dotnet-core/2.1#sdk-2.1.403). (**Note** This tutorial was written with .Net Core SDK 2.1.403.  The steps in this guide may work with other versions, but that has not been tested.)
 - [C# extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp)
-- Either a personal Microsoft account with a mailbox on Outlook.com, or a Microsoft work or school account.
+- A Microsoft work or school account.
 
-If you don't have a Microsoft account, there are a couple of options to get a free account:
-
-- You can [sign up for a new personal Microsoft account](https://signup.live.com/signup?wa=wsignin1.0&rpsnv=12&ct=1454618383&rver=6.4.6456.0&wp=MBI_SSL_SHARED&wreply=https://mail.live.com/default.aspx&id=64855&cbcxt=mai&bk=1454618383&uiflavor=web&uaid=b213a65b4fdc484382b6622b3ecaa547&mkt=E-US&lc=1033&lic=1).
-- You can [sign up for the Office 365 Developer Program](https://developer.microsoft.com/office/dev-program) to get a free Office 365 subscription.
-
+If you don't have a Microsoft account you can [sign up for the Office 365 Developer Program](https://developer.microsoft.com/office/dev-program) to get a free Office 365 subscription.
 
 ## Step 1: Update the App Registration permissions
 
@@ -61,83 +58,173 @@ As this exercise requires new permissions the App Registration needs to be updat
 
     > **Note:** Make sur you do not have any application permission already selected, it will make the request fail. If you do have some, remove them before granting the new permissions.
 
-## Step 2: Enable your application for Device Code Flow
-1. On the application registration view from the last step, click on **Manifest**.
-2. Set the `allowPublicClient` property to `true`.
-3. Click on `Save`
+## Step 2: Extend the Program to list Managed Devices for a User
 
-## Step 3: Implement the Device Code Flow in the application
-
-In this step you will create a UserHelper class that encapsulates the logic for creating users and finding user objects by alias and then add calls to the console application created in the [Base Console Application Setup](../base-console-app/) to provision a new user.
-
-### Create the DeviceCodeFlowAuthorizationProvider class
-
-1. Create a new file in the `Helpers` folder called `DeviceCodeFlowAuthorizationProvider.cs`.
-1. Replace the contents of `DeviceCodeFlowAuthorizationProvider.cs` with the following code:
+1. Inside the `Program` class add a new method `ListManagedDevices` with the following definition. This method will list all the Intune managed devices for a user.
 
     ```cs
-    using System;
-    using System.Collections.Generic;
-    using System.Net.Http;
-    using System.Net.Http.Headers;
-    using System.Threading.Tasks;
-    using Microsoft.Graph;
-    using Microsoft.Identity.Client;
+    private static async Task ListManagedDevices(IntuneHelper intuneHelper, string userPrincipalName)
+    {
+        var managedDevices = await intuneHelper.ListManagedDevicesForUser(userPrincipalName);
 
-    namespace ConsoleGraphTest {
-        public class DeviceCodeFlowAuthorizationProvider : IAuthenticationProvider
-        {
-            private readonly PublicClientApplication _application;
-            private readonly List<string> _scopes;
-            private string _authToken;
-            public DeviceCodeFlowAuthorizationProvider(PublicClientApplication application, List<string> scopes) {
-                _application = application;
-                _scopes = scopes;
-            }
-            public async Task AuthenticateRequestAsync(HttpRequestMessage request)
-            {
-                if(string.IsNullOrEmpty(_authToken))
-                {
-                    var result = await _application.AcquireTokenWithDeviceCodeAsync(_scopes, callback => {
-                        Console.WriteLine(callback.Message);
-                        return Task.FromResult(0);
-                    });
-                    _authToken = result.AccessToken;
-                }
-                request.Headers.Authorization = new AuthenticationHeaderValue("bearer", _authToken);
-            }
-        }
+        Console.WriteLine($"Number of Intune managed devices for user {userPrincipalName}: {managedDevices.Count()}");
+        Console.WriteLine(managedDevices.Select(x => $"-- {x.DeviceName} : {x.Manufacturer} {x.Model}").Aggregate((x, y) => $"{x}\n{y}"));
     }
     ```
-This class contains the code to implement the device code flow requests when the `GraphServiceClient` requires an access token.
 
-### Extend program to leverage this new authentication flow
-
-1. Inside the `Program` class replace the last lines of the method `YourMethod` with the following lines.  This replaces references to leverage the Device Code Flow.
+1. Inside the `Program` class add the main helper method `IntuneHelperCall` with the following definition. We will build on this method during the exercise.
 
     ```cs
-        var authority = $"https://login.microsoftonline.com/{config["tenantId"]}";
+    private static async Task IntuneHelperCall(IConfigurationRoot config)
+    {
+        const string userPrincipalName = "<user>";
 
-        List<string> scopes = new List<string>();
-        scopes.Add("https://graph.microsoft.com/.default");
+        var graphClient = GetAuthenticatedGraphClient(config);
+        var httpClient = GetAuthenticatedHTTPClient(config);
+        var intuneHelper = new IntuneHelper(graphClient, httpClient);
 
-        var cca = new PublicClientApplication(clientId, authority);
-        return new DeviceCodeFlowAuthorizationProvider(cca, scopes);
+        await ListManagedDevices(intuneHelper, userPrincipalName);
+    }
     ```
-    > **Important** Any key things to note where the developer might run into issues.
+1. Continuing in the `Main` method add the following code to call the new method.
 
-### Update the reference to the MSAL library
-At the time of the writing, the Device Code Flow flow is only implemented in preview versions of the library.
-1. Inside the `ConsoleGraphTest.csproj` file replace the following line
-```xml
-<PackageReference Include="Microsoft.Identity.Client" Version="2.1.0-preview" /> 
+    ```cs
+    IntuneHelperCall(config).GetAwaiter().GetResult();
+    ```
+
+1. Above the `Program` class, add a reference to Linq adding this line.
+
+    ```cs
+    using System.Linq;
+    ```
+
+1. Save all files.
+
+The console application is now able to list all Intune Managed Devices for a user. In order to test the console application run the following commands from the command line:
+
 ```
-by 
-```xml
-<PackageReference Include="Microsoft.Identity.Client" Version="2.4.0-preview" /> 
+dotnet build
+dotnet run
 ```
-2. In a command line type the following command `dotnet restore`.
-The console application is now able to leverage the Device Code Flow which will allow the user to be identified and the context to bear a delegated context. In order to test the console application run the following commands from the command line:
+
+## Step 3: Extend the program to publish a web app
+
+1. Inside the `Program` class add a new method `PublishWebApp` with the following definition. This method will publish a web app.
+
+    ```cs
+    private static async Task<WebApp> PublishWebApp(IntuneHelper intuneHelper, string url, string name, string publisher)
+    {
+        var webApp = await intuneHelper.PublishWebApp(url, name, publisher);
+
+        Console.WriteLine($"Published web app: {webApp.Id}: {webApp.DisplayName} - {webApp.AppUrl}");
+
+        return webApp;
+    }
+    ```
+1. Continuing in the `IntuneHelperCall` method add the following code to call the new method.
+
+    ```cs
+    WebApp app = await PublishWebApp(
+        intuneHelper,
+        "http://aka.ms/30DaysMsGraph",
+        "30 Days of MS Graph",
+        "Microsoft Corporation");
+    ```
+
+1. Save all files.
+
+The console application is now able to publish a web app to Intune. In order to test the console application run the following commands from the command line:
+
+```
+dotnet build
+dotnet run
+```
+
+## Step 4: Extend the program to assign an app to all users
+
+1. Inside the `Program` class add a new method `AssignAppToAllUsers` with the following definition. This method will publish assign an app to a group.
+
+    ```cs
+    private static async Task AssignAppToAllUsers(IntuneHelper intuneHelper, MobileApp app)
+    {
+        var assignments = await intuneHelper.AssignAppToAllUsers(app);
+        Console.WriteLine($"App {app.DisplayName} has {assignments.Count()} assignments");
+    }
+    ```
+
+1. Continuing in the `IntuneHelperCall` method add the following code to call the new method.
+
+    ```cs
+    await AssignAppToAllUsers(intuneHelper, app);
+    ```
+
+1. Save all files.
+
+The console application is now able to publish a web app to Intune. In order to test the console application run the following commands from the command line:
+
+```
+dotnet build
+dotnet run
+```
+
+## Step 5: Extend the program to create a Device Configuration Policy
+
+1. Inside the `Program` class add a new method `CreateWindowsDeviceConfiguration` with the following definition. This method will create a Windows Device Configuration.
+
+    ```cs
+        private static async Task<DeviceConfiguration> CreateWindowsDeviceConfiguration(IntuneHelper intuneHelper, string displayName, string edgeHomePage, bool enableDeveloperMode)
+        {
+            var deviceConfiguration = await intuneHelper.CreateWindowsDeviceConfiguration(
+                displayName,
+                edgeHomePage,
+                enableDeveloperMode);
+
+            Console.WriteLine($"Created Device Configuration: {deviceConfiguration.Id}: {deviceConfiguration.DisplayName}");
+
+            return deviceConfiguration;
+        }
+    ```
+
+1. Continuing in the `IntuneHelperCall` method add the following code to call the new method.
+
+    ```cs
+    DeviceConfiguration deviceConfiguration = await CreateWindowsDeviceConfiguration(
+        intuneHelper,
+        "Windows 10 Developer Configuration",
+        "http://aka.ms/30DaysMsGraph",
+        true);
+    ```
+
+1. Save all files.
+
+The console application is now able to create a Windows Device Configuration. In order to test the console application run the following commands from the command line:
+
+```
+dotnet build
+dotnet run
+```
+
+## Step 6: Extend the program to assign a Device Configuration Policy to all devices
+
+1. Inside the `Program` class add a new method `AssignDeviceConfigurationToAllDevices` with the following definition. This method will assign a device configuration to all Intune managed devices.
+
+    ```cs
+    private static async Task AssignDeviceConfigurationToAllDevices(IntuneHelper intuneHelper, DeviceConfiguration deviceConfiguration)
+    {
+        var assignments = await intuneHelper.AssignDeviceConfigurationToAllDevices(deviceConfiguration);
+        Console.WriteLine($"Device Configuration {deviceConfiguration.DisplayName} has {assignments.Count()} assignments");
+    }
+    ```
+
+1. Continuing in the `IntuneHelperCall` method add the following code to call the new method.
+
+    ```cs
+    await AssignDeviceConfigurationToAllDevices(intuneHelper, deviceConfiguration);
+    ```
+
+1. Save all files.
+
+The console application is now able to assign a device configuration to all Intune managed devices. In order to test the console application run the following commands from the command line:
 
 ```
 dotnet build
