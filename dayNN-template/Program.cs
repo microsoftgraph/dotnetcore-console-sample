@@ -26,6 +26,8 @@ namespace ConsoleGraphTest
 
             //Query using Graph SDK (preferred when possible)
             GraphServiceClient graphClient = GetAuthenticatedGraphClient(config);
+
+            //<<<<<<<<<<<<These lines can safely be removed as only for demo purposes
             List<QueryOption> options = new List<QueryOption>
             {
                 new QueryOption("$top", "1")
@@ -34,14 +36,19 @@ namespace ConsoleGraphTest
             var graphResult = graphClient.Users.Request(options).GetAsync().Result;
             Console.WriteLine("Graph SDK Result");
             Console.WriteLine(graphResult[0].DisplayName);
+            //>>>>>>>>>>>>
 
             //Direct query using HTTPClient (for beta endpoint calls or not available in Graph SDK)
             HttpClient httpClient = GetAuthenticatedHTTPClient(config);
+            
+            //<<<<<<<<<<<<These lines can safely be removed as only for demo purposes
             Uri Uri = new Uri("https://graph.microsoft.com/v1.0/users?$top=1");
             var httpResult = httpClient.GetStringAsync(Uri).Result;
 
             Console.WriteLine("HTTP Result");
             Console.WriteLine(httpResult);
+            //>>>>>>>>>>>>
+
             // Call your method wrapping construction and calls to the helper
             MyHelperCall();
         }
