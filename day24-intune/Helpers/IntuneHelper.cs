@@ -10,25 +10,14 @@ using Newtonsoft.Json.Linq;
 
 namespace ConsoleGraphTest
 {
-    /**
-     * Please rename your helper class to match it's purpose
-     */
     public class IntuneHelper
     {
-
-        /**
-         * Inject either a GraphServiceClient or an HttpClient (with Authentiation supplied)
-         * Which you choose to use will depend on your scenario but the GraphServiceClient should be used where practical
-         * Please delete the constructor you don't use
-         */
         private GraphServiceClient _graphClient;
-        private HttpClient _httpClient;
-        public IntuneHelper(GraphServiceClient graphClient, HttpClient httpClient)
+
+        public IntuneHelper(GraphServiceClient graphClient)
         {
             if (null == graphClient) throw new ArgumentNullException(nameof(graphClient));
             _graphClient = graphClient;
-            if (null == httpClient) throw new ArgumentNullException(nameof(httpClient));
-            _httpClient = httpClient;
         }
 
         // Add Public methods to provide functionality for your scenario.
@@ -47,28 +36,18 @@ namespace ConsoleGraphTest
 
         public async Task<ICollection<MobileAppAssignment>> AssignAppToAllUsers(MobileApp app)
         {
-            var assignment = BuildAppAssignmentRequestJson();
+            var assignment = BuildMobileAppAssignment();
 
-            string requestUrl = _graphClient.BaseUrl + $"/deviceAppManagement/mobileApps/{app.Id}/assign";
-
-            var response = await _httpClient.PostAsync(requestUrl, new StringContent(assignment.ToString(), Encoding.UTF8, "application/json"));
-
-            response.EnsureSuccessStatusCode();
+            await _graphClient.DeviceAppManagement.MobileApps[app.Id].Assign(new[] { assignment }).Request().PostAsync();
 
             return await _graphClient.DeviceAppManagement.MobileApps[app.Id].Assignments.Request().GetAsync();
         }
 
         public async Task<ICollection<DeviceConfigurationAssignment>> AssignDeviceConfigurationToAllDevices(DeviceConfiguration deviceConfiguration)
         {
-            var assignment = BuildDeviceConfigurationAssignmentRequestJson();
+            var assignment = BuildDeviceConfigurationAssignment();
 
-
-
-            var response = await _httpClient.PostAsync(
-                _graphClient.DeviceManagement.DeviceConfigurations[deviceConfiguration.Id].Assign().Request().RequestUrl,
-                new StringContent(assignment.ToString(), Encoding.UTF8, "application/json"));
-
-            response.EnsureSuccessStatusCode();
+            await _graphClient.DeviceManagement.DeviceConfigurations[deviceConfiguration.Id].Assign(new[] { assignment }).Request().PostAsync();
 
             return await _graphClient.DeviceManagement.DeviceConfigurations[deviceConfiguration.Id].Assignments.Request().GetAsync();
         }
@@ -106,46 +85,33 @@ namespace ConsoleGraphTest
         }
 
         // Add private methods to encapsulate housekeeping work away from public methods
-        private static JObject BuildAppAssignmentRequestJson()
+
+        private static MobileAppAssignment BuildMobileAppAssignment()
         {
-            return new JObject
+            return new MobileAppAssignment
             {
-                new JProperty(
-                    "mobileAppAssignments",
-                    new JArray(
-                        new JObject(
-                            new JProperty(
-                                "@odata.type",
-                                "microsoft.graph.mobileAppAssignment"),
-                            new JProperty(
-                                "intent", 
-                                "availableWithoutEnrollment"),
-                            new JProperty(
-                                "target", 
-                                new JObject(
-                                    new JProperty(
-                                        "@odata.type", 
-                                        "microsoft.graph.allLicensedUsersAssignmentTarget"))))))
+                Intent = InstallIntent.Available,
+                Target = new AllLicensedUsersAssignmentTarget
+                {
+                    AdditionalData = new Dictionary<string, object>
+                    {
+                        {"@odata.type", "microsoft.graph.allLicensedUsersAssignmentTarget" }
+                    }
+                }
             };
         }
 
-        private static JObject BuildDeviceConfigurationAssignmentRequestJson()
+        private static DeviceConfigurationAssignment BuildDeviceConfigurationAssignment()
         {
-            return new JObject
+            return new DeviceConfigurationAssignment
             {
-                new JProperty(
-                    "assignments",
-                    new JArray(
-                        new JObject(
-                            new JProperty(
-                                "@odata.type",
-                                "microsoft.graph.deviceConfigurationAssignment"),
-                            new JProperty(
-                                "target",
-                                new JObject(
-                                    new JProperty(
-                                        "@odata.type",
-                                        "microsoft.graph.allDevicesAssignmentTarget"))))))
+                Target = new AllDevicesAssignmentTarget
+                {
+                    AdditionalData = new Dictionary<string, object>
+                    {
+                        {"@odata.type", "microsoft.graph.allDevicesAssignmentTarget" }
+                    }
+                }
             };
         }
     }

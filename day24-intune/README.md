@@ -80,8 +80,7 @@ As this exercise requires new permissions the App Registration needs to be updat
         const string userPrincipalName = "<user>";
 
         var graphClient = GetAuthenticatedGraphClient(config);
-        var httpClient = GetAuthenticatedHTTPClient(config);
-        var intuneHelper = new IntuneHelper(graphClient, httpClient);
+        var intuneHelper = new IntuneHelper(graphClient);
 
         await ListManagedDevices(intuneHelper, userPrincipalName);
     }
