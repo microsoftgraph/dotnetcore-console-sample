@@ -10,7 +10,11 @@ Each of the samples builds from a common base project, in order to sucessfully b
 
 - [Base console application setup](./base-console-app)
 - [Day 16 - Create a new user](./day16-create-user)
+<<<<<<< HEAD
 - [Day 17 - Assign Licenses](./day17-assign-license)
+=======
+- [Day NN - Template](./dayNN-template)
+>>>>>>> parent of b4cbf6c... Update to contain only the first two days of content
 
 ## Contributing
 
