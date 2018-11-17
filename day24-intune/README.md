@@ -19,6 +19,7 @@ To complete this sample you need the following:
 - [.Net Core SDK](https://www.microsoft.com/net/download/dotnet-core/2.1#sdk-2.1.403). (**Note** This tutorial was written with .Net Core SDK 2.1.403.  The steps in this guide may work with other versions, but that has not been tested.)
 - [C# extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp)
 - A Microsoft work or school account.
+- An Intune subscription, if you don't have an Intune subscription [Create a free trial](https://docs.microsoft.com/en-us/intune/get-started-evaluation)
 
 If you don't have a Microsoft account you can [sign up for the Office 365 Developer Program](https://developer.microsoft.com/office/dev-program) to get a free Office 365 subscription.
 
