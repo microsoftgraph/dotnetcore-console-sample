@@ -25,7 +25,6 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 - You can [sign up for a new personal Microsoft account](https://signup.live.com/signup?wa=wsignin1.0&rpsnv=12&ct=1454618383&rver=6.4.6456.0&wp=MBI_SSL_SHARED&wreply=https://mail.live.com/default.aspx&id=64855&cbcxt=mai&bk=1454618383&uiflavor=web&uaid=b213a65b4fdc484382b6622b3ecaa547&mkt=E-US&lc=1033&lic=1).
 - You can [sign up for the Office 365 Developer Program](https://developer.microsoft.com/office/dev-program) to get a free Office 365 subscription.
 
-
 ## Step 1: Update the App Registration permissions
 
 As this exercise requires new permissions the App Registration needs to be updated to include the **User.Read.All**, **Mail.Read**, **MailboxSettings.Read** and **MailboxSettings.ReadWrite** permissions using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
@@ -69,6 +68,7 @@ As this exercise requires new permissions the App Registration needs to be updat
 In this step you will create a MailboxHelper class that encapsulates the logic for creating new mailbox message rules, read mail and mailboxsettings along with finding user objects by alias. Then add methods to the console application created in the [Base Console Application Setup](../base-console-app/) to create message rule, read mail and mailbox settings.
 
 ### Create the MailboxHelper class
+
 1. Create a new file in the `Helpers` folder called `ResultsItems.cs`.
 1. Replace the contents of `ResultsItems.cs` with the following code:
 
@@ -78,7 +78,7 @@ In this step you will create a MailboxHelper class that encapsulates the logic f
     using System.Net.Http;
     using System.Threading.Tasks;
     using Microsoft.Graph;
-    //Comment
+
     namespace ConsoleGraphTest
     {
         public class ResultsItem
@@ -112,16 +112,8 @@ This class contains the helper class that will be used to hold the result data f
     //Comment
     namespace ConsoleGraphTest
     {
-        /**
-        * Please rename your helper class to match it's purpose
-        */
         public class MailboxHelper
         {
-            /**
-            * Inject either a GraphServiceClient or an HttpClient (with Authentiation supplied)
-            * Which you choose to use will depend on your scenario but the GraphServiceClient should be used where practical
-            * Please delete the constructor you don't use
-            */
             private GraphServiceClient _graphClient;
             private HttpClient _httpClient;
             public MailboxHelper(GraphServiceClient graphClient)
@@ -129,7 +121,6 @@ This class contains the helper class that will be used to hold the result data f
                 if (null == graphClient) throw new ArgumentNullException(nameof(graphClient));
                     _graphClient = graphClient;
             }
-
             public MailboxHelper(HttpClient httpClient)
             {
                 if (null == httpClient) throw new ArgumentNullException(nameof(httpClient));
@@ -213,8 +204,8 @@ This class contains the helper class that will be used to hold the result data f
                 if (userResult.Count != 1) throw new ApplicationException($"Unable to find a user with the alias {alias}");
                 return userResult[0];
             }
-            
-            private static MessageRule BuildMailRule(string displayName, int sequence, bool isEnabled, string senderContains, string forwardToEmail) 
+
+            private static MessageRule BuildMailRule(string displayName, int sequence, bool isEnabled, string senderContains, string forwardToEmail)
             {
                 IEnumerable<string> senderContainsList = new string[]{senderContains};
                 EmailAddress email = new EmailAddress(){
@@ -259,7 +250,7 @@ This class contains the code to read and update mailbox settings, create user ma
         const string alias = "admin";
         var mailboxHelper = new MailboxHelper(_graphServiceClient, _httpClient);
         mailboxHelper.SetUserMailboxDefaultTimeZone(alias, "Eastern Standard Time");
-    }   
+    }
     private static void ListUserMailInboxMessages()
     {
         const string alias = "admin";
@@ -325,6 +316,7 @@ dotnet run
     //Retrieve the message rules to validate
     ListUserMailBoxRules();
     ```
+
 1. Save all files.
 
 The console application is now able to create a new message rule and then retrieve all the message rules for the user. In order to test the console application run the following commands from the command line:
@@ -333,4 +325,5 @@ The console application is now able to create a new message rule and then retrie
 dotnet build
 dotnet run
 ```
+
 After running this you have updated the user mailbox settings along with creating a message rule for the user.

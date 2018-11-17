@@ -3,21 +3,14 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Graph;
-//Comment
+
 namespace ConsoleGraphTest
 {
-    /**
-     * Please rename your helper class to match it's purpose
-     */
     public class MailboxHelper
     {
-        /**
-         * Inject either a GraphServiceClient or an HttpClient (with Authentiation supplied)
-         * Which you choose to use will depend on your scenario but the GraphServiceClient should be used where practical
-         * Please delete the constructor you don't use
-         */
         private GraphServiceClient _graphClient;
         private HttpClient _httpClient;
+        
         public MailboxHelper(GraphServiceClient graphClient)
         {
             if (null == graphClient) throw new ArgumentNullException(nameof(graphClient));
