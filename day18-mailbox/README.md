@@ -6,8 +6,8 @@
     - [Step 2: Extend the app to update mailbox settings](#step-2-extend-the-app-to-manage-and-update-user-mailbox)
     
         - [Create the MailboxHelper class](#create-the-mailboxhelper-class)
-        - [Extend program to read mailbox messages and mailbox settings](#extend-program-to-read-mailbox-messages-and-mailbox-settings)
-        - [Extend program to create mailbox message rule](#extend-program-to-create-and-retrieve-message-rules)
+        - [Extend program to read and update mailbox settings](#extend-program-to-read-and-update-mailbox-settings)
+        - [Extend program to create and retrieve mailbox message rule](#extend-program-to-create-and-retrieve-message-rules)
         
 
 ## Prerequisites
@@ -127,13 +127,21 @@ This class contains the helper class that will be used to hold the result data f
             public MailboxHelper(GraphServiceClient graphClient)
             {
                 if (null == graphClient) throw new ArgumentNullException(nameof(graphClient));
-                _graphClient = graphClient;
+                    _graphClient = graphClient;
             }
 
             public MailboxHelper(HttpClient httpClient)
             {
                 if (null == httpClient) throw new ArgumentNullException(nameof(httpClient));
-                _httpClient = httpClient;
+                    _httpClient = httpClient;
+            }
+
+            public MailboxHelper(GraphServiceClient graphClient, HttpClient httpClient)
+            {
+                if (null == graphClient) throw new ArgumentNullException(nameof(graphClient));
+                    _graphClient = graphClient;
+                if (null == httpClient) throw new ArgumentNullException(nameof(httpClient));
+                    _httpClient = httpClient;
             }
 
             public async Task<List<ResultsItem>> ListInboxMessages(string alias)
@@ -161,8 +169,15 @@ This class contains the helper class that will be used to hold the result data f
                 User detailedUser = await _graphClient.Users[user.Id].Request().Select("MailboxSettings").GetAsync();
                 return detailedUser.MailboxSettings.TimeZone;
             }
-
-            
+            public async void SetUserMailboxDefaultTimeZone(string alias, string timezone)
+            {
+                User user = FindByAlias(alias).Result;
+                Uri Uri = new Uri("https://graph.microsoft.com/v1.0/users/"+ user.Id +"/mailboxSettings");
+                String jsonContent = "{\"timeZone\" : \""+ timezone +"\"}";
+                HttpContent httpContent = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
+                await _httpClient.PatchAsync(Uri, httpContent);
+            }        
+        
             public async Task<List<ResultsItem>> GetUserMailboxRules(string alias)
             {
                 User user = FindByAlias(alias).Result;
@@ -225,11 +240,11 @@ This class contains the helper class that will be used to hold the result data f
         }
     }
     ```
-This class contains the code to create user mailbox message rules, retrieve the message rules, retrieve the mailbox messages and the mailboxsetings (timezone for example).
+This class contains the code to read and update mailbox settings, create user mailbox message rules, retrieve the message rules, retrieve the mailbox messages.
 
-### Extend program to read mailbox messages and mailbox settings
+### Extend program to read and update mailbox settings
 
-1. Inside the `Program` class add below methods. The `GetUserMailboxDefaultTimeZone` method will retrieve the user mailbox settings (in this case it outputs the default timezone). The method `ListUserMailInboxMessages` is added to showcase how MS Graph SDK can be used to retrieve user mailbox messages. 
+1. Inside the `Program` class add below methods. The `GetUserMailboxDefaultTimeZone` method will retrieve the user mailbox settings (in this case it outputs the default timezone). The `SetUserMailboxDefaultTimeZone` method will update the user mailbox settings (in this case it updates the default timezone). The method `ListUserMailInboxMessages` is added to showcase how MS Graph SDK can be used to retrieve user mailbox messages. 
 
     ```cs
     private static void GetUserMailboxDefaultTimeZone()
@@ -239,7 +254,12 @@ This class contains the code to create user mailbox message rules, retrieve the 
         var defaultTimeZone = mailboxHelper.GetUserMailboxDefaultTimeZone(alias).Result;
         Console.WriteLine("Default timezone: "+ defaultTimeZone);
     }
-   
+    private static void SetUserMailboxDefaultTimeZone()
+    {
+        const string alias = "admin";
+        var mailboxHelper = new MailboxHelper(_graphServiceClient, _httpClient);
+        mailboxHelper.SetUserMailboxDefaultTimeZone(alias, "Eastern Standard Time");
+    }   
     private static void ListUserMailInboxMessages()
     {
         const string alias = "admin";
@@ -251,14 +271,21 @@ This class contains the code to create user mailbox message rules, retrieve the 
 1. Continuing in the `Main` method add the following code to call the new method.
 
     ```cs
+    //Get the current timezone setting
     GetUserMailboxDefaultTimeZone();
+    //update the timezone setting for the user mailbox
+    SetUserMailboxDefaultTimeZone();
+    //Get the timezone setting again to verify that its updated
+    GetUserMailboxDefaultTimeZone();
+
+    //Showcase method to show how to MS Graph sdk to retrieve messages
     ListUserMailInboxMessages();
     ```
 1. Save all files.
 
->**Note:** Currently (as of Nov 2018) there is no support to update mailbox settings in MS Graph SDK. However, its in the works and expect to have that update soon. This sample will be updated accordingly.
+>**Note:** Currently (as of Nov 2018) there is no support to update mailbox settings in MS Graph SDK. However, its in the works and expect to have that update soon. This sample will be updated accordingly. The method `SetUserMailboxDefaultTimeZone` uses HTTPClient instead of GraphServiceClient object to update the mailbox settings.
 
-The console application is now able to retrieve the mailbox settings and get mailbox messages. In order to test the console application run the following commands from the command line:
+The console application is now able to retrieve and update the mailbox settings and get mailbox messages. In order to test the console application run the following commands from the command line:
 
 ```
 dotnet build
@@ -293,7 +320,9 @@ dotnet run
 1. Continuing in the `Main` method add the following code to call the new method.
 
     ```cs
+    //Create a new message rule
     CreateUserMailBoxRule();
+    //Retrieve the message rules to validate
     ListUserMailBoxRules();
     ```
 1. Save all files.

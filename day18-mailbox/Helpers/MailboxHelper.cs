@@ -21,13 +21,21 @@ namespace ConsoleGraphTest
         public MailboxHelper(GraphServiceClient graphClient)
         {
             if (null == graphClient) throw new ArgumentNullException(nameof(graphClient));
-            _graphClient = graphClient;
+                _graphClient = graphClient;
         }
 
         public MailboxHelper(HttpClient httpClient)
         {
             if (null == httpClient) throw new ArgumentNullException(nameof(httpClient));
-            _httpClient = httpClient;
+                _httpClient = httpClient;
+        }
+
+        public MailboxHelper(GraphServiceClient graphClient, HttpClient httpClient)
+        {
+            if (null == graphClient) throw new ArgumentNullException(nameof(graphClient));
+                _graphClient = graphClient;
+            if (null == httpClient) throw new ArgumentNullException(nameof(httpClient));
+                _httpClient = httpClient;
         }
 
         public async Task<List<ResultsItem>> ListInboxMessages(string alias)
@@ -55,8 +63,15 @@ namespace ConsoleGraphTest
             User detailedUser = await _graphClient.Users[user.Id].Request().Select("MailboxSettings").GetAsync();
             return detailedUser.MailboxSettings.TimeZone;
         }
-
-        
+        public async void SetUserMailboxDefaultTimeZone(string alias, string timezone)
+        {
+            User user = FindByAlias(alias).Result;
+            Uri Uri = new Uri("https://graph.microsoft.com/v1.0/users/"+ user.Id +"/mailboxSettings");
+            String jsonContent = "{\"timeZone\" : \""+ timezone +"\"}";
+            HttpContent httpContent = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
+            await _httpClient.PatchAsync(Uri, httpContent);
+        }        
+     
         public async Task<List<ResultsItem>> GetUserMailboxRules(string alias)
         {
             User user = FindByAlias(alias).Result;

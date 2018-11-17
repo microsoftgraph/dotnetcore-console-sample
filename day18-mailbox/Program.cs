@@ -43,10 +43,21 @@ namespace ConsoleGraphTest
             Console.WriteLine("HTTP Result");
             Console.WriteLine(httpResult);
 
-            //Below methods showcase MS Graph sdk usage with mailbox
-            ListUserMailInboxMessages();
+            //Below methods showcase MS Graph sdk and Graph HTTPClient usage with mailbox
+
+            //Get the current timezone setting
             GetUserMailboxDefaultTimeZone();
+            //update the timezone setting for the user mailbox
+            SetUserMailboxDefaultTimeZone();
+            //Get the timezone setting again to verify that its updated
+            GetUserMailboxDefaultTimeZone();
+
+            //Showcase method to show how to MS Graph sdk to retrieve messages
+            ListUserMailInboxMessages();
+
+            //Create a new message rule
             CreateUserMailBoxRule();
+            //Retrieve the message rules to validate
             ListUserMailBoxRules();
         }
 
@@ -66,7 +77,12 @@ namespace ConsoleGraphTest
             var defaultTimeZone = mailboxHelper.GetUserMailboxDefaultTimeZone(alias).Result;
             Console.WriteLine("Default timezone: "+ defaultTimeZone);
         }
-
+        private static void SetUserMailboxDefaultTimeZone()
+        {
+            const string alias = "admin";
+            var mailboxHelper = new MailboxHelper(_graphServiceClient, _httpClient);
+            mailboxHelper.SetUserMailboxDefaultTimeZone(alias, "Eastern Standard Time");
+        }
         private static void ListUserMailBoxRules()
         {
             const string alias = "admin";
