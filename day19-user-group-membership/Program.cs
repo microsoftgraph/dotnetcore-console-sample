@@ -42,49 +42,21 @@ namespace ConsoleGraphTest
 
             Console.WriteLine("HTTP Result");
             Console.WriteLine(httpResult);
-
-            //Below methods showcase MS Graph sdk usage with mailbox
-            ListUserMailInboxMessages();
-            GetUserMailboxDefaultTimeZone();
-            CreateUserMailBoxRule();
-            ListUserMailBoxRules();
+            // Call your method wrapping construction and calls to the helper
+            MyHelperCall();
         }
 
         // Add a private method to do any necessary setup and make calls to your helper
-        private static void ListUserMailInboxMessages()
+        private static void MyHelperCall()
         {
-            const string alias = "admin";
-            var mailboxHelper = new MailboxHelper(_graphServiceClient);
-            List<ResultsItem> items = mailboxHelper.ListInboxMessages(alias).Result;
-            Console.WriteLine("Message count: "+ items.Count);
-        }
-   
-        private static void GetUserMailboxDefaultTimeZone()
-        {
-            const string alias = "admin";
-            var mailboxHelper = new MailboxHelper(_graphServiceClient);
-            var defaultTimeZone = mailboxHelper.GetUserMailboxDefaultTimeZone(alias).Result;
-            Console.WriteLine("Default timezone: "+ defaultTimeZone);
+            const string alias = "sdk_test";
+            var userHelper = new MyHelper(_graphServiceClient);
+            var user = userHelper.FindByAlias(alias).Result;
+            // Add some console writes for demo purposes if necessary
+            Console.WriteLine(user.DisplayName);
+            Console.WriteLine(user.UserPrincipalName);
         }
 
-        private static void ListUserMailBoxRules()
-        {
-            const string alias = "admin";
-            var mailboxHelper = new MailboxHelper(_graphServiceClient);
-            List<ResultsItem> rules = mailboxHelper.GetUserMailboxRules(alias).Result;
-            Console.WriteLine("Rules count: "+ rules.Count);
-            foreach(ResultsItem rule in rules)
-            {
-                Console.WriteLine("Rule Name: "+ rule.Display);
-            }
-        }
-
-        private static void CreateUserMailBoxRule()
-        {
-            const string alias = "admin";
-            var mailboxHelper = new MailboxHelper(_graphServiceClient);
-            mailboxHelper.CreateRule(alias, "ForwardBasedonSender", 2, true, "svarukal", "adelev@M365x995052.onmicrosoft.com").GetAwaiter().GetResult();
-        }
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
         {
             var authenticationProvider = CreateAuthorizationProvider(config);

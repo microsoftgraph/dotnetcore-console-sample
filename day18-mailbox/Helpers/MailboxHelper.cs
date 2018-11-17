@@ -56,20 +56,7 @@ namespace ConsoleGraphTest
             return detailedUser.MailboxSettings.TimeZone;
         }
 
-        /*
-        public async Task SetUserMailboxDefaultTimeZone(string alias, string timezone)
-        {
-            User user = FindByAlias(alias).Result;
-            User detailedUser = await _graphClient.Users[user.Id].Request().Select("MailboxSettings").GetAsync();
-            //detailedUser.MailboxSettings.TimeZone = timezone;
-            MailboxSettings mbs = detailedUser.MailboxSettings;
-            mbs.TimeZone = timezone;
-            await _graphClient.Users[user.Id].Request().UpdateAsync(new User{
-                MailboxSettings = mbs
-            });
-        }
-        */
-
+        
         public async Task<List<ResultsItem>> GetUserMailboxRules(string alias)
         {
             User user = FindByAlias(alias).Result;
@@ -105,7 +92,6 @@ namespace ConsoleGraphTest
             if (userResult.Count != 1) throw new ApplicationException($"Unable to find a user with the alias {alias}");
             return userResult[0];
         }
-
         
         private static MessageRule BuildMailRule(string displayName, int sequence, bool isEnabled, string senderContains, string forwardToEmail) 
         {

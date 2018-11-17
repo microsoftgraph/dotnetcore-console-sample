@@ -1,13 +1,14 @@
-# Day NN - Scenario Template
+# Day 18 - Manage and Update user mailbox settings
 
-> When adding Images, save them in the Images folder for your day
-
-- [Day NN - Scenario Template](#day-nn-scenario-template)
+- [Day 18 - Update user mailbox settings](#day-18-mailbox)
     - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-rgistration-permissions)
-    - [Step 2: Extend the app to yyy](#step-2-extend-the-app-to-yyy)
-        - [Create the MyHelper class](#create-the-myhelper-class)
-        - [Extend program to yyy](#extend-program-to-yyy)
+    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+    - [Step 2: Extend the app to update mailbox settings](#step-2-extend-the-app-to-manage-and-update-user-mailbox)
+    
+        - [Create the MailboxHelper class](#create-the-mailboxhelper-class)
+        - [Extend program to read mailbox messages and mailbox settings](#extend-program-to-read-mailbox-messages-and-mailbox-settings)
+        - [Extend program to create mailbox message rule](#extend-program-to-create-and-retrieve-message-rules)
+        
 
 ## Prerequisites
 
@@ -27,7 +28,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 ## Step 1: Update the App Registration permissions
 
-As this exercise requires new permissions the App Registration needs to be updated to include the **\<New-Permission-Here\>** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
+As this exercise requires new permissions the App Registration needs to be updated to include the **User.ReadWrite.All**, **Mail.Read**, **MailboxSettings.Read** and **MailboxSettings.ReadWrite** permissions using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
 1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
@@ -47,54 +48,260 @@ As this exercise requires new permissions the App Registration needs to be updat
         ![Screenshot of selecting Microsoft Graph permission to add to app registration](Images/aad-create-app-05.png)
 
     1. Select **Application permissions**.
-    1. In the "Select permissions" search box type "\<Start of permission string\>".
-    1. Select **\<New-Permission-Here\>** from the filtered list.
+    1. In the "Select permissions" search box type "User".
+    1. Select **User.ReadWrite.All** from the filtered list.
 
-        ![Screenshot of adding application permission for User.Read.All permission](Images/new-image-needed.png)
+        ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-06.png)
+    1. In the "Select permissions" search box type "Mail".
+    1. Select **Mail.Read**, **MailboxSettings.Read** and **MailboxSettings.ReadWrite** from the filtered list.
+
+        ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-07.png)
 
     1. Click **Add permissions** at the bottom of flyout.
 
-1. Back on the API permissions content blade, click **Grant admin consent for \<name of tenant\>**.
-**need new screenshot here**
-    ![Screenshot of granting admin consent for newly added permission](Images/new-image-needed.png)
+1. Back on the API permissions content blade, click **Grant admin consent for Contoso**.
+    ![Screenshot of granting admin consent for newly added permission](Images/aad-create-app-08.png)
 
     1. Click **Yes**.
 
-## Step 2: Extend the app to yyy
+## Step 2: Extend the app to manage and update user mailbox
 
-In this step you will create a UserHelper class that encapsulates the logic for creating users and finding user objects by alias and then add calls to the console application created in the [Base Console Application Setup](../base-console-app/) to provision a new user.
+In this step you will create a MailboxHelper class that encapsulates the logic for creating new mailbox message rules, read mail and mailboxsettings along with finding user objects by alias. Then add methods to the console application created in the [Base Console Application Setup](../base-console-app/) to create message rule, read mail and mailbox settings.
 
-### Create the MyHelper class
-
-1. Create a new file in the `Helpers` folder called `MyHelperFileName.cs`.
-1. Replace the contents of `MyHelperFileName.cs` with the following code:
-
-    ```cs
-    // Your code here
-    ```
-This class contains the code to ....
-
-### Extend program to yyy
-
-1. Inside the `Program` class add a new method `YourMethod` with the following definition.  This method creates a new User in Azure Active Directory using the UserHelper class. This user will enableded and be required to change their password upon their next login.
+### Create the MailboxHelper class
+1. Create a new file in the `Helpers` folder called `ResultsItems.cs`.
+1. Replace the contents of `ResultsItems.cs` with the following code:
 
     ```cs
-    // Your code here
-    ```
-    > **Important** Any key things to note where the developer might run into issues.
+    using System;
+    using System.Collections.Generic;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using Microsoft.Graph;
+    //Comment
+    namespace ConsoleGraphTest
+    {
+        public class ResultsItem
+        {
 
+            // The ID and display name for the entity's radio button.
+            public string Id { get; set; }
+            public string Display { get; set; }
+
+            // The properties of an entity that display in the UI.
+            public Dictionary<string, object> Properties;
+
+            public ResultsItem()
+            {
+                Properties = new Dictionary<string, object>();
+            }
+        }
+    }
+    ```
+This class contains the helper class that will be used to hold the result data from various Microsoft Graph API calls and then used to iterate (if applicable) and show it in UI.
+
+1. Create a new file in the `Helpers` folder called `MailboxHelper.cs`.
+1. Replace the contents of `MailboxHelper.cs` with the following code:
+
+    ```cs
+    using System;
+    using System.Collections.Generic;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using Microsoft.Graph;
+    //Comment
+    namespace ConsoleGraphTest
+    {
+        /**
+        * Please rename your helper class to match it's purpose
+        */
+        public class MailboxHelper
+        {
+            /**
+            * Inject either a GraphServiceClient or an HttpClient (with Authentiation supplied)
+            * Which you choose to use will depend on your scenario but the GraphServiceClient should be used where practical
+            * Please delete the constructor you don't use
+            */
+            private GraphServiceClient _graphClient;
+            private HttpClient _httpClient;
+            public MailboxHelper(GraphServiceClient graphClient)
+            {
+                if (null == graphClient) throw new ArgumentNullException(nameof(graphClient));
+                _graphClient = graphClient;
+            }
+
+            public MailboxHelper(HttpClient httpClient)
+            {
+                if (null == httpClient) throw new ArgumentNullException(nameof(httpClient));
+                _httpClient = httpClient;
+            }
+
+            public async Task<List<ResultsItem>> ListInboxMessages(string alias)
+            {
+                User user = FindByAlias(alias).Result;
+                List<ResultsItem> items = new List<ResultsItem>();
+
+                IMailFolderMessagesCollectionPage messages = await _graphClient.Users[user.Id].MailFolders.Inbox.Messages.Request().Top(10).GetAsync();
+                if (messages?.Count > 0)
+                {
+                    foreach (Message message in messages)
+                    {
+                        items.Add(new ResultsItem
+                        {
+                            Display = message.Subject,
+                            Id = message.Id
+                        });
+                    }
+                }
+                return items;
+            }
+            public async Task<string> GetUserMailboxDefaultTimeZone(string alias)
+            {
+                User user = FindByAlias(alias).Result;
+                User detailedUser = await _graphClient.Users[user.Id].Request().Select("MailboxSettings").GetAsync();
+                return detailedUser.MailboxSettings.TimeZone;
+            }
+
+            
+            public async Task<List<ResultsItem>> GetUserMailboxRules(string alias)
+            {
+                User user = FindByAlias(alias).Result;
+                IMailFolderMessageRulesCollectionPage rules = await _graphClient.Users[user.Id].MailFolders.Inbox.MessageRules.Request().GetAsync(); 
+                List<ResultsItem> items = new List<ResultsItem>();
+                if (rules?.Count > 0)
+                {
+                    foreach (MessageRule rule in rules)
+                    {
+                        items.Add(new ResultsItem
+                        {
+                            Display = rule.DisplayName,
+                            Id = rule.Id
+                        });
+                    }
+                }
+                return items;
+            }
+            public async Task CreateRule(string alias, string displayName, int sequence, bool isEnabled, string senderContains, string forwardToEmail)
+            {
+                MessageRule rule = BuildMailRule(displayName, sequence, isEnabled, senderContains, forwardToEmail);
+                User user = FindByAlias(alias).Result;
+                await _graphClient.Users[user.Id].MailFolders.Inbox.MessageRules.Request().AddAsync(rule);
+            }
+            public async Task<User> FindByAlias(string alias)
+            {
+                List<QueryOption> queryOptions = new List<QueryOption>
+                {
+                    new QueryOption("$filter", $@"mailNickname eq '{alias}'")
+                };
+
+                var userResult = await _graphClient.Users.Request(queryOptions).GetAsync();
+                if (userResult.Count != 1) throw new ApplicationException($"Unable to find a user with the alias {alias}");
+                return userResult[0];
+            }
+            
+            private static MessageRule BuildMailRule(string displayName, int sequence, bool isEnabled, string senderContains, string forwardToEmail) 
+            {
+                IEnumerable<string> senderContainsList = new string[]{senderContains};
+                EmailAddress email = new EmailAddress(){
+                    Address = forwardToEmail
+                };
+                Recipient recipient = new Recipient(){
+                    EmailAddress = email
+                };
+                IEnumerable<Recipient> recipientList = new Recipient[]{ recipient };
+                var msgRule = new MessageRule{
+                    DisplayName = displayName,
+                    Sequence = sequence,
+                    IsEnabled = isEnabled,
+                    Conditions = new MessageRulePredicates{
+                        SenderContains = senderContainsList
+                    },
+                    Actions = new MessageRuleActions{
+                        ForwardTo = recipientList
+                    }
+                };
+                return msgRule;
+            }
+        }
+    }
+    ```
+This class contains the code to create user mailbox message rules, retrieve the message rules, retrieve the mailbox messages and the mailboxsetings (timezone for example).
+
+### Extend program to read mailbox messages and mailbox settings
+
+1. Inside the `Program` class add below methods. The `GetUserMailboxDefaultTimeZone` method will retrieve the user mailbox settings (in this case it outputs the default timezone). The method `ListUserMailInboxMessages` is added to showcase how MS Graph SDK can be used to retrieve user mailbox messages. 
+
+    ```cs
+    private static void GetUserMailboxDefaultTimeZone()
+    {
+        const string alias = "admin";
+        var mailboxHelper = new MailboxHelper(_graphServiceClient);
+        var defaultTimeZone = mailboxHelper.GetUserMailboxDefaultTimeZone(alias).Result;
+        Console.WriteLine("Default timezone: "+ defaultTimeZone);
+    }
+   
+    private static void ListUserMailInboxMessages()
+    {
+        const string alias = "admin";
+        var mailboxHelper = new MailboxHelper(_graphServiceClient);
+        List<ResultsItem> items = mailboxHelper.ListInboxMessages(alias).Result;
+        Console.WriteLine("Message count: "+ items.Count);
+    }
+    ```
 1. Continuing in the `Main` method add the following code to call the new method.
 
     ```cs
-    YourMethod();
+    GetUserMailboxDefaultTimeZone();
+    ListUserMailInboxMessages();
     ```
 1. Save all files.
 
-The console application is now able to \<do some new thing\>. In order to test the console application run the following commands from the command line:
+>**Note:** Currently (as of Nov 2018) there is no support to update mailbox settings in MS Graph SDK. However, its in the works and expect to have that update soon. This sample will be updated accordingly.
+
+The console application is now able to retrieve the mailbox settings and get mailbox messages. In order to test the console application run the following commands from the command line:
 
 ```
 dotnet build
 dotnet run
 ```
 
-Summary of what the thing that can be done is.
+### Extend program to create and retrieve message rules
+
+1. Inside the `Program` class add below methods. The `ListUserMailBoxRules` method will retrieve the user mailbox message rules. The `CreateUserMailBoxRule` method will create a new message rule for the user mailbox witht the supplied parameters: rule displayname, sequence, enabled or not, filter criteria for sender and forward mail to email. 
+
+    ```cs
+    private static void ListUserMailBoxRules()
+    {
+        const string alias = "admin";
+        var mailboxHelper = new MailboxHelper(_graphServiceClient);
+        List<ResultsItem> rules = mailboxHelper.GetUserMailboxRules(alias).Result;
+        Console.WriteLine("Rules count: "+ rules.Count);
+        foreach(ResultsItem rule in rules)
+        {
+            Console.WriteLine("Rule Name: "+ rule.Display);
+        }
+    }
+
+    private static void CreateUserMailBoxRule()
+    {
+        const string alias = "admin";
+        var mailboxHelper = new MailboxHelper(_graphServiceClient);
+        mailboxHelper.CreateRule(alias, "ForwardBasedonSender", 2, true, "svarukal", "adelev@M365x995052.onmicrosoft.com").GetAwaiter().GetResult();
+    }
+    ```
+
+1. Continuing in the `Main` method add the following code to call the new method.
+
+    ```cs
+    CreateUserMailBoxRule();
+    ListUserMailBoxRules();
+    ```
+1. Save all files.
+
+The console application is now able to create a new message rule and then retrieve all the message rules for the user. In order to test the console application run the following commands from the command line:
+
+```
+dotnet build
+dotnet run
+```
+After running this you have updated the user mailbox settings along with creating a message rule for the user.
