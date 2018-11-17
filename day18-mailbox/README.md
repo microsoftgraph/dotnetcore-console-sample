@@ -28,7 +28,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 ## Step 1: Update the App Registration permissions
 
-As this exercise requires new permissions the App Registration needs to be updated to include the **User.ReadWrite.All**, **Mail.Read**, **MailboxSettings.Read** and **MailboxSettings.ReadWrite** permissions using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
+As this exercise requires new permissions the App Registration needs to be updated to include the **User.Read.All**, **Mail.Read**, **MailboxSettings.Read** and **MailboxSettings.ReadWrite** permissions using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
 1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
@@ -49,13 +49,13 @@ As this exercise requires new permissions the App Registration needs to be updat
 
     1. Select **Application permissions**.
     1. In the "Select permissions" search box type "User".
-    1. Select **User.ReadWrite.All** from the filtered list.
+    1. Select **User.Read.All** from the filtered list.
 
         ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-06.png)
     1. In the "Select permissions" search box type "Mail".
     1. Select **Mail.Read**, **MailboxSettings.Read** and **MailboxSettings.ReadWrite** from the filtered list.
 
-        ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-07.png)
+        ![Screenshot of adding application permission for Mail.Read, MailboxSettings.Read and MailboxSettings.ReadWrite permission](Images/aad-create-app-07.png)
 
     1. Click **Add permissions** at the bottom of flyout.
 
