@@ -127,14 +127,6 @@ This class contains the helper class that will be used to hold the result data f
                     _httpClient = httpClient;
             }
 
-            public MailboxHelper(GraphServiceClient graphClient, HttpClient httpClient)
-            {
-                if (null == graphClient) throw new ArgumentNullException(nameof(graphClient));
-                    _graphClient = graphClient;
-                if (null == httpClient) throw new ArgumentNullException(nameof(httpClient));
-                    _httpClient = httpClient;
-            }
-
             public async Task<List<ResultsItem>> ListInboxMessages(string alias)
             {
                 User user = FindByAlias(alias).Result;
@@ -167,8 +159,8 @@ This class contains the helper class that will be used to hold the result data f
                 String jsonContent = "{\"timeZone\" : \""+ timezone +"\"}";
                 HttpContent httpContent = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
                 await _httpClient.PatchAsync(Uri, httpContent);
-            }        
-        
+            }
+
             public async Task<List<ResultsItem>> GetUserMailboxRules(string alias)
             {
                 User user = FindByAlias(alias).Result;
@@ -248,7 +240,7 @@ This class contains the code to read and update mailbox settings, create user ma
     private static void SetUserMailboxDefaultTimeZone()
     {
         const string alias = "admin";
-        var mailboxHelper = new MailboxHelper(_graphServiceClient, _httpClient);
+        var mailboxHelper = new MailboxHelper(_httpClient);
         mailboxHelper.SetUserMailboxDefaultTimeZone(alias, "Eastern Standard Time");
     }
     private static void ListUserMailInboxMessages()

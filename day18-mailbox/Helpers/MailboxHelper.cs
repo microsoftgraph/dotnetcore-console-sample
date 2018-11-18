@@ -23,14 +23,6 @@ namespace ConsoleGraphTest
                 _httpClient = httpClient;
         }
 
-        public MailboxHelper(GraphServiceClient graphClient, HttpClient httpClient)
-        {
-            if (null == graphClient) throw new ArgumentNullException(nameof(graphClient));
-                _graphClient = graphClient;
-            if (null == httpClient) throw new ArgumentNullException(nameof(httpClient));
-                _httpClient = httpClient;
-        }
-
         public async Task<List<ResultsItem>> ListInboxMessages(string alias)
         {
             User user = FindByAlias(alias).Result;
