@@ -42,7 +42,7 @@ namespace ConsoleGraphTest
             if (plans.Any())
             {
                 Console.WriteLine($"Number of plans in current tenant: {plans.Count}");
-                Console.Write(plans.Select(x => $"-- {x.Title}").Aggregate((x, y) => $"{x}\n{y}"));
+                Console.WriteLine(plans.Select(x => $"-- {x.Title}").Aggregate((x, y) => $"{x}\n{y}"));
                 return plans.First().Id;
             }
             else

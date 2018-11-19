@@ -17,6 +17,7 @@
 To complete this sample you need the following:
 
 - Complete the [Base Console Application Setup](../base-console-app/)
+- Complete the [Day 20 - Device Code Auth Setup](../day20-devicecode)
 - [Visual Studio Code](https://code.visualstudio.com/) installed on your development machine. If you do not have Visual Studio Code, visit the previous link for download options. (**Note:** This tutorial was written with Visual Studio Code version 1.28.2. The steps in this guide may work with other versions, but that has not been tested.)
 - [.Net Core SDK](https://www.microsoft.com/net/download/dotnet-core/2.1#sdk-2.1.403). (**Note** This tutorial was written with .Net Core SDK 2.1.403.  The steps in this guide may work with other versions, but that has not been tested.)
 - [C# extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp)
@@ -26,7 +27,6 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 - You can [sign up for a new personal Microsoft account](https://signup.live.com/signup?wa=wsignin1.0&rpsnv=12&ct=1454618383&rver=6.4.6456.0&wp=MBI_SSL_SHARED&wreply=https://mail.live.com/default.aspx&id=64855&cbcxt=mai&bk=1454618383&uiflavor=web&uaid=b213a65b4fdc484382b6622b3ecaa547&mkt=E-US&lc=1033&lic=1).
 - You can [sign up for the Office 365 Developer Program](https://developer.microsoft.com/office/dev-program) to get a free Office 365 subscription.
-
 
 ## Step 1: Update the App Registration permissions
 
@@ -61,7 +61,7 @@ As this exercise requires new permissions the App Registration needs to be updat
     1. Click **Add permissions** at the bottom of flyout.
 
 1. Back on the API permissions content blade, click **Grant admin consent for \<name of tenant\>**.  
-**need new screenshot here**
+
     ![Screenshot of granting admin consent for newly added permission](Images/aad-grant-permissions-planner.png)
 
     1. Click **Yes**.
@@ -80,7 +80,9 @@ Planner relies on the Office 365 group infrastructure to function properly. Plea
 
 ## Step 4: Extend the app to List existing Planner Plans
 
-In this step you will create a Helper method that encapsulates the logic for listing existing plans and then add calls to the console application created in the [Device Code Flow](../day22-devicecode/).
+In this step you will create a Helper method that encapsulates the logic for listing existing plans and then add calls to the console application created in the [Device Code Flow](../day20-devicecode/).
+
+ > **Important:** Ensure that you follow the steps from Day 20 Device Code Flow exercise or today's application updates will not leverage the proper authentication flow necessary to be successful.
 
 ### Extend program to List existing Planner Plans
 
@@ -104,8 +106,8 @@ In this step you will create a Helper method that encapsulates the logic for lis
     ```
 1. Inside the `Helpers` folder add a class `PlannerHelper.cs` with the following definition.
 
-We will build on this class during the exercise.
-As it is defined, the helper will list current plans for the first group it can find, and create one if none exist.
+    We will build on this class during the exercise.
+    As it is defined, the helper will list current plans for the first group it can find, and create one if none exist.
 
     ```cs
     using System;
@@ -116,9 +118,6 @@ As it is defined, the helper will list current plans for the first group it can 
 
     namespace ConsoleGraphTest
     {
-        // This class allows an implementation of IAuthenticationProvider to be inserted into the DelegatingHandler
-        // pipeline of an HttpClient instance.  In future versions of GraphSDK, many cross-cutting concernts will
-        // be implemented as DelegatingHandlers.  This AuthHandler will come in the box.
         public class PlannerHelper
         {
             private readonly GraphServiceClient _graphClient;
@@ -150,7 +149,7 @@ As it is defined, the helper will list current plans for the first group it can 
                 if (plans.Any())
                 {
                     Console.WriteLine($"Number of plans in current tenant: {plans.Count}");
-                    Console.Write(plans.Select(x => $"-- {x.Title}").Aggregate((x, y) => $"{x}\n{y}"));
+                    Console.WriteLine(plans.Select(x => $"-- {x.Title}").Aggregate((x, y) => $"{x}\n{y}"));
                     return plans.First().Id;
                 }
                 else
