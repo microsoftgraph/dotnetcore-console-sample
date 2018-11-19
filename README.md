@@ -11,6 +11,8 @@ Each of the samples builds from a common base project, in order to sucessfully b
 - [Base console application setup](./base-console-app)
 - [Day 16 - Create a new user](./day16-create-user)
 - [Day 17 - Assign Licenses](./day17-assign-license)
+- [Day 18 - Update Exchange Online Mailbox](./day18-mailbox)
+- [Day 19 - Assign permissions to Unified Group](./day19-assign-permissions)
 
 ## Contributing
 
