@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using Microsoft.Identity.Client;
 using Microsoft.Graph;
 using Microsoft.Extensions.Configuration;
@@ -42,19 +40,6 @@ namespace ConsoleGraphTest
 
             Console.WriteLine("HTTP Result");
             Console.WriteLine(httpResult);
-            // Call your method wrapping construction and calls to the helper
-            MyHelperCall();
-        }
-
-        // Add a private method to do any necessary setup and make calls to your helper
-        private static void MyHelperCall()
-        {
-            const string alias = "sdk_test";
-            var userHelper = new MyHelper(_graphServiceClient);
-            var user = userHelper.FindByAlias(alias).Result;
-            // Add some console writes for demo purposes if necessary
-            Console.WriteLine(user.DisplayName);
-            Console.WriteLine(user.UserPrincipalName);
         }
 
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
@@ -76,13 +61,13 @@ namespace ConsoleGraphTest
             var clientId = config["applicationId"];
             var clientSecret = config["applicationSecret"];
             var redirectUri = config["redirectUri"];
-            var authority = $"https://login.microsoftonline.com/{config["tenantId"]}/v2.0";
+            var authority = $"https://login.microsoftonline.com/{config["tenantId"]}";
 
             List<string> scopes = new List<string>();
             scopes.Add("https://graph.microsoft.com/.default");
 
-            var cca = new ConfidentialClientApplication(clientId, authority, redirectUri, new ClientCredential(clientSecret), null, null);
-            return new MsalAuthenticationProvider(cca, scopes.ToArray());
+            var cca = new PublicClientApplication(clientId, authority);
+            return new DeviceCodeFlowAuthorizationProvider(cca, scopes);
         }
 
         private static IConfigurationRoot LoadAppSettings()
@@ -98,8 +83,7 @@ namespace ConsoleGraphTest
                 if (string.IsNullOrEmpty(config["applicationId"]) ||
                     string.IsNullOrEmpty(config["applicationSecret"]) ||
                     string.IsNullOrEmpty(config["redirectUri"]) ||
-                    string.IsNullOrEmpty(config["tenantId"]) ||
-                    string.IsNullOrEmpty(config["domain"]))
+                    string.IsNullOrEmpty(config["tenantId"]))
                 {
                     return null;
                 }

@@ -26,38 +26,66 @@ namespace ConsoleGraphTest
 
             //Query using Graph SDK (preferred when possible)
             GraphServiceClient graphClient = GetAuthenticatedGraphClient(config);
-            List<QueryOption> options = new List<QueryOption>
-            {
-                new QueryOption("$top", "1")
-            };
-
-            var graphResult = graphClient.Users.Request(options).GetAsync().Result;
-            Console.WriteLine("Graph SDK Result");
-            Console.WriteLine(graphResult[0].DisplayName);
-
-            //Direct query using HTTPClient (for beta endpoint calls or not available in Graph SDK)
             HttpClient httpClient = GetAuthenticatedHTTPClient(config);
-            Uri Uri = new Uri("https://graph.microsoft.com/v1.0/users?$top=1");
-            var httpResult = httpClient.GetStringAsync(Uri).Result;
+            
+            //Below methods showcase MS Graph sdk and Graph HTTPClient usage with mailbox
 
-            Console.WriteLine("HTTP Result");
-            Console.WriteLine(httpResult);
-     
-            // Call your method wrapping construction and calls to the helper
-            MyHelperCall();
+            //Get the current timezone setting
+            GetUserMailboxDefaultTimeZone();
+            //update the timezone setting for the user mailbox
+            SetUserMailboxDefaultTimeZone();
+            //Get the timezone setting again to verify that its updated
+            GetUserMailboxDefaultTimeZone();
+
+            //Showcase method to show how to MS Graph sdk to retrieve messages
+            ListUserMailInboxMessages();
+
+            //Create a new message rule
+            CreateUserMailBoxRule();
+            //Retrieve the message rules to validate
+            ListUserMailBoxRules();
         }
 
         // Add a private method to do any necessary setup and make calls to your helper
-        private static void MyHelperCall()
+        private static void ListUserMailInboxMessages()
         {
-            const string alias = "sdk_test";
-            var userHelper = new MyHelper(_graphServiceClient);
-            var user = userHelper.FindByAlias(alias).Result;
-            // Add some console writes for demo purposes if necessary
-            Console.WriteLine(user.DisplayName);
-            Console.WriteLine(user.UserPrincipalName);       
+            const string alias = "admin";
+            var mailboxHelper = new MailboxHelper(_graphServiceClient);
+            List<ResultsItem> items = mailboxHelper.ListInboxMessages(alias).Result;
+            Console.WriteLine("Message count: "+ items.Count);
+        }
+   
+        private static void GetUserMailboxDefaultTimeZone()
+        {
+            const string alias = "admin";
+            var mailboxHelper = new MailboxHelper(_graphServiceClient);
+            var defaultTimeZone = mailboxHelper.GetUserMailboxDefaultTimeZone(alias).Result;
+            Console.WriteLine("Default timezone: "+ defaultTimeZone);
+        }
+        private static void SetUserMailboxDefaultTimeZone()
+        {
+            const string alias = "admin";
+            var mailboxHelper = new MailboxHelper(_graphServiceClient, _httpClient);
+            mailboxHelper.SetUserMailboxDefaultTimeZone(alias, "Eastern Standard Time");
+        }
+        private static void ListUserMailBoxRules()
+        {
+            const string alias = "admin";
+            var mailboxHelper = new MailboxHelper(_graphServiceClient);
+            List<ResultsItem> rules = mailboxHelper.GetUserMailboxRules(alias).Result;
+            Console.WriteLine("Rules count: "+ rules.Count);
+            foreach(ResultsItem rule in rules)
+            {
+                Console.WriteLine("Rule Name: "+ rule.Display);
+            }
         }
 
+        private static void CreateUserMailBoxRule()
+        {
+            const string alias = "admin";
+            var mailboxHelper = new MailboxHelper(_graphServiceClient);
+            mailboxHelper.CreateRule(alias, "ForwardBasedonSender", 2, true, "svarukal", "adelev@M365x995052.onmicrosoft.com").GetAwaiter().GetResult();
+        }
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
         {
             var authenticationProvider = CreateAuthorizationProvider(config);
@@ -77,13 +105,13 @@ namespace ConsoleGraphTest
             var clientId = config["applicationId"];
             var clientSecret = config["applicationSecret"];
             var redirectUri = config["redirectUri"];
-            var authority = $"https://login.microsoftonline.com/{config["tenantId"]}";
+            var authority = $"https://login.microsoftonline.com/{config["tenantId"]}/v2.0";
 
             List<string> scopes = new List<string>();
             scopes.Add("https://graph.microsoft.com/.default");
 
-            var cca = new PublicClientApplication(clientId, authority);
-            return new DeviceCodeFlowAuthorizationProvider(cca, scopes);
+            var cca = new ConfidentialClientApplication(clientId, authority, redirectUri, new ClientCredential(clientSecret), null, null);
+            return new MsalAuthenticationProvider(cca, scopes.ToArray());
         }
 
         private static IConfigurationRoot LoadAppSettings()
@@ -99,7 +127,8 @@ namespace ConsoleGraphTest
                 if (string.IsNullOrEmpty(config["applicationId"]) ||
                     string.IsNullOrEmpty(config["applicationSecret"]) ||
                     string.IsNullOrEmpty(config["redirectUri"]) ||
-                    string.IsNullOrEmpty(config["tenantId"]))
+                    string.IsNullOrEmpty(config["tenantId"]) ||
+                    string.IsNullOrEmpty(config["domain"]))
                 {
                     return null;
                 }

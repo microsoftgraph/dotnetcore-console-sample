@@ -59,9 +59,10 @@ As this exercise requires new permissions the App Registration needs to be updat
 
     1. Click **Yes**.  
 
-    > **Note:** Make sur you do not have any application permission already selected, it will make the request fail. If you do have some, remove them before granting the new permissions.
+    > **Note:** Make sure you do not have any application permission already selected, it will make the request fail. If you do have some, remove them before granting the new permissions.
 
 ## Step 2: Enable your application for Device Code Flow
+
 1. On the application registration view from the last step, click on **Manifest**.
 2. Set the `allowPublicClient` property to `true`.
 3. Click on `Save`
@@ -124,19 +125,25 @@ This class contains the code to implement the device code flow requests when the
         var cca = new PublicClientApplication(clientId, authority);
         return new DeviceCodeFlowAuthorizationProvider(cca, scopes);
     ```
-    > **Important** Any key things to note where the developer might run into issues.
 
 ### Update the reference to the MSAL library
+
 At the time of the writing, the Device Code Flow flow is only implemented in preview versions of the library.
+
 1. Inside the `ConsoleGraphTest.csproj` file replace the following line
-```xml
-<PackageReference Include="Microsoft.Identity.Client" Version="2.1.0-preview" /> 
-```
-by 
-```xml
-<PackageReference Include="Microsoft.Identity.Client" Version="2.4.0-preview" /> 
-```
-2. In a command line type the following command `dotnet restore`.
+
+    ```xml
+    <PackageReference Include="Microsoft.Identity.Client" Version="2.1.0-preview" /> 
+    ```
+
+    by
+
+    ```xml
+    <PackageReference Include="Microsoft.Identity.Client" Version="2.4.0-preview" /> 
+    ```
+
+1. In a command line type the following command `dotnet restore`.
+
 The console application is now able to leverage the Device Code Flow which will allow the user to be identified and the context to bear a delegated context. In order to test the console application run the following commands from the command line:
 
 ```

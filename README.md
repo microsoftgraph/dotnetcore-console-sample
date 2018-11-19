@@ -1,6 +1,6 @@
 # dotnetcore-console-sample
 
-This repository will contain several samples showing how to interact with Microsoft Graph using the .Net core SDK.  
+This repository will contain several samples showing how to interact with Microsoft Graph using the .Net core SDK.
 These samples have been created as part of the [30 days of Microsoft Graph](https://aka.ms/30DaysMSGraph) blog series.
 Each of the samples builds from a common base project, in order to sucessfully build a sample you must first complete the setup required in the base project for that application type.
 
@@ -10,6 +10,9 @@ Each of the samples builds from a common base project, in order to sucessfully b
 
 - [Base console application setup](./base-console-app)
 - [Day 16 - Create a new user](./day16-create-user)
+- [Day 17 - Assign Licenses](./day17-assign-license)
+- [Day 18 - Update Exchange Online Mailbox](./day18-mailbox)
+- [Day 19 - Assign permissions to Unified Group](./day19-assign-permissions)
 - [Day 24 - Intune](./day24-intune)
 - [Day NN - Template](./dayNN-template)
 
