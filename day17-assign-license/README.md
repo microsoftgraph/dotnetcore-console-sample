@@ -135,7 +135,7 @@ This class contains the code to get a user, get a license, and assign the licens
 1. Continuing in the `Main` method add the following code to call the new method.
 
     ```cs
-    AddLicenseToUser();
+    AddLicenseToUser(config);
     ```
 
 1. Save all files.
