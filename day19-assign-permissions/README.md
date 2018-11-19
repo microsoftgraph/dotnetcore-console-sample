@@ -25,7 +25,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 ## Step 1: Update the App Registration permissions
 
-As this exercise requires new permissions the App Registration needs to be updated to include the **Directory.Read.All**, **Directory.ReadWrite.All**, **Group.Read.All** and **Group.ReadWrite.All** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
+As this exercise requires new permissions the App Registration needs to be updated to include the **Directory.ReadWrite.All**, **Group.Read.All** and **Group.ReadWrite.All** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
 1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
@@ -163,15 +163,35 @@ In this step you will create a PermissionHelper class that encapsulates the logi
                     await _graphClient.Groups[groupId].Members.References.Request().AddAsync(user);
             }
 
-            //Returns the first unified group with the given suffix
-            public async Task<string> GetGroupByName(string groupNameSuffix)
+            //Returns the first unified group with the given prefix
+            public async Task<string> GetGroupByName(string groupNamePrefix)
             {
-                var groups = await _graphClient.Groups.Request().Filter("groupTypes/any(c:c%20eq%20'unified') AND startswith(displayName,'" + groupNameSuffix + "')").Select("displayName,description,id").GetAsync();
+                var groups = await _graphClient.Groups.Request().Filter("groupTypes/any(c:c%20eq%20'unified') AND startswith(displayName,'" + groupNamePrefix + "')").Select("displayName,description,id").GetAsync();
                 if (groups?.Count > 0)
                 {
                     return (groups[0] as Group).Id as string;
                 }
                 return null;
+            }
+
+            //Creates a Unified O365 Group
+            public async Task<string> CreateGroup()
+            {
+                string guid = Guid.NewGuid().ToString();
+                string groupPrefix = "Contoso -";
+                Group group = await _graphClient.Groups.Request().AddAsync(new Group
+                {
+                    GroupTypes = new List<string> { "Unified" },
+                    DisplayName = groupPrefix + guid.Substring(0, 8),
+                    Description = groupPrefix + guid,
+                    MailNickname = groupPrefix.Replace(" ", "").ToLower() + guid.Substring(0, 8),
+                    MailEnabled = false,
+                    SecurityEnabled = false
+                });
+                if (null == group)
+                    throw new ApplicationException($"Unable to create a unified group"); 
+                
+                return group.Id;
             }
 
             //Returns the User object for the given alias
@@ -189,11 +209,11 @@ In this step you will create a PermissionHelper class that encapsulates the logi
         }
     }
     ```
-This class contains the code to list all the groups a user belongs to, identify a unified group by suffix, add a user as a member to a unified group and thus provide permissions on the Office 365 and the corresponding SharePoint Online site.
+This class contains the code to list all the groups a user belongs to, identify a unified group by prefix, add a user as a member to a unified group and thus provide permissions on the Office 365 and the corresponding SharePoint Online site. You will also find a method that creates a unified group with "Contoso -" as prefix.
 
 ### Extend program to add and validate user permissions to unified group
 
-1. Inside the `Program` class add below methods. with the following definition. The method `ListUnifiedGroupsForUser` identifies all the groups that the given user is a member of. The method `GetUnifiedGroupStartswith` returns the unified office 365 group id for a given group name suffix. The method `AddUserToUnifiedGroup` attempts to add the given user to the provided group. All these methods in turn invoke the methods in PermissionHelper class which uses Microsoft Graph SDK to make all the API calls. 
+1. Inside the `Program` class add below methods. with the following definition. The method `ListUnifiedGroupsForUser` identifies all the groups that the given user is a member of. The method `GetUnifiedGroupStartswith` returns the unified office 365 group id for a given group name prefix. The method `AddUserToUnifiedGroup` attempts to add the given user to the provided group. All these methods in turn invoke the methods in PermissionHelper class which uses Microsoft Graph SDK to make all the API calls. 
 
     ```cs
     private static void PermissionHelperExampleScenario()
@@ -217,10 +237,10 @@ This class contains the code to list all the groups a user belongs to, identify 
         }
     }
 
-    private static string GetUnifiedGroupStartswith(string groupSuffix)
+    private static string GetUnifiedGroupStartswith(string groupPrefix)
     {
         var permissionHelper = new PermissionHelper(_graphServiceClient);
-        var groupId = permissionHelper.GetGroupByName(groupSuffix).Result;
+        var groupId = permissionHelper.GetGroupByName(groupPrefix).Result;
         return groupId;
     }
     private static void AddUserToUnifiedGroup(string alias, string groupId)

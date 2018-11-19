@@ -21,7 +21,7 @@ namespace ConsoleGraphTest
             if (null == httpClient) throw new ArgumentNullException(nameof(httpClient));
             _httpClient = httpClient;
         }
-        
+
         //Returns a list of groups that the given user belongs to
         public async Task<List<ResultsItem>> UserMemberOf(string alias)
         {
@@ -61,12 +61,38 @@ namespace ConsoleGraphTest
         //Returns the first unified group with the given suffix
         public async Task<string> GetGroupByName(string groupNameSuffix)
         {
+            string groupId = string.Empty;
             var groups = await _graphClient.Groups.Request().Filter("groupTypes/any(c:c%20eq%20'unified') AND startswith(displayName,'" + groupNameSuffix + "')").Select("displayName,description,id").GetAsync();
             if (groups?.Count > 0)
             {
-                return (groups[0] as Group).Id as string;
+                groupId = (groups[0] as Group).Id;
             }
-            return null;
+            else
+            {
+                groupId = CreateGroup().Result;
+                
+            }
+            return groupId;
+        }
+
+        //Creates a Unified O365 Group
+        public async Task<string> CreateGroup()
+        {
+            string guid = Guid.NewGuid().ToString();
+            string groupPrefix = "Contoso -";
+            Group group = await _graphClient.Groups.Request().AddAsync(new Group
+            {
+                GroupTypes = new List<string> { "Unified" },
+                DisplayName = groupPrefix + guid.Substring(0, 8),
+                Description = groupPrefix + guid,
+                MailNickname = groupPrefix.Replace(" ", "").ToLower() + guid.Substring(0, 8),
+                MailEnabled = false,
+                SecurityEnabled = false
+            });
+            if (null == group)
+                throw new ApplicationException($"Unable to create a unified group"); 
+            
+            return group.Id;
         }
 
         //Returns the User object for the given alias

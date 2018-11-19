@@ -30,11 +30,9 @@ namespace ConsoleGraphTest
             //Validate the user permissions to the group which also implies the associated SPO site
             PermissionHelperExampleScenario();
         }
-
         
         private static void PermissionHelperExampleScenario()
         {
-
             const string alias = "adelev";
             ListUnifiedGroupsForUser(alias);
             string groupId = GetUnifiedGroupStartswith("Contoso");
@@ -53,10 +51,10 @@ namespace ConsoleGraphTest
             }
         }
 
-        private static string GetUnifiedGroupStartswith(string groupSuffix)
+        private static string GetUnifiedGroupStartswith(string groupPrefix)
         {
             var permissionHelper = new PermissionHelper(_graphServiceClient);
-            var groupId = permissionHelper.GetGroupByName(groupSuffix).Result;
+            var groupId = permissionHelper.GetGroupByName(groupPrefix).Result;
             return groupId;
         }
         private static void AddUserToUnifiedGroup(string alias, string groupId)
