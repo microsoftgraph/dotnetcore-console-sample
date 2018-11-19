@@ -211,6 +211,8 @@ In this step you will create a PermissionHelper class that encapsulates the logi
     ```
 This class contains the code to list all the groups a user belongs to, identify a unified group by prefix, add a user as a member to a unified group and thus provide permissions on the Office 365 and the corresponding SharePoint Online site. You will also find a method that creates a unified group with "Contoso -" as prefix.
 
+>**Note:**The sample code attempts to create a unified group if it doesn't find a group with the prefix "Contoso". This might fail if your tenant is configured with a prefix requirement.
+
 ### Extend program to add and validate user permissions to unified group
 
 1. Inside the `Program` class add below methods. with the following definition. The method `ListUnifiedGroupsForUser` identifies all the groups that the given user is a member of. The method `GetUnifiedGroupStartswith` returns the unified office 365 group id for a given group name prefix. The method `AddUserToUnifiedGroup` attempts to add the given user to the provided group. All these methods in turn invoke the methods in PermissionHelper class which uses Microsoft Graph SDK to make all the API calls. 
