@@ -22,7 +22,6 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 - You can [sign up for a new personal Microsoft account](https://signup.live.com/signup?wa=wsignin1.0&rpsnv=12&ct=1454618383&rver=6.4.6456.0&wp=MBI_SSL_SHARED&wreply=https://mail.live.com/default.aspx&id=64855&cbcxt=mai&bk=1454618383&uiflavor=web&uaid=b213a65b4fdc484382b6622b3ecaa547&mkt=E-US&lc=1033&lic=1).
 - You can [sign up for the Office 365 Developer Program](https://developer.microsoft.com/office/dev-program) to get a free Office 365 subscription.
 
-
 ## Step 1: Update the App Registration permissions
 
 As this exercise requires new permissions the App Registration needs to be updated to include the **Directory.ReadWrite.All**, **Group.Read.All** and **Group.ReadWrite.All** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
@@ -46,18 +45,18 @@ As this exercise requires new permissions the App Registration needs to be updat
 
     1. Select **Application permissions**.
     1. In the "Select permissions" search box type "Directory".
-    1. Select **Directory.Read.All** and**Directory.ReadWrite.All**from the filtered list.
+    1. Select **Directory.ReadWrite.All**from the filtered list.
 
-        ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-06.png)
+        ![Screenshot of adding application permission for Directory.ReadWrite.All permission](Images/aad-create-app-06.png)
     1. Go back to the "Select permissions" search box type and type "Group".  
-    1. Select **Group.Read.All** and**Group.ReadWrite.All**from the filtered list.
+    1. Select **Group.Read.All** and **Group.ReadWrite.All**from the filtered list.
 
-        ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-07.png)     
+        ![Screenshot of adding application permission for Group.Read.All and Group.ReadWrite.All permissions](Images/aad-create-app-07.png)
 
     1. Click **Add permissions** at the bottom of flyout.
 
 1. Back on the API permissions content blade, click **Grant admin consent for Contoso**.
-**need new screenshot here**
+
     ![Screenshot of granting admin consent for newly added permission](Images/aad-create-app-08.png)
 
     1. Click **Yes**.
@@ -65,6 +64,7 @@ As this exercise requires new permissions the App Registration needs to be updat
 ## Step 2: Extend the program to manage user permissions to unified groups
 
 ### Create the ResultsItem Helper class
+
 1. Create a new file in the `Helpers` folder called `ResultsItems.cs`.
 1. Replace the contents of `ResultsItems.cs` with the following code:
 
@@ -97,6 +97,7 @@ As this exercise requires new permissions the App Registration needs to be updat
 This class contains the helper class that will be used to hold the result data from various Microsoft Graph API calls and then used to iterate (if applicable) and show it in UI.
 
 ### Create the PermissionHelper class
+
 In this step you will create a PermissionHelper class that encapsulates the logic for managing users permissions by virtue of adding them to Unified Groups.Then you will add calls to the console application created in the [Base Console Application Setup](../base-console-app/) to provision validate the user permissions through unified groups.
 
 1. Create a new file in the `Helpers` folder called `PermissionHelper.cs`.
@@ -105,7 +106,6 @@ In this step you will create a PermissionHelper class that encapsulates the logi
     ```cs
     using System;
     using System.Collections.Generic;
-    using System.Net.Http;
     using System.Threading.Tasks;
     using Microsoft.Graph;
 
@@ -114,19 +114,13 @@ In this step you will create a PermissionHelper class that encapsulates the logi
         public class PermissionHelper
         {
             private GraphServiceClient _graphClient;
-            private HttpClient _httpClient;
+
             public PermissionHelper(GraphServiceClient graphClient)
             {
                 if (null == graphClient) throw new ArgumentNullException(nameof(graphClient));
                 _graphClient = graphClient;
             }
 
-            public PermissionHelper(HttpClient httpClient)
-            {
-                if (null == httpClient) throw new ArgumentNullException(nameof(httpClient));
-                _httpClient = httpClient;
-            }
-            
             //Returns a list of groups that the given user belongs to
             public async Task<List<ResultsItem>> UserMemberOf(string alias)
             {
@@ -189,8 +183,8 @@ In this step you will create a PermissionHelper class that encapsulates the logi
                     SecurityEnabled = false
                 });
                 if (null == group)
-                    throw new ApplicationException($"Unable to create a unified group"); 
-                
+                    throw new ApplicationException($"Unable to create a unified group");
+
                 return group.Id;
             }
 
@@ -209,6 +203,7 @@ In this step you will create a PermissionHelper class that encapsulates the logi
         }
     }
     ```
+
 This class contains the code to list all the groups a user belongs to, identify a unified group by prefix, add a user as a member to a unified group and thus provide permissions on the Office 365 and the corresponding SharePoint Online site. You will also find a method that creates a unified group with "Contoso -" as prefix.
 
 >**Note:**The sample code attempts to create a unified group if it doesn't find a group with the prefix "Contoso". This might fail if your tenant is configured with a prefix requirement.
@@ -251,13 +246,13 @@ This class contains the code to list all the groups a user belongs to, identify 
         permissionHelper.AddUserToGroup(alias, groupId).GetAwaiter().GetResult();
     }
     ```
-    > **Important** Any key things to note where the developer might run into issues.
 
 1. Continuing in the `Main` method add the following code to execute the scenario that will be used to demonstrate how a user can be given permissions to a specific unified group and thus the SharePoint Online site using Microsoft Graph API. This method will first lits out the groups the user belongs to, then adds the user to a new unified group and then validates that the user is in fact added to the group.
 
     ```cs
     PermissionHelperExampleScenario();
     ```
+
 1. Save all files.
 
 The console application is now able to manage user permissions to unified groups and SharePoint Online sites by virtue of membership fo the groups. In order to test the console application run the following commands from the command line:

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Graph;
 
@@ -9,17 +8,11 @@ namespace ConsoleGraphTest
     public class PermissionHelper
     {
         private GraphServiceClient _graphClient;
-        private HttpClient _httpClient;
+
         public PermissionHelper(GraphServiceClient graphClient)
         {
             if (null == graphClient) throw new ArgumentNullException(nameof(graphClient));
             _graphClient = graphClient;
-        }
-
-        public PermissionHelper(HttpClient httpClient)
-        {
-            if (null == httpClient) throw new ArgumentNullException(nameof(httpClient));
-            _httpClient = httpClient;
         }
 
         //Returns a list of groups that the given user belongs to
