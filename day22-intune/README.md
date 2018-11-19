@@ -1,6 +1,6 @@
-# Day 24 - Device and App Management with Intune
+# Day 22 - Device and App Management with Intune
 
-- [Day 24 - Device and App Management with Intune](#day-device-and-app-management-with-intune)
+- [Day 22 - Device and App Management with Intune](#day-device-and-app-management-with-intune)
   - [Prerequisites](#prerequisites)
   - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
   - [Step 2: Extend the program to list Managed Devices for a User](#step-2-extend-the-program-to-list-managed-devices-for-a-user)

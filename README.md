@@ -13,7 +13,7 @@ Each of the samples builds from a common base project, in order to sucessfully b
 - [Day 17 - Assign Licenses](./day17-assign-license)
 - [Day 18 - Update Exchange Online Mailbox](./day18-mailbox)
 - [Day 19 - Assign permissions to Unified Group](./day19-assign-permissions)
-- [Day 24 - Intune](./day24-intune)
+- [Day 22 - Intune](./day22-intune)
 - [Day NN - Template](./dayNN-template)
 
 ## Contributing

@@ -42,20 +42,6 @@ namespace ConsoleGraphTest
 
             Console.WriteLine("HTTP Result");
             Console.WriteLine(httpResult);
-     
-            // Call your method wrapping construction and calls to the helper
-            MyHelperCall();
-        }
-
-        // Add a private method to do any necessary setup and make calls to your helper
-        private static void MyHelperCall()
-        {
-            const string alias = "sdk_test";
-            var userHelper = new MyHelper(_graphServiceClient);
-            var user = userHelper.FindByAlias(alias).Result;
-            // Add some console writes for demo purposes if necessary
-            Console.WriteLine(user.DisplayName);
-            Console.WriteLine(user.UserPrincipalName);       
         }
 
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
