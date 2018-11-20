@@ -1,6 +1,6 @@
-# Day NN - Using the Device Code Flow to Authenticate Users
+# Day 20 - Using the Device Code Flow to Authenticate Users
 
-- [Day NN - Using the Device Code Flow to Authenticate Users](#day-using-the-device-code-flow-to-authenticate-users)
+- [Day 20 - Using the Device Code Flow to Authenticate Users](#day-using-the-device-code-flow-to-authenticate-users)
     - [Prerequisites](#prerequisites)
     - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
     - [Step 2: Enable your application for Device Code Flow](#step-2-enable-your-application-for-device-code-flow)
