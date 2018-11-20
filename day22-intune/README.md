@@ -46,7 +46,7 @@ As this exercise requires new permissions the App Registration needs to be updat
 
     1. Select **Delegated permissions**.
     1. In the "Select permissions" search box type "DeviceManagement>".
-    1. Select **DeviceManagementApps.ReadWrite.All)**, **DeviceManagementConfiguration.ReadWrite.All**, and **DeviceManagementManagedDevices.Read.All** from the filtered list.
+    1. Select **DeviceManagementApps.ReadWrite.All**, **DeviceManagementConfiguration.ReadWrite.All**, and **DeviceManagementManagedDevices.Read.All** from the filtered list.
 
         ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-01.png)
 
@@ -57,7 +57,7 @@ As this exercise requires new permissions the App Registration needs to be updat
 
     1. Click **Yes**.  
 
-    > **Note:** Make sur you do not have any application permission already selected, it will make the request fail. If you do have some, remove them before granting the new permissions.
+    > **Note:** Make sure you do not have any application permission already selected, it will make the request fail. If you do have some, remove them before granting the new permissions.
 
 ## Step 2: Extend the Program to list Managed Devices for a User
 
