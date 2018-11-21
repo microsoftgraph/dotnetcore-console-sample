@@ -49,7 +49,7 @@ As this exercise requires new permissions the App Registration needs to be updat
     1. In the "Select permissions" search box type "DeviceManagement>".
     1. Select **DeviceManagementApps.ReadWrite.All**, **DeviceManagementConfiguration.ReadWrite.All**, and **DeviceManagementManagedDevices.Read.All** from the filtered list.
 
-        ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-01.png)
+        ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-01.PNG)
 
     1. Click **Add permissions** at the bottom of flyout.
 
