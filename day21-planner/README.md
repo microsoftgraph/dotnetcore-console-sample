@@ -1,8 +1,8 @@
-# Day 23 - Getting your Team organized with Planner through the Microsoft Graph
+# Day 21 - Getting your Team organized with Planner through the Microsoft Graph
 
 > When adding Images, save them in the Images folder for your day
 
-- [Day 23 - Getting your Team organized with Planner through the Microsoft Graph](#day-23-getting-your-team-organized-with-planner-through-the-microsoft-graph)
+- [Day 21 - Getting your Team organized with Planner through the Microsoft Graph](#day-23-getting-your-team-organized-with-planner-through-the-microsoft-graph)
     - [Prerequisites](#prerequisites)
     - [Step 1: Update the App Registration permissions](#step-1-update-the-app-rgistration-permissions)
     - [Step 2: Ensure that you are part of an Office 365 group](#step-2-ensure-that-you-are-part-of-an-office-365-group)

@@ -1,13 +1,14 @@
 # Day 22 - Device and App Management with Intune
 
-- [Day 22 - Device and App Management with Intune](#day-device-and-app-management-with-intune)
-  - [Prerequisites](#prerequisites)
-  - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
-  - [Step 2: Extend the program to list Managed Devices for a User](#step-2-extend-the-program-to-list-managed-devices-for-a-user)
-  - [Step 3: Extend the program to publish a web app](#step-3-extend-the-program-to-publish-a-web-app)
-  - [Step 4: Extend the program to assign an app to all users](#step-4-extend-the-program-to-assign-an-app-to-all-users)
-  - [Step 5: Extend the program to create a Device Configuration Policy](#step-5-extend-the-program-to-create-a-device-configuration-policy)
-  - [Step 6: Extend the program to assign a Device Configuration Policy to all devices](#step-6-extend-the-program-to-assign-a-Device-Configuration-Policy-to-all-devices)
+- [Day 22 - Device and App Management with Intune](#day-22---device-and-app-management-with-intune)
+    - [Prerequisites](#prerequisites)
+    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+    - [Step 2: Extend the application with IntuneHelper class](#step-2-extend-the-application-with-intunehelper-class)
+    - [Step 3: Extend the Program to list Managed Devices for a User](#step-3-extend-the-program-to-list-managed-devices-for-a-user)
+    - [Step 4: Extend the program to publish a web app](#step-4-extend-the-program-to-publish-a-web-app)
+    - [Step 5: Extend the program to assign an app to all users](#step-5-extend-the-program-to-assign-an-app-to-all-users)
+    - [Step 6: Extend the program to create a Device Configuration Policy](#step-6-extend-the-program-to-create-a-device-configuration-policy)
+    - [Step 7: Extend the program to assign a Device Configuration Policy to all devices](#step-7-extend-the-program-to-assign-a-device-configuration-policy-to-all-devices)
 
 
 ## Prerequisites
