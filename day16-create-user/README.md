@@ -2,7 +2,7 @@
 
 - [Day 16 - Create a new User](#day-16-create-a-new-user)
     - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-rgistration-permissions)
+    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
     - [Step 2: Extend the app to create users](#step-2-extend-the-app-to-create-users)
         - [Create the UserHelper class](#create-the-userhelper-class)
         - [Extend program to create users](#extend-program-to-create-users)
@@ -53,7 +53,7 @@ As this exercise requires new permissions the App Registration needs to be updat
     1. Click **Add permissions** at the bottom of flyout.
 
 1. Back on the API permissions content blade, click **Grant admin consent for \<name of tenant\>**.
-**need new screenshot here**
+
     ![Screenshot of granting admin consent for newly added permission](Images/aad-create-app-07.png)
 
     1. Click **Yes**.
@@ -62,7 +62,7 @@ As this exercise requires new permissions the App Registration needs to be updat
 
 In this step you will create a UserHelper class that encapsulates the logic for creating users and finding user objects by alias and then add calls to the console application created in the [Base Console Application Setup](../base-console-app/) to provision a new user.
 
-### Create UserHelper class
+### Create the UserHelper class
 
 1. Create a new file in the `Helpers` folder called `UserHelper.cs`.
 1. Replace the contents of `UserHelper.cs` with the following code:
