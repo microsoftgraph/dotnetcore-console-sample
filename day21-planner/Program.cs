@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using Microsoft.Identity.Client;
@@ -22,26 +22,11 @@ namespace ConsoleGraphTest
                 return;
             }
 
-            //Query using Graph SDK (preferred when possible)
-            GraphServiceClient graphClient = GetAuthenticatedGraphClient(config);
-            List<QueryOption> options = new List<QueryOption>
-            {
-                new QueryOption("$top", "1")
-            };
-
-            var graphResult = graphClient.Users.Request(options).GetAsync().Result;
-            Console.WriteLine("Graph SDK Result");
-            Console.WriteLine(graphResult[0].DisplayName);
-
-            //Direct query using HTTPClient (for beta endpoint calls or not available in Graph SDK)
-            HttpClient httpClient = GetAuthenticatedHTTPClient(config);
-            Uri Uri = new Uri("https://graph.microsoft.com/v1.0/users?$top=1");
-            var httpResult = httpClient.GetStringAsync(Uri).Result;
-
-            Console.WriteLine("HTTP Result");
-            Console.WriteLine(httpResult);
+            var GraphServiceClient = GetAuthenticatedGraphClient(config);
+            var plannerHelper = new PlannerHelper(GraphServiceClient);
+            plannerHelper.PlannerHelperCall().GetAwaiter().GetResult();
         }
-
+        
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
         {
             var authenticationProvider = CreateAuthorizationProvider(config);
@@ -66,8 +51,8 @@ namespace ConsoleGraphTest
             List<string> scopes = new List<string>();
             scopes.Add("https://graph.microsoft.com/.default");
 
-            var cca = new PublicClientApplication(clientId, authority);
-            return new DeviceCodeFlowAuthorizationProvider(cca, scopes);
+            var pca = new PublicClientApplication(clientId, authority);
+            return new DeviceCodeFlowAuthorizationProvider(pca, scopes);
         }
 
         private static IConfigurationRoot LoadAppSettings()
