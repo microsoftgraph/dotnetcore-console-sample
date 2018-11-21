@@ -51,16 +51,16 @@ As this exercise requires new permissions the App Registration needs to be updat
     1. In the "Select permissions" search box type "\<Start of permission string\>".
     1. Select **Group.ReadWrite.All** from the filtered list.
 
-        ![Screenshot of adding Delegated permission for Group.ReadWrite.All](Images/aad-add-planner-permissions.png)
+        ![Screenshot of adding Delegated permission for Group.ReadWrite.All](Images/aad-add-planner-permissions.PNG)
 
     1. Selection **User.ReadBasic.All** from the filtered list.
-        ![Screenshort of addinf delegated permission for User.ReadBasic.All](Images/aad-add-planner-permissions-2.png)
+        ![Screenshot of adding Delegated permission for User.ReadBasic.All](Images/aad-add-planner-permissions-2.PNG)
 
     1. Click **Add permissions** at the bottom of flyout.
 
 1. Back on the API permissions content blade, click **Grant admin consent for \<name of tenant\>**.  
 
-    ![Screenshot of granting admin consent for newly added permission](Images/aad-grant-permissions-planner.png)
+    ![Screenshot of granting admin consent for newly added permission](Images/aad-grant-permissions-planner.PNG)
 
     1. Click **Yes**.
 
