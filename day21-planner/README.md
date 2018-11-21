@@ -1,10 +1,8 @@
-# Day 21 - Getting your Team organized with Planner through the Microsoft Graph
+# Day 21 - Creating plans, buckets, and tasks in Planner
 
-> When adding Images, save them in the Images folder for your day
-
-- [Day 21 - Getting your Team organized with Planner through the Microsoft Graph](#day-23-getting-your-team-organized-with-planner-through-the-microsoft-graph)
+- [Day 21 - Getting your Team organized with Planner through the Microsoft Graph](#day-21---getting-your-team-organized-with-planner-through-the-microsoft-graph)
     - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-rgistration-permissions)
+    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
     - [Step 2: Ensure that you are part of an Office 365 group](#step-2-ensure-that-you-are-part-of-an-office-365-group)
     - [Step 3: Enable your application for Device Code Flow](#step-3-enable-your-application-for-device-code-flow)
     - [Step 4: Extend the app to List existing Planner Plans](#step-4-extend-the-app-to-list-existing-planner-plans)
@@ -30,7 +28,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 ## Step 1: Update the App Registration permissions
 
-As this exercise requires new permissions the App Registration needs to be updated to include the **Group.ReadWrite.All** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
+As this exercise requires new permissions the App Registration needs to be updated to include the **Group.ReadWrite.All** and **User.ReadBasic.All** permissions using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
 1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
