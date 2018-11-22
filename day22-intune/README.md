@@ -49,7 +49,7 @@ As this exercise requires new permissions the App Registration needs to be updat
     1. In the "Select permissions" search box type "DeviceManagement>".
     1. Select **DeviceManagementApps.ReadWrite.All**, **DeviceManagementConfiguration.ReadWrite.All**, and **DeviceManagementManagedDevices.Read.All** from the filtered list.
 
-        ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-01.png)
+        ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-01.PNG)
 
     1. Click **Add permissions** at the bottom of flyout.
 
@@ -61,6 +61,10 @@ As this exercise requires new permissions the App Registration needs to be updat
     > **Note:** Make sure you do not have any application permission already selected, it will make the request fail. If you do have some, remove them before granting the new permissions.
 
 ## Step 2: Extend the application with IntuneHelper class
+
+In this step you will create a Helper method that encapsulates the logic for interacting with Intune and then add calls to the console application created in the [Device Code Flow](../day20-devicecode/).
+
+ > **Important:** Ensure that you follow the steps from Day 20 Device Code Flow exercise or today's application updates will not leverage the proper authentication flow necessary to be successful.
 
 1. Create a new file in the `Helpers` folder called `IntuneHelper.cs`.
 1. Replace the contents of `IntuneHelper.cs` with the following code:
