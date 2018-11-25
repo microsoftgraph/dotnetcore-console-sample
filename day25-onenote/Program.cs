@@ -37,11 +37,24 @@ namespace ConsoleGraphTest
         // Add a private method to do any necessary setup and make calls to your helper
         private static void OneNoteHelperCall()
         {
-            const string alias = "sdk_test";
+            const string userPrincipalName = "adelev@m365x974797.onmicrosoft.com";
+            const string notebookName = "Microsoft Graph notes";
+            const string sectionName = "Required Reading";
+            const string pageName = "30DaysMSGraph";
+
             var onenoteHelper = new OneNoteHelper(_graphServiceClient);
-            //var user = onenoteHelper.FindByAlias(alias).Result;
-            // Add some console writes for demo purposes if necessary
+            var onenoteHelperHttp = new OneNoteHelper(_httpClient);
             
+            var notebookResult = onenoteHelper.GetNotebook(userPrincipalName, notebookName) ?? onenoteHelper.CreateNoteBook(userPrincipalName, notebookName).GetAwaiter().GetResult();
+            Console.WriteLine("Found / created notebook: " + notebookResult.DisplayName);
+
+            var sectionResult = onenoteHelper.GetSection(userPrincipalName, notebookResult, sectionName) ?? onenoteHelper.CreateSection(userPrincipalName, notebookResult, sectionName).GetAwaiter().GetResult();
+            Console.WriteLine("Found / created section: " + sectionResult.DisplayName);
+
+            var pageCreateResult = onenoteHelperHttp.CreatePage(userPrincipalName, sectionResult, pageName).GetAwaiter().GetResult();
+
+            var pageGetResult = onenoteHelper.GetPage(userPrincipalName, sectionResult, pageName);
+            Console.WriteLine("Found / created page: " + pageGetResult.Title);
         }
 
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
