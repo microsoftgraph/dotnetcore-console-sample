@@ -16,6 +16,7 @@ Each of the samples builds from a common base project, in order to sucessfully b
 - [Day 20 - Device code flow to authentication users](./day20-devicecode)
 - [Day 21 - Create plans, buckets, and tasks in Planner](./day21-planner)
 - [Day 22 - Intune](./day22-intune)
+- [Day 25 - OneNote](./day25-onenote)
 - [Day NN - Template](./dayNN-template)
 
 ## Contributing
