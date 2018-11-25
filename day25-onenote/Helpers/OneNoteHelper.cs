@@ -101,7 +101,7 @@ namespace ConsoleGraphTest
         {
              Uri Uri = new Uri($"https://graph.microsoft.com/v1.0/users/{upn}/onenote/sections/{section.Id}/pages");
 
-            // use a verbatim interpolated string to represetnt the HTML text to be used for page creation
+            // use a verbatim interpolated string to represent the HTML text to be used for page creation
             var html = $@"
             <!DOCTYPE html>
             <html>
