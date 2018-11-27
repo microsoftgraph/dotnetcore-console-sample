@@ -2,10 +2,16 @@
 
 - [Day 28 - Webhooks](#day-28-webhooks)
     - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-rgistration-permissions)
-    - [Step 2: Extend the app to yyy](#step-2-extend-the-app-to-yyy)
-        - [Create the MyHelper class](#create-the-myhelper-class)
-        - [Extend program to yyy](#extend-program-to-yyy)
+    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+    - [Step 2: Create the Web API](#step-2-create-the-web-api)
+        - [Create the Web API Project](#create-the-web-api-project)
+    - [Step 3: Add authentication code](#step-3-add-authentication-code)
+        - [Set configuration values from Azure AD App regisrtration](#set-configuration-values-from-azure-ad-app-regisrtration)
+        - [Setup Authentication helper classes](#setup-authentication-helper-classes)
+    - [Step 4 - Setup Models and Controllers](#step-4-setup-models-and-controllers)
+        - [Add SubscriptionsRepository and supporting model classes](#add-subscriptionsrepository-and-supporting-model-classes)
+        - [Add the controllers](#add-the-controllers)
+    - [Step 5: Run the application](#step-5-run-the-application)
 
 ## Prerequisites
 
@@ -57,7 +63,7 @@ As this exercise requires new permissions the App Registration needs to be updat
 
     1. Click **Yes**.
 
-## Step 2: Create the Web API project
+## Step 2: Create the Web API
 
 In this step you will create an ASP.Net core Web API project and set up the necessary dependencies.
 
@@ -304,9 +310,9 @@ In this step you will set up the classes and configuration that will be used to 
     ```
     > This registers an instance of the HttpClient class pre-configured with the necessary authentication context with the Dependency Injection system that is baked into ASP.NET Core.
 
-## Step 4 - Setup Models and Controllers
+## Step 4: Setup Models and Controllers
 
-### Add SubscriptionsRepoitory and supporing model classes
+### Add SubscriptionsRepository and supporting model classes
 
 In this step you will create the classes to serialize and deserialize all of the requests needed when working with webhooks and create an in-memory repository for tracking subscriptions.
 
@@ -441,7 +447,7 @@ In this step you will create the classes to serialize and deserialize all of the
         }
     }
     ```
-> In a production system the `SubscriptionRepository` implementation would certainly be connected to some form of cloud storage system such as CosmosDb or Azure SQL.
+    > In a production system the `SubscriptionRepository` implementation would certainly be connected to some form of cloud storage system such as CosmosDb or Azure SQL.
 
 1. In the `Startup.cs` file edit the `ConfigureServices` method to add the following lines:
 
@@ -656,7 +662,7 @@ In this step you will define the Subscription and Notifcation controllers to han
     ```
     > The NotificationsController is responsible for recieving notfication requests from Microsoft Graph
 
-## Step 5 - Run the application
+## Step 5: Run the application
 
 The Web API is now able to register subscriptions and handle incoming notifications. In order to test the Web API run the following commands from the command line:
 
