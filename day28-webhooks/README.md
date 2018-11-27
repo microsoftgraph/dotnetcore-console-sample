@@ -116,7 +116,9 @@ In this step you will set up the classes and configuration that will be used to 
     "applicationSecret": "",
     "tenantId": "",
     "redirectUri": "",
+    "baseUrl": ""
     ```
+    > **Note:** `baseUrl` will be filled in at a later step.  Leave it empty for now.
 
 1. Open the `Startup.cs` file add a new method called `ValidateConfig()`:
 
@@ -154,7 +156,7 @@ In this step you will set up the classes and configuration that will be used to 
         app.UseMvc();
     }
     ```
-    > Note that UseHttpsRedirection is only called for production configurations, this is to allow ngrok to call the http endpoint and not encounter SSL validation issues when running on localhost.
+    > **Note:** that UseHttpsRedirection is only called for production configurations, this is to allow ngrok to call the http endpoint and not encounter SSL validation issues when running on localhost.
 
 1. Configure the ngrok tunnel and settings:
 
@@ -163,6 +165,8 @@ In this step you will set up the classes and configuration that will be used to 
         ```bash
         ngrok http 5000
         ```
+        > **Note:** If you did not yet install the [ngrok](https://ngrok.com/) tool from the prerequisites please do so now.  Be sure to place the `ngrok.exe` tool in an accesible location or update your PATH environment variable to include the containing folder.
+
     1. Copy the https Forwarding url shown
         ![Screenshot of ngrok running](Images/ngrok.png)
     1. In VSCode Paste the copied URL into the baseUrl property in `appsettings.json`
@@ -675,7 +679,7 @@ The Web API is now able to register subscriptions and handle incoming notificati
 
 1. From the command line running ngrok copy the https forwading url.
 
-1. Open a web browser at `<ngrokUrl>/api/subscriptions/<known-upn>`, e.g. https://891b8419.ngrok.io/api/subscriptions/sdt_test@contoso.com.
+1. Open a web browser at `<ngrokUrl>/api/subscriptions/<known-upn>`, ex. https://891b8419.ngrok.io/api/subscriptions/sdt_test@contoso.com.
 
 1. You will see two api requests logged in the ngrok console
     ![Screenshot of subscription registration requests](Images/ngrok-02.png)
