@@ -47,13 +47,33 @@ namespace ConsoleGraphTest
         {
             const string smallFilePath = @"SampleFiles\SmallFile.txt";
             const string largeFilePath = @"SampleFiles\LargeFile.txt";
-            
+
+            // change this bool to false to upload to OneDrive site instead
+            bool uploadToSharePoint = true;
+
             var oneDriveHelper = new OneDriveHelper(_graphServiceClient);
-            var uploadedSmallFile = oneDriveHelper.UploadSmallFile(smallFilePath).GetAwaiter().GetResult();
-
-            //var uploadedLargeFile = oneDriveHelper.UploadLargeFile(largeFilePath);
-
+   
+            var uploadedSmallFile = oneDriveHelper.UploadSmallFile(smallFilePath, uploadToSharePoint).GetAwaiter().GetResult();
+            if(uploadedSmallFile != null)
+            {
+                Console.WriteLine($"Uploaded file {smallFilePath} to {uploadedSmallFile.WebUrl}.");
+            }
+            else
+            {
+                Console.WriteLine($"Failure uploading {smallFilePath}");
+            }
+            
+            var uploadedLargeFile = oneDriveHelper.UploadLargeFile(largeFilePath, uploadToSharePoint).GetAwaiter().GetResult();
+            if(uploadedLargeFile != null)
+            {
+                Console.WriteLine($"Uploaded file {largeFilePath} to {uploadedLargeFile.WebUrl}.");
+            }
+            else
+            {
+                Console.WriteLine($"Failure uploading {largeFilePath}");
+            }
         }
+
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
         {
             var authenticationProvider = CreateAuthorizationProvider(config);

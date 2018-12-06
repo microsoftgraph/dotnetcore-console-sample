@@ -36,7 +36,7 @@ namespace ConsoleGraphTest
 
             if(uploadToSharePoint)
             {
-                //uploadedFile = await graphClient.Sites["root"].Drive.Root.ItemWithPath(fileToUpload.Name).Content.Request().PutAsync<DriveItem>(fileStream);
+                uploadedFile = await _graphClient.Sites["root"].Drive.Root.ItemWithPath(fileToUpload).Content.Request().PutAsync<DriveItem>(fileStream);
             }
             else
             {
@@ -46,8 +46,6 @@ namespace ConsoleGraphTest
             return uploadedFile;
         }
 
-        public void SomeFunc()
-
         /// <summary>
         /// Take a file greater than 4MB and upload it to the service
         /// </summary>
@@ -55,42 +53,39 @@ namespace ConsoleGraphTest
         /// <param name="uploadToSharePoint">Should we upload to SharePoint or OneDrive?</param>
         public async Task<DriveItem> UploadLargeFile(string fileToUpload, bool uploadToSharePoint)
         {
-            throw new NotImplementedException();
-
-
             DriveItem uploadedFile = null;
             FileStream fileStream = new FileStream(fileToUpload, FileMode.Open);
 
             UploadSession uploadSession = null;
 
-            // // Do we want OneDrive for Business/Consumer or do we want a SharePoint Site?
-            // if (uploadToSharePoint)
-            // {
-            //     uploadSession = await graphClient.Sites["root"].Drive.Root.ItemWithPath(fileToUpload.Name).CreateUploadSession().Request().PostAsync();
-            // }
-            // else
-            // {
-            //     uploadSession = await graphClient.Me.Drive.Root.ItemWithPath(fileToUpload.Name).CreateUploadSession().Request().PostAsync();
-            // }
+            // Do we want OneDrive for Business/Consumer or do we want a SharePoint Site?
+            if (uploadToSharePoint)
+            {
+                uploadSession = await _graphClient.Sites["root"].Drive.Root.ItemWithPath(fileToUpload).CreateUploadSession().Request().PostAsync();
+            }
+            else
+            {
+                uploadSession = await _graphClient.Me.Drive.Root.ItemWithPath(fileToUpload).CreateUploadSession().Request().PostAsync();
+            }
 
-            // if (uploadSession != null)
-            // {
-            //     // Chunk size must be divisible by 320KiB, our chunk size will be slightly more than 1MB
-            //     int maxSizeChunk = (320 * 1024) * 4;
-            //     ChunkedUploadProvider uploadProvider = new ChunkedUploadProvider(uploadSession, graphClient, fileStream, maxSizeChunk);
-            //     var chunkRequests = uploadProvider.GetUploadChunkRequests();
-            //     var exceptions = new List<Exception>();
-            //     var readBuffer = new byte[maxSizeChunk];
-            //     foreach (var request in chunkRequests)
-            //     {
-            //         var result = await uploadProvider.GetChunkRequestResponseAsync(request, readBuffer, exceptions);
+            if (uploadSession != null)
+            {
+                // Chunk size must be divisible by 320KiB, our chunk size will be slightly more than 1MB
+                int maxSizeChunk = (320 * 1024) * 4;
+                ChunkedUploadProvider uploadProvider = new ChunkedUploadProvider(uploadSession, _graphClient, fileStream, maxSizeChunk);
+                var chunkRequests = uploadProvider.GetUploadChunkRequests();
+                var exceptions = new List<Exception>();
+                var readBuffer = new byte[maxSizeChunk];
+                foreach (var request in chunkRequests)
+                {
+                    var result = await uploadProvider.GetChunkRequestResponseAsync(request, readBuffer, exceptions);
 
-            //         if (result.UploadSucceeded)
-            //         {
-            //             uploadedFile = result.ItemResponse;
-            //         }
-            //     }
-            // }
+                    if (result.UploadSucceeded)
+                    {
+                        uploadedFile = result.ItemResponse;
+                    }
+                }
+            }
 
             return uploadedFile;
         }
