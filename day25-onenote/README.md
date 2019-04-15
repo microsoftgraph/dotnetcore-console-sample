@@ -26,7 +26,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 As this exercise requires new permissions the App Registration needs to be updated to include the **Notes.ReadWrite.All** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
-1. Open a browser and navigate to the [Preview App Registration](https://aka.ms/AppRegistrationsPreview) within Azure AD Portal. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
+1. Open a browser and navigate to the [App registrations page](https://go.microsoft.com/fwlink/?linkid=2083908) within the Azure AD Portal. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
     > **Note:** If you do not have permissions to create app registrations contact your Azure AD domain administrators.
 

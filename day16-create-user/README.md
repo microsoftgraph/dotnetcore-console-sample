@@ -31,13 +31,13 @@ As this exercise requires new permissions the App Registration needs to be updat
 
     > **Note:** If you do not have permissions to create app registrations contact your Azure AD domain administrators.
 
-1. Click **Azure Active Directory** from the left-hand navigation menu.
+1. Select **Azure Active Directory** from the left-hand navigation menu, then **App registrations (preview)**.
 
 1. Click on the **.NET Core Graph Tutorial** item in the list
 
     > **Note:** If you used a different name while completing the [Base Console Application Setup](../base-console-app/) select that instead.
 
-1. Click **API permissions** from the current blade content.
+1. Click **API permissions** from the current page.
 
     1. Click **Add a permission** from the current blade content.
     1. On the **Request API permissions** flyout select **Microsoft Graph**.
