@@ -46,7 +46,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
     Run the following commands to install these NuGet packages:
 
     ```
-    dotnet add package Microsoft.Identity.Client --version 2.3.1-preview
+    dotnet add package Microsoft.Identity.Client --version 2.7.1
     dotnet add package Microsoft.Graph
     dotnet add package Microsoft.Extensions.Configuration
     dotnet add package Microsoft.Extensions.Configuration.FileExtensions
@@ -57,17 +57,13 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 In this exercise, you will create an Azure AD app registration using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
-1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
+1. Open a browser and navigate to the [Azure AD Portal](https://go.microsoft.com/fwlink/?linkid=2083908) app registration page. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
     > **Note:** If you do not have permissions to create app registrations contact your Azure AD domain administrators.
 
-1. Click **Azure Active Directory** from the left-hand navigation menu.
-
-1. Click **App registrations (Preview)** from the current blade navigation pane.
+1. Click **New registration** from the current page.
 
     > **Note:** All information and example screenshots are using the preview versions of this registration portal and are subject to change.  We will attempt to update this documentation to match after the new app registration UI is generally available (GA).
-
-1. Click **New registration** from the current blade content.
 
 1. On the **Register an application** page, specify the following values:
 
