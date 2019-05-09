@@ -117,15 +117,17 @@ namespace ConsoleGraphTest
         private static IAuthenticationProvider CreateAuthorizationProvider(IConfigurationRoot config)
         {
             var clientId = config["applicationId"];
-            var clientSecret = config["applicationSecret"];
             var redirectUri = config["redirectUri"];
             var authority = $"https://login.microsoftonline.com/{config["tenantId"]}";
 
             List<string> scopes = new List<string>();
             scopes.Add("https://graph.microsoft.com/.default");
 
-            var cca = new PublicClientApplication(clientId, authority);
-            return new DeviceCodeFlowAuthorizationProvider(cca, scopes);
+            var pca = PublicClientApplicationBuilder.Create(clientId)
+                                                    .WithAuthority(authority)
+                                                    .WithRedirectUri(redirectUri)
+                                                    .Build();
+            return new DeviceCodeFlowAuthorizationProvider(pca, scopes);
         }
 
         private static IConfigurationRoot LoadAppSettings()
@@ -139,7 +141,6 @@ namespace ConsoleGraphTest
 
                 // Validate required settings
                 if (string.IsNullOrEmpty(config["applicationId"]) ||
-                    string.IsNullOrEmpty(config["applicationSecret"]) ||
                     string.IsNullOrEmpty(config["redirectUri"]) ||
                     string.IsNullOrEmpty(config["tenantId"]))
                 {

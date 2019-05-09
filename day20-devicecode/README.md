@@ -86,10 +86,10 @@ In this step you will create a UserHelper class that encapsulates the logic for 
     namespace ConsoleGraphTest {
         public class DeviceCodeFlowAuthorizationProvider : IAuthenticationProvider
         {
-            private readonly PublicClientApplication _application;
+            private readonly IPublicClientApplication _application;
             private readonly List<string> _scopes;
             private string _authToken;
-            public DeviceCodeFlowAuthorizationProvider(PublicClientApplication application, List<string> scopes) {
+            public DeviceCodeFlowAuthorizationProvider(IPublicClientApplication application, List<string> scopes) {
                 _application = application;
                 _scopes = scopes;
             }
@@ -120,8 +120,12 @@ This class contains the code to implement the device code flow requests when the
         List<string> scopes = new List<string>();
         scopes.Add("https://graph.microsoft.com/.default");
 
-        var cca = new PublicClientApplication(clientId, authority);
-        return new DeviceCodeFlowAuthorizationProvider(cca, scopes);
+        var pca = PublicClientApplicationBuilder.Create(clientId)
+                                                .WithAuthority(authority)
+                                                .WithRedirectUri(redirectUri)
+                                                .WithClientSecret(clientSecret)
+                                                .Build();
+        return new DeviceCodeFlowAuthorizationProvider(pca, scopes);
     ```
 
 ### Update the reference to the MSAL library
@@ -137,7 +141,7 @@ At the time of the writing, the Device Code Flow flow is only implemented in pre
     by
 
     ```xml
-    <PackageReference Include="Microsoft.Identity.Client" Version="2.4.0-preview" /> 
+    <PackageReference Include="Microsoft.Identity.Client" Version="3.0.8" /> 
     ```
 
 1. In a command line type the following command `dotnet restore`.

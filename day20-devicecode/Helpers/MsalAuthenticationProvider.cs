@@ -16,10 +16,10 @@ namespace ConsoleGraphTest
     // the GraphSDK team.  It will supports all the types of Client Application as defined by MSAL.
     public class MsalAuthenticationProvider : IAuthenticationProvider
     {
-        private ConfidentialClientApplication _clientApplication;
+        private IConfidentialClientApplication _clientApplication;
         private string[] _scopes;
 
-        public MsalAuthenticationProvider(ConfidentialClientApplication clientApplication, string[] scopes) {
+        public MsalAuthenticationProvider(IConfidentialClientApplication clientApplication, string[] scopes) {
             _clientApplication = clientApplication;
             _scopes = scopes;
         }
@@ -39,7 +39,8 @@ namespace ConsoleGraphTest
         public async Task<string> GetTokenAsync()
         {
             AuthenticationResult authResult = null;
-            authResult = await _clientApplication.AcquireTokenForClientAsync(_scopes);
+            authResult = await _clientApplication.AcquireTokenForClient(_scopes)
+                                .ExecuteAsync();
             return authResult.AccessToken;
         }
     }

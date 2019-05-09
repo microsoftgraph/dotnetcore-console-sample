@@ -88,7 +88,11 @@ namespace ConsoleGraphTest
             List<string> scopes = new List<string>();
             scopes.Add("https://graph.microsoft.com/.default");
 
-            var cca = new ConfidentialClientApplication(clientId, authority, redirectUri, new ClientCredential(clientSecret), null, null);
+            var cca = ConfidentialClientApplicationBuilder.Create(clientId)
+                                                    .WithAuthority(authority)
+                                                    .WithRedirectUri(redirectUri)
+                                                    .WithClientSecret(clientSecret)
+                                                    .Build();
             return new MsalAuthenticationProvider(cca, scopes.ToArray());
         }
 

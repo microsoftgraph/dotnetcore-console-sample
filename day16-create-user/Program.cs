@@ -87,7 +87,6 @@ namespace ConsoleGraphTest
                                                     .WithRedirectUri(redirectUri)
                                                     .WithClientSecret(clientSecret)
                                                     .Build();
-
             return new MsalAuthenticationProvider(cca, scopes.ToArray());
         }
 
