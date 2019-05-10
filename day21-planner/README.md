@@ -1,14 +1,14 @@
 # Day 21 - Creating plans, buckets, and tasks in Planner
 
-- [Day 21 - Getting your Team organized with Planner through the Microsoft Graph](#day-21---getting-your-team-organized-with-planner-through-the-microsoft-graph)
-    - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
-    - [Step 2: Ensure that you are part of an Office 365 group](#step-2-ensure-that-you-are-part-of-an-office-365-group)
-    - [Step 3: Enable your application for Device Code Flow](#step-3-enable-your-application-for-device-code-flow)
-    - [Step 4: Extend the app to List existing Planner Plans](#step-4-extend-the-app-to-list-existing-planner-plans)
-        - [Extend program to List existing Planner Plans](#extend-program-to-list-existing-planner-plans)
-        - [Extend program to add a Bucket](#extend-program-to-add-a-bucket)
-        - [Extend program to add a Task](#extend-program-to-add-a-task)
+- [Day 21 - Creating plans, buckets, and tasks in Planner](#day-21---creating-plans-buckets-and-tasks-in-planner)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+  - [Step 2: Ensure that you are part of an Office 365 group](#step-2-ensure-that-you-are-part-of-an-office-365-group)
+  - [Step 3: Enable your application for Device Code Flow](#step-3-enable-your-application-for-device-code-flow)
+  - [Step 4: Extend the app to List existing Planner Plans](#step-4-extend-the-app-to-list-existing-planner-plans)
+    - [Extend program to List existing Planner Plans](#extend-program-to-list-existing-planner-plans)
+    - [Extend program to add a Bucket](#extend-program-to-add-a-bucket)
+    - [Extend program to add a Task](#extend-program-to-add-a-task)
 
 ## Prerequisites
 
@@ -100,6 +100,7 @@ In this step you will create a Helper method that encapsulates the logic for lis
         plannerHelper.PlannerHelperCall().GetAwaiter().GetResult();
     }
     ```
+
 1. Inside the `Helpers` folder add a class `PlannerHelper.cs` with the following definition.
 
     We will build on this class during the exercise.
@@ -213,11 +214,13 @@ dotnet run
         return createdBucket.Id;
     }
     ```
+
 1. Inside the `PlannerHelper` add the following line at the end of the `PlannerHelperCall` method.
 
     ```cs
     var bucketId = await CreatePlannerBucket(groupId, planId);
     ```
+
 1. Save all files.
 
 The console application is now able add new buckets to a plan. In order to test the console application run the following commands from the command line:
@@ -255,11 +258,13 @@ dotnet run
         Console.WriteLine($"Added new task {createdTask.Title} to bucket");
     }
     ```
+
 1. Inside the `PlannerHelper` class update the `PlannerHelperCall` method to add the following line at the end.
 
     ```cs
     await CreatePlannerTask(users, groupId, planId, bucketId);
     ```
+
 1. Save all files.
 
 The console application is now able add new tasks to a bucket. In order to test the console application run the following commands from the command line:

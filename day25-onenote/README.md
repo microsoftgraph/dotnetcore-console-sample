@@ -1,11 +1,11 @@
 # Day 25 - Create a OneNote notebook and page
 
-- [Day NN - Scenario Template](#day-nn-scenario-template)
-    - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-rgistration-permissions)
-    - [Step 2: Extend the app to yyy](#step-2-extend-the-app-to-yyy)
-        - [Create the MyHelper class](#create-the-myhelper-class)
-        - [Extend program to yyy](#extend-program-to-yyy)
+- [Day 25 - Create a OneNote notebook and page](#day-25---create-a-onenote-notebook-and-page)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+  - [Step 2: Extend the app to OneNote](#step-2-extend-the-app-to-onenote)
+    - [Create the OneNoteHelper class](#create-the-onenotehelper-class)
+    - [Extend program to create a OneNote notebook, section, and page](#extend-program-to-create-a-onenote-notebook-section-and-page)
 
 ## Prerequisites
 
@@ -233,6 +233,7 @@ In this step you will create a OneNoteHelper class that encapsulates the logic f
         Console.WriteLine("Found / created page: " + pageGetResult.Title);
     }
     ```
+
     > **Important** Be sure to replace `<userPrincipalName>` with a valid UPN within your tenant.
 
 1. Continuing in the `Main` method add the following code to call the new method.
@@ -240,6 +241,7 @@ In this step you will create a OneNoteHelper class that encapsulates the logic f
     ```cs
     OneNoteHelperCall();
     ```
+
 1. Save all files.
 
 The console application is now able to create a OneNote notebook, section, and page. In order to test the console application run the following commands from the command line:

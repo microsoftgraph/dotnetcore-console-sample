@@ -44,11 +44,11 @@ As this exercise requires new permissions the App Registration needs to be updat
 
         ![Screenshot of selecting Microsoft Graph permission to add to app registration](Images/aad-create-app-05.png)
 
-    1. Select **Application permissions**.
+    1. Select **[Application|Delegated] permissions**.
     1. In the "Select permissions" search box type "\<Start of permission string\>".
     1. Select **\<New-Permission-Here\>** from the filtered list.
 
-        ![Screenshot of adding application permission for User.Read.All permission](Images/new-image-needed.png)
+        ![Screenshot of adding [application|delegated] permission for User.Read.All permission](Images/new-image-needed.png)
 
     1. Click **Add permissions** at the bottom of flyout.
 
@@ -70,6 +70,7 @@ In this step you will create a UserHelper class that encapsulates the logic for 
     ```cs
     // Your code here
     ```
+
 This class contains the code to ....
 
 ### Extend program to yyy
@@ -79,6 +80,7 @@ This class contains the code to ....
     ```cs
     // Your code here
     ```
+
     > **Important** Any key things to note where the developer might run into issues.
 
 1. Continuing in the `Main` method add the following code to call the new method.
@@ -86,6 +88,7 @@ This class contains the code to ....
     ```cs
     YourMethod();
     ```
+
 1. Save all files.
 
 The console application is now able to \<do some new thing\>. In order to test the console application run the following commands from the command line:
