@@ -143,7 +143,7 @@ At the time of the writing, the Device Code Flow flow is now implemented in GA v
     by
 
     ```xml
-    <PackageReference Include="Microsoft.Identity.Client" Version="3.0.8" /> 
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.0.0" /> 
     ```
 
 1. In a command line type the following command `dotnet restore`.
