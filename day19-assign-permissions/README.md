@@ -1,11 +1,12 @@
 # Day 19 - Assign permissions to user using the unified groups
 
-- [Day 19 - Add permissions to user](#day19-assign-permissions)
-    - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
-    - [Step 2: Extend the Program to manage user permissions to unified groups](#step-2-extend-the-program-to-manage-user-permissions-to-unified-groups)
-        - [Create the PermissionHelper class](#create-the-permissionhelper-class)
-        - [Extend program to add and validate user permissions to unified group](#extend-program-to-add-and-validate-user-permissions-to-unified-group)
+- [Day 19 - Assign permissions to user using the unified groups](#day-19---assign-permissions-to-user-using-the-unified-groups)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+  - [Step 2: Extend the program to manage user permissions to unified groups](#step-2-extend-the-program-to-manage-user-permissions-to-unified-groups)
+    - [Create the ResultsItem Helper class](#create-the-resultsitem-helper-class)
+    - [Create the PermissionHelper class](#create-the-permissionhelper-class)
+    - [Extend program to add and validate user permissions to unified group](#extend-program-to-add-and-validate-user-permissions-to-unified-group)
 
 ## Prerequisites
 
