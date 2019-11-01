@@ -1,13 +1,13 @@
 # Base Console Application Setup
 
 - [Base Console Application Setup](#base-console-application-setup)
-    - [Prerequisites](#prerequisites)
-    - [Step 1: Create a .Net Core Console Application](#step-1-create-a-net-core-console-application)
-    - [Step 2: Register a web application with the new Azure AD Portal App Registration](#step-2-register-a-web-application-with-the-new-azure-ad-portal-app-registration)
-    - [Step 3: Extend the app for Azure AD Authentication](#step-3-extend-the-app-for-azure-ad-authentication)
-        - [Create helper classes](#create-helper-classes)
-    - [Step 4: Extend the app for Microsoft Graph](#step-4-extend-the-app-for-microsoft-graph)
-        - [Get user information from tenant](#get-user-information-from-tenant)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Create a .Net Core Console Application](#step-1-create-a-net-core-console-application)
+  - [Step 2: Register a web application with the new Azure AD Portal App Registration](#step-2-register-a-web-application-with-the-new-azure-ad-portal-app-registration)
+  - [Step 3: Extend the app for Azure AD Authentication](#step-3-extend-the-app-for-azure-ad-authentication)
+    - [Create helper classes](#create-helper-classes)
+  - [Step 4: Extend the app for Microsoft Graph](#step-4-extend-the-app-for-microsoft-graph)
+    - [Get user information from tenant](#get-user-information-from-tenant)
 
 ## Prerequisites
 
@@ -46,7 +46,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
     Run the following commands to install these NuGet packages:
 
     ```
-    dotnet add package Microsoft.Identity.Client --version 2.3.1-preview
+    dotnet add package Microsoft.Identity.Client --version 3.0.8
     dotnet add package Microsoft.Graph
     dotnet add package Microsoft.Extensions.Configuration
     dotnet add package Microsoft.Extensions.Configuration.FileExtensions
@@ -57,17 +57,13 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 In this exercise, you will create an Azure AD app registration using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
-1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
+1. Open a browser and navigate to the [Azure AD Portal](https://go.microsoft.com/fwlink/?linkid=2083908) app registration page. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
     > **Note:** If you do not have permissions to create app registrations contact your Azure AD domain administrators.
 
-1. Click **Azure Active Directory** from the left-hand navigation menu.
-
-1. Click **App registrations (Preview)** from the current blade navigation pane.
+1. Click **New registration** from the current page.
 
     > **Note:** All information and example screenshots are using the preview versions of this registration portal and are subject to change.  We will attempt to update this documentation to match after the new app registration UI is generally available (GA).
-
-1. Click **New registration** from the current blade content.
 
 1. On the **Register an application** page, specify the following values:
 
@@ -220,10 +216,10 @@ In this step you will extend the application from the previous step to support a
         // the GraphSDK team.  It will supports all the types of Client Application as defined by MSAL.
         public class MsalAuthenticationProvider : IAuthenticationProvider
         {
-            private ConfidentialClientApplication _clientApplication;
+            private IConfidentialClientApplication _clientApplication;
             private string[] _scopes;
 
-            public MsalAuthenticationProvider(ConfidentialClientApplication clientApplication, string[] scopes) {
+            public MsalAuthenticationProvider(IConfidentialClientApplication clientApplication, string[] scopes) {
                 _clientApplication = clientApplication;
                 _scopes = scopes;
             }
@@ -243,7 +239,8 @@ In this step you will extend the application from the previous step to support a
             public async Task<string> GetTokenAsync()
             {
                 AuthenticationResult authResult = null;
-                authResult = await _clientApplication.AcquireTokenForClientAsync(_scopes);
+                authResult = await _clientApplication.AcquireTokenForClient(_scopes)
+                                    .ExecuteAsync();
                 return authResult.AccessToken;
             }
         }
@@ -309,7 +306,7 @@ In this step you will incorporate the Microsoft Graph into the application. For 
     }
     ```
 
-1. Inside the `Program` class add a new method `CreateAuthorizationProvider` that will be used in later methods to instantiate the clients used for making calls against the Microsoft Graph.  This method uses the configuration data with a `ConfidentialClientApplication`.
+1. Inside the `Program` class add a new method `CreateAuthorizationProvider` that will be used in later methods to instantiate the clients used for making calls against the Microsoft Graph.  This method uses the configuration data with a `ConfidentialClientApplicationBuilder`.
 
     ```cs
     private static IAuthenticationProvider CreateAuthorizationProvider(IConfigurationRoot config)
@@ -322,7 +319,11 @@ In this step you will incorporate the Microsoft Graph into the application. For 
         List<string> scopes = new List<string>();
         scopes.Add("https://graph.microsoft.com/.default");
 
-        var cca = new ConfidentialClientApplication(clientId, authority, redirectUri, new ClientCredential(clientSecret), null, null);
+        var cca = ConfidentialClientApplicationBuilder.Create(clientId)
+                                                .WithAuthority(authority)
+                                                .WithRedirectUri(redirectUri)
+                                                .WithClientSecret(clientSecret)
+                                                .Build();
         return new MsalAuthenticationProvider(cca, scopes.ToArray());
     }
     ```
@@ -396,7 +397,7 @@ dotnet run
 
 Consider what this code is doing.
 
-- The `GetAuthenticatedGraphClient` function initializes a `GraphServiceClient` with an authentication provider that calls `AcquireTokenForClientAsync`.
+- The `GetAuthenticatedGraphClient` function initializes a `GraphServiceClient` with an authentication provider that calls `AcquireTokenForClient(<scopes>).ExecuteAsync()`.
 - In the `Main` function:
   - The graph endpoint that will be called is `/v1.0/users/$top=1`.
 - The `HttpClient` call with a manually constructed url and the `GraphServiceClient` sdk call are functionaly equivalent, which you choose to use in your applications will depend on your team practices, coding styles and target languages.

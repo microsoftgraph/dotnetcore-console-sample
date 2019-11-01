@@ -1,14 +1,14 @@
 # Day 22 - Device and App Management with Intune
 
 - [Day 22 - Device and App Management with Intune](#day-22---device-and-app-management-with-intune)
-    - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
-    - [Step 2: Extend the application with IntuneHelper class](#step-2-extend-the-application-with-intunehelper-class)
-    - [Step 3: Extend the Program to list Managed Devices for a User](#step-3-extend-the-program-to-list-managed-devices-for-a-user)
-    - [Step 4: Extend the program to publish a web app](#step-4-extend-the-program-to-publish-a-web-app)
-    - [Step 5: Extend the program to assign an app to all users](#step-5-extend-the-program-to-assign-an-app-to-all-users)
-    - [Step 6: Extend the program to create a Device Configuration Policy](#step-6-extend-the-program-to-create-a-device-configuration-policy)
-    - [Step 7: Extend the program to assign a Device Configuration Policy to all devices](#step-7-extend-the-program-to-assign-a-device-configuration-policy-to-all-devices)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+  - [Step 2: Extend the application with IntuneHelper class](#step-2-extend-the-application-with-intunehelper-class)
+  - [Step 3: Extend the Program to list Managed Devices for a User](#step-3-extend-the-program-to-list-managed-devices-for-a-user)
+  - [Step 4: Extend the program to publish a web app](#step-4-extend-the-program-to-publish-a-web-app)
+  - [Step 5: Extend the program to assign an app to all users](#step-5-extend-the-program-to-assign-an-app-to-all-users)
+  - [Step 6: Extend the program to create a Device Configuration Policy](#step-6-extend-the-program-to-create-a-device-configuration-policy)
+  - [Step 7: Extend the program to assign a Device Configuration Policy to all devices](#step-7-extend-the-program-to-assign-a-device-configuration-policy-to-all-devices)
 
 
 ## Prerequisites
@@ -28,11 +28,9 @@ If you don't have a Microsoft account you can [sign up for the Office 365 Develo
 
 As this exercise requires new permissions the App Registration needs to be updated to include the **DeviceManagementApps.ReadWrite.All)**, **DeviceManagementConfiguration.ReadWrite.All**, and **DeviceManagementManagedDevices.Read.All** permissions using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
-1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
+1. Open a browser and navigate to the [Azure AD Portal](https://go.microsoft.com/fwlink/?linkid=2083908) app registrations page. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
     > **Note:** If you do not have permissions to create app registrations contact your Azure AD domain administrators.
-
-1. Click **Azure Active Directory** from the left-hand navigation menu.
 
 1. Click on the **.NET Core Graph Tutorial** item in the list
 
@@ -207,6 +205,7 @@ In this step you will create a Helper method that encapsulates the logic for int
         }
     }
     ```
+
 This class contains the code to list managed devices, publish / assign a web app, and create / assign a Windows device configuration.
 
 ## Step 3: Extend the Program to list Managed Devices for a User
@@ -236,6 +235,7 @@ This class contains the code to list managed devices, publish / assign a web app
         await ListManagedDevices(intuneHelper, userPrincipalName);
     }
     ```
+
     > **Important:** Be sure to replace `<user>` with the user principal name of a valid user.
 
 1. Continuing in the `Main` method add the following code to call the new method.
@@ -273,6 +273,7 @@ dotnet run
         return webApp;
     }
     ```
+
 1. Continuing in the `IntuneHelperCall` method add the following code to call the new method.
 
     ```cs

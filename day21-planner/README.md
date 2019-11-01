@@ -1,14 +1,14 @@
 # Day 21 - Creating plans, buckets, and tasks in Planner
 
-- [Day 21 - Getting your Team organized with Planner through the Microsoft Graph](#day-21---getting-your-team-organized-with-planner-through-the-microsoft-graph)
-    - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
-    - [Step 2: Ensure that you are part of an Office 365 group](#step-2-ensure-that-you-are-part-of-an-office-365-group)
-    - [Step 3: Enable your application for Device Code Flow](#step-3-enable-your-application-for-device-code-flow)
-    - [Step 4: Extend the app to List existing Planner Plans](#step-4-extend-the-app-to-list-existing-planner-plans)
-        - [Extend program to List existing Planner Plans](#extend-program-to-list-existing-planner-plans)
-        - [Extend program to add a Bucket](#extend-program-to-add-a-bucket)
-        - [Extend program to add a Task](#extend-program-to-add-a-task)
+- [Day 21 - Creating plans, buckets, and tasks in Planner](#day-21---creating-plans-buckets-and-tasks-in-planner)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+  - [Step 2: Ensure that you are part of an Office 365 group](#step-2-ensure-that-you-are-part-of-an-office-365-group)
+  - [Step 3: Enable your application for Device Code Flow](#step-3-enable-your-application-for-device-code-flow)
+  - [Step 4: Extend the app to List existing Planner Plans](#step-4-extend-the-app-to-list-existing-planner-plans)
+    - [Extend program to List existing Planner Plans](#extend-program-to-list-existing-planner-plans)
+    - [Extend program to add a Bucket](#extend-program-to-add-a-bucket)
+    - [Extend program to add a Task](#extend-program-to-add-a-task)
 
 ## Prerequisites
 
@@ -30,11 +30,9 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 As this exercise requires new permissions the App Registration needs to be updated to include the **Group.ReadWrite.All** and **User.ReadBasic.All** permissions using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
-1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
+1. Open a browser and navigate to the [Azure AD Portal](https://go.microsoft.com/fwlink/?linkid=2083908) app registrations page. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
     > **Note:** If you do not have permissions to create app registrations contact your Azure AD domain administrators.
-
-1. Click **Azure Active Directory** from the left-hand navigation menu.
 
 1. Click on the **.NET Core Graph Tutorial** item in the list
 
@@ -102,6 +100,7 @@ In this step you will create a Helper method that encapsulates the logic for lis
         plannerHelper.PlannerHelperCall().GetAwaiter().GetResult();
     }
     ```
+
 1. Inside the `Helpers` folder add a class `PlannerHelper.cs` with the following definition.
 
     We will build on this class during the exercise.
@@ -215,11 +214,13 @@ dotnet run
         return createdBucket.Id;
     }
     ```
+
 1. Inside the `PlannerHelper` add the following line at the end of the `PlannerHelperCall` method.
 
     ```cs
     var bucketId = await CreatePlannerBucket(groupId, planId);
     ```
+
 1. Save all files.
 
 The console application is now able add new buckets to a plan. In order to test the console application run the following commands from the command line:
@@ -257,11 +258,13 @@ dotnet run
         Console.WriteLine($"Added new task {createdTask.Title} to bucket");
     }
     ```
+
 1. Inside the `PlannerHelper` class update the `PlannerHelperCall` method to add the following line at the end.
 
     ```cs
     await CreatePlannerTask(users, groupId, planId, bucketId);
     ```
+
 1. Save all files.
 
 The console application is now able add new tasks to a bucket. In order to test the console application run the following commands from the command line:

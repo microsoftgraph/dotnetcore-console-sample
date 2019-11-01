@@ -1,11 +1,11 @@
 # Day 25 - Create a OneNote notebook and page
 
-- [Day NN - Scenario Template](#day-nn-scenario-template)
-    - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-rgistration-permissions)
-    - [Step 2: Extend the app to yyy](#step-2-extend-the-app-to-yyy)
-        - [Create the MyHelper class](#create-the-myhelper-class)
-        - [Extend program to yyy](#extend-program-to-yyy)
+- [Day 25 - Create a OneNote notebook and page](#day-25---create-a-onenote-notebook-and-page)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+  - [Step 2: Extend the app to OneNote](#step-2-extend-the-app-to-onenote)
+    - [Create the OneNoteHelper class](#create-the-onenotehelper-class)
+    - [Extend program to create a OneNote notebook, section, and page](#extend-program-to-create-a-onenote-notebook-section-and-page)
 
 ## Prerequisites
 
@@ -26,7 +26,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 As this exercise requires new permissions the App Registration needs to be updated to include the **Notes.ReadWrite.All** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
-1. Open a browser and navigate to the [Preview App Registration](https://aka.ms/AppRegistrationsPreview) within Azure AD Portal. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
+1. Open a browser and navigate to the [App registrations page](https://go.microsoft.com/fwlink/?linkid=2083908) within the Azure AD Portal. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
     > **Note:** If you do not have permissions to create app registrations contact your Azure AD domain administrators.
 
@@ -233,6 +233,7 @@ In this step you will create a OneNoteHelper class that encapsulates the logic f
         Console.WriteLine("Found / created page: " + pageGetResult.Title);
     }
     ```
+
     > **Important** Be sure to replace `<userPrincipalName>` with a valid UPN within your tenant.
 
 1. Continuing in the `Main` method add the following code to call the new method.
@@ -240,6 +241,7 @@ In this step you will create a OneNoteHelper class that encapsulates the logic f
     ```cs
     OneNoteHelperCall();
     ```
+
 1. Save all files.
 
 The console application is now able to create a OneNote notebook, section, and page. In order to test the console application run the following commands from the command line:

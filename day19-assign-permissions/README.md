@@ -1,11 +1,12 @@
 # Day 19 - Assign permissions to user using the unified groups
 
-- [Day 19 - Add permissions to user](#day19-assign-permissions)
-    - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
-    - [Step 2: Extend the Program to manage user permissions to unified groups](#step-2-extend-the-program-to-manage-user-permissions-to-unified-groups)
-        - [Create the PermissionHelper class](#create-the-permissionhelper-class)
-        - [Extend program to add and validate user permissions to unified group](#extend-program-to-add-and-validate-user-permissions-to-unified-group)
+- [Day 19 - Assign permissions to user using the unified groups](#day-19---assign-permissions-to-user-using-the-unified-groups)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+  - [Step 2: Extend the program to manage user permissions to unified groups](#step-2-extend-the-program-to-manage-user-permissions-to-unified-groups)
+    - [Create the ResultsItem Helper class](#create-the-resultsitem-helper-class)
+    - [Create the PermissionHelper class](#create-the-permissionhelper-class)
+    - [Extend program to add and validate user permissions to unified group](#extend-program-to-add-and-validate-user-permissions-to-unified-group)
 
 ## Prerequisites
 
@@ -26,11 +27,9 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 As this exercise requires new permissions the App Registration needs to be updated to include the **Directory.ReadWrite.All**, **Group.Read.All** and **Group.ReadWrite.All** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
-1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
+1. Open a browser and navigate to the [Azure AD Portal](https://go.microsoft.com/fwlink/?linkid=2083908). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
     > **Note:** If you do not have permissions to create app registrations contact your Azure AD domain administrators.
-
-1. Click **Azure Active Directory** from the left-hand navigation menu.
 
 1. Click on the **.NET Core Graph Tutorial** item in the list
 

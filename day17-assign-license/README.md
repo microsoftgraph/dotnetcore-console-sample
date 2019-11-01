@@ -1,11 +1,11 @@
 # Day 17 - Assign Office 365 User License
 
 - [Day 17 - Assign Office 365 User License](#day-17---assign-office-365-user-license)
-    - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
-    - [Step 2: Extend the app to Office 365 Licensing](#step-2-extend-the-app-to-office-365-licensing)
-        - [Create the LicenseHelper class](#create-the-licensehelper-class)
-        - [Extend program to assing a license to a user](#extend-program-to-assing-a-license-to-a-user)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+  - [Step 2: Extend the app to Office 365 Licensing](#step-2-extend-the-app-to-office-365-licensing)
+    - [Create the LicenseHelper class](#create-the-licensehelper-class)
+    - [Extend program to assing a license to a user](#extend-program-to-assing-a-license-to-a-user)
 
 ## Prerequisites
 
@@ -26,7 +26,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 As this exercise requires new permissions the App Registration needs to be updated to include the Directory.ReadWrite.All application permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
-1. Open a browser and navigate to the [Azure AD Portal](https://aka.ms/AppRegistrationsPreview). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
+1. Open a browser and navigate to the [Azure AD Portal](https://go.microsoft.com/fwlink/?linkid=2083908) app registrations page. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
     > **Note:** If you do not have permissions to create app registrations contact your Azure AD domain administrators.
 
@@ -111,6 +111,7 @@ In this step you will create a LicenseHelper class that encapsulates the logic f
         }
     }
     ```
+
 This class contains the code to get a user, get a license, and assign the license to user.
 
 ### Extend program to assing a license to a user
@@ -130,6 +131,7 @@ This class contains the code to get a user, get a license, and assign the licens
             licenseHelper.AddLicense(user.Id, sku.SkuId).GetAwaiter().GetResult();
         }
     ```
+
     > **Important** Please update the `<replaceWithUserAlias>` with a user name alias from your tenant.  Ex. "AdeleV".
 
 1. Continuing in the `Main` method add the following code to call the new method.

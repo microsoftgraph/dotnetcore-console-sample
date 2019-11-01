@@ -1,14 +1,12 @@
 # Day 18 - Manage and Update user mailbox settings
 
-- [Day 18 - Update user mailbox settings](#day-18-mailbox)
-    - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
-    - [Step 2: Extend the app to update mailbox settings](#step-2-extend-the-app-to-manage-and-update-user-mailbox)
-    
-        - [Create the MailboxHelper class](#create-the-mailboxhelper-class)
-        - [Extend program to read and update mailbox settings](#extend-program-to-read-and-update-mailbox-settings)
-        - [Extend program to create and retrieve mailbox message rule](#extend-program-to-create-and-retrieve-message-rules)
-        
+- [Day 18 - Manage and Update user mailbox settings](#day-18---manage-and-update-user-mailbox-settings)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+  - [Step 2: Extend the app to manage and update user mailbox](#step-2-extend-the-app-to-manage-and-update-user-mailbox)
+    - [Create the MailboxHelper class](#create-the-mailboxhelper-class)
+    - [Extend program to read and update mailbox settings](#extend-program-to-read-and-update-mailbox-settings)
+    - [Extend program to create and retrieve message rules](#extend-program-to-create-and-retrieve-message-rules)
 
 ## Prerequisites
 
@@ -29,11 +27,9 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 As this exercise requires new permissions the App Registration needs to be updated to include the **User.Read.All**, **Mail.Read**, **MailboxSettings.Read** and **MailboxSettings.ReadWrite** permissions using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
-1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
+1. Open a browser and navigate to the [Azure AD Portal](https://go.microsoft.com/fwlink/?linkid=2083908) app registrations page. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
     > **Note:** If you do not have permissions to create app registrations contact your Azure AD domain administrators.
-
-1. Click **Azure Active Directory** from the left-hand navigation menu.
 
 1. Click on the **.NET Core Graph Tutorial** item in the list
 
@@ -98,6 +94,7 @@ In this step you will create a MailboxHelper class that encapsulates the logic f
         }
     }
     ```
+
 This class contains the helper class that will be used to hold the result data from various Microsoft Graph API calls and then used to iterate (if applicable) and show it in UI.
 
 1. Create a new file in the `Helpers` folder called `MailboxHelper.cs`.
@@ -109,7 +106,7 @@ This class contains the helper class that will be used to hold the result data f
     using System.Net.Http;
     using System.Threading.Tasks;
     using Microsoft.Graph;
-    //Comment
+
     namespace ConsoleGraphTest
     {
         public class MailboxHelper
@@ -167,8 +164,8 @@ This class contains the helper class that will be used to hold the result data f
                 String jsonContent = "{\"timeZone\" : \""+ timezone +"\"}";
                 HttpContent httpContent = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
                 await _httpClient.PatchAsync(Uri, httpContent);
-            }        
-        
+            }
+
             public async Task<List<ResultsItem>> GetUserMailboxRules(string alias)
             {
                 User user = FindByAlias(alias).Result;
@@ -231,6 +228,7 @@ This class contains the helper class that will be used to hold the result data f
         }
     }
     ```
+
 This class contains the code to read and update mailbox settings, create user mailbox message rules, retrieve the message rules, retrieve the mailbox messages.
 
 ### Extend program to read and update mailbox settings
@@ -259,6 +257,7 @@ This class contains the code to read and update mailbox settings, create user ma
         Console.WriteLine("Message count: "+ items.Count);
     }
     ```
+
 1. Continuing in the `Main` method add the following code to call the new method.
 
     ```cs
@@ -272,6 +271,7 @@ This class contains the code to read and update mailbox settings, create user ma
     //Showcase method to show how to MS Graph sdk to retrieve messages
     ListUserMailInboxMessages();
     ```
+
 1. Save all files.
 
 >**Note:** Currently (as of Nov 2018) there is no support to update mailbox settings in MS Graph SDK. However, its in the works and expect to have that update soon. This sample will be updated accordingly. The method `SetUserMailboxDefaultTimeZone` uses HTTPClient instead of GraphServiceClient object to update the mailbox settings.

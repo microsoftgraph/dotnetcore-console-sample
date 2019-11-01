@@ -29,7 +29,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 As this exercise requires new permissions the App Registration needs to be updated to include the **\<New-Permission-Here\>** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
-1. Open a browser and navigate to the [Preview App Registration](https://aka.ms/AppRegistrationsPreview) within Azure AD Portal. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
+1. Open a browser and navigate to the [App registrations page](https://go.microsoft.com/fwlink/?linkid=2083908) within the Azure AD Portal. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
     > **Note:** If you do not have permissions to create app registrations contact your Azure AD domain administrators.
 
@@ -44,11 +44,11 @@ As this exercise requires new permissions the App Registration needs to be updat
 
         ![Screenshot of selecting Microsoft Graph permission to add to app registration](Images/aad-create-app-05.png)
 
-    1. Select **Application permissions**.
+    1. Select **[Application|Delegated] permissions**.
     1. In the "Select permissions" search box type "\<Start of permission string\>".
     1. Select **\<New-Permission-Here\>** from the filtered list.
 
-        ![Screenshot of adding application permission for User.Read.All permission](Images/new-image-needed.png)
+        ![Screenshot of adding [application|delegated] permission for User.Read.All permission](Images/new-image-needed.png)
 
     1. Click **Add permissions** at the bottom of flyout.
 
@@ -70,6 +70,7 @@ In this step you will create a UserHelper class that encapsulates the logic for 
     ```cs
     // Your code here
     ```
+
 This class contains the code to ....
 
 ### Extend program to yyy
@@ -79,6 +80,7 @@ This class contains the code to ....
     ```cs
     // Your code here
     ```
+
     > **Important** Any key things to note where the developer might run into issues.
 
 1. Continuing in the `Main` method add the following code to call the new method.
@@ -86,6 +88,7 @@ This class contains the code to ....
     ```cs
     YourMethod();
     ```
+
 1. Save all files.
 
 The console application is now able to \<do some new thing\>. In order to test the console application run the following commands from the command line:

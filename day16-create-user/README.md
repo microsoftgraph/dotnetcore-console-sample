@@ -1,11 +1,11 @@
 # Day 16 - Create a new User
 
-- [Day 16 - Create a new User](#day-16-create-a-new-user)
-    - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
-    - [Step 2: Extend the app to create users](#step-2-extend-the-app-to-create-users)
-        - [Create the UserHelper class](#create-the-userhelper-class)
-        - [Extend program to create users](#extend-program-to-create-users)
+- [Day 16 - Create a new User](#day-16---create-a-new-user)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+  - [Step 2: Extend the app to create users](#step-2-extend-the-app-to-create-users)
+    - [Create the UserHelper class](#create-the-userhelper-class)
+    - [Extend program to create users](#extend-program-to-create-users)
 
 ## Prerequisites
 
@@ -22,7 +22,6 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 - You can [sign up for a new personal Microsoft account](https://signup.live.com/signup?wa=wsignin1.0&rpsnv=12&ct=1454618383&rver=6.4.6456.0&wp=MBI_SSL_SHARED&wreply=https://mail.live.com/default.aspx&id=64855&cbcxt=mai&bk=1454618383&uiflavor=web&uaid=b213a65b4fdc484382b6622b3ecaa547&mkt=E-US&lc=1033&lic=1).
 - You can [sign up for the Office 365 Developer Program](https://developer.microsoft.com/office/dev-program) to get a free Office 365 subscription.
 
-
 ## Step 1: Update the App Registration permissions
 
 As this exercise requires new permissions the App Registration needs to be updated to include  the **User.ReadWrite.All** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
@@ -31,13 +30,13 @@ As this exercise requires new permissions the App Registration needs to be updat
 
     > **Note:** If you do not have permissions to create app registrations contact your Azure AD domain administrators.
 
-1. Click **Azure Active Directory** from the left-hand navigation menu.
+1. Select **Azure Active Directory** from the left-hand navigation menu, then **App registrations (preview)**.
 
 1. Click on the **.NET Core Graph Tutorial** item in the list
 
     > **Note:** If you used a different name while completing the [Base Console Application Setup](../base-console-app/) select that instead.
 
-1. Click **API permissions** from the current blade content.
+1. Click **API permissions** from the current page.
 
     1. Click **Add a permission** from the current blade content.
     1. On the **Request API permissions** flyout select **Microsoft Graph**.
@@ -48,7 +47,7 @@ As this exercise requires new permissions the App Registration needs to be updat
     1. In the "Select permissions" search box type "User".
     1. Select **User.ReadWrite.All** from the filtered list.
 
-        ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-06.png)
+        ![Screenshot of adding application permission for User.ReadWrite.All permission](Images/aad-create-app-06.png)
 
     1. Click **Add permissions** at the bottom of flyout.
 
@@ -122,6 +121,7 @@ In this step you will create a UserHelper class that encapsulates the logic for 
         }
     }
     ```
+
 This class contains the code to create a minimal user profile given the alias, domain, display name and password for a new user account and a method to load a user object from Microsoft Graph given an alias.
 
 ### Extend program to create users
@@ -141,6 +141,7 @@ This class contains the code to create a minimal user profile given the alias, d
         Console.WriteLine(user.UserPrincipalName);
     }
     ```
+
     > **Important** the value supplied as the alias must be unique for your Azure Active Directory tenant.
 
 1. Continuing in the `Main` method add the following code to call the new method.
@@ -148,6 +149,7 @@ This class contains the code to create a minimal user profile given the alias, d
     ```cs
     CreateAndFindNewUser(config);
     ```
+
 1. Save all files.
 
 The console application is now able to provision new users into Azure Active Directory. In order to test the console application run the following commands from the command line:

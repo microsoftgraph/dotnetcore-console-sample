@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Microsoft.Identity.Client;
 using Microsoft.Graph;
 using Microsoft.Extensions.Configuration;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ConsoleGraphTest
 {
     class Program
     {
         private static GraphServiceClient _graphServiceClient;
-        //private static HttpClient _httpClient;
+        private static HttpClient _httpClient;
 
         static void Main(string[] args)
         {
@@ -24,19 +27,22 @@ namespace ConsoleGraphTest
 
             //Query using Graph SDK (preferred when possible)
             GraphServiceClient graphClient = GetAuthenticatedGraphClient(config);
-            AddLicenseToUser(config);
-        }
+            List<QueryOption> options = new List<QueryOption>
+            {
+                new QueryOption("$top", "1")
+            };
 
-        private static void AddLicenseToUser(IConfigurationRoot config)
-        {
-            string alias = "lidiah";
-            string domain = config["domain"];
-            string upn = $"{alias}@{domain}";
-            var licenseHelper = new LicenseHelper(_graphServiceClient);
-            var user = licenseHelper.GetUser(upn).Result;
+            var graphResult = graphClient.Users.Request(options).GetAsync().Result;
+            Console.WriteLine("Graph SDK Result");
+            Console.WriteLine(graphResult[0].DisplayName);
 
-            var sku = licenseHelper.GetLicense().Result;
-            licenseHelper.AddLicense(user.Id, sku.SkuId).GetAwaiter().GetResult();
+            //Direct query using HTTPClient (for beta endpoint calls or not available in Graph SDK)
+            HttpClient httpClient = GetAuthenticatedHTTPClient(config);
+            Uri Uri = new Uri("https://graph.microsoft.com/v1.0/users?$top=1");
+            var httpResult = httpClient.GetStringAsync(Uri).Result;
+
+            Console.WriteLine("HTTP Result");
+            Console.WriteLine(httpResult);
         }
 
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
@@ -46,22 +52,53 @@ namespace ConsoleGraphTest
             return _graphServiceClient;
         }
 
+        private static HttpClient GetAuthenticatedHTTPClient(IConfigurationRoot config)
+        {
+            var authenticationProvider = CreateAuthorizationProvider(config);
+            _httpClient = new HttpClient(new AuthHandler(authenticationProvider, new HttpClientHandler()));
+            return _httpClient;
+        }
+
         private static IAuthenticationProvider CreateAuthorizationProvider(IConfigurationRoot config)
         {
             var clientId = config["applicationId"];
-            var clientSecret = config["applicationSecret"];
+            var certificateThumbprint = config["certificateThumbprint"];
             var redirectUri = config["redirectUri"];
             var authority = $"https://login.microsoftonline.com/{config["tenantId"]}/v2.0";
 
+            // defaulting to CurrentUser certificate store under My (Personal), change these if stored elsewhere
+            X509Certificate2 cert = GetCertificate(certificateThumbprint, StoreName.My, StoreLocation.CurrentUser);
+
+            //this specific scope means that application will default to what is defined in the application registration rather than using dynamic scopes
             List<string> scopes = new List<string>();
             scopes.Add("https://graph.microsoft.com/.default");
 
             var cca = ConfidentialClientApplicationBuilder.Create(clientId)
                                                     .WithAuthority(authority)
                                                     .WithRedirectUri(redirectUri)
-                                                    .WithClientSecret(clientSecret)
+                                                    .WithCertificate(cert)
                                                     .Build();
             return new MsalAuthenticationProvider(cca, scopes.ToArray());
+        }
+
+        private static X509Certificate2 GetCertificate(string thumbprint, StoreName storeName, StoreLocation storeLocation)
+        {
+            X509Store store = new X509Store(storeName, storeLocation);
+            try
+            {
+                store.Open(OpenFlags.ReadOnly);
+
+                var col = store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint, false);
+                if (col == null || col.Count == 0)
+                {
+                    return null;
+                }
+                return col[0];
+            }
+            finally
+            {
+                store.Close();
+            }
         }
 
         private static IConfigurationRoot LoadAppSettings()
@@ -75,7 +112,7 @@ namespace ConsoleGraphTest
 
                 // Validate required settings
                 if (string.IsNullOrEmpty(config["applicationId"]) ||
-                    string.IsNullOrEmpty(config["applicationSecret"]) ||
+                    string.IsNullOrEmpty(config["certificateThumbprint"]) ||
                     string.IsNullOrEmpty(config["redirectUri"]) ||
                     string.IsNullOrEmpty(config["tenantId"]) ||
                     string.IsNullOrEmpty(config["domain"]))

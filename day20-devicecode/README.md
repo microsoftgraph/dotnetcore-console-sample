@@ -1,13 +1,13 @@
 # Day 20 - Using the Device Code Flow to Authenticate Users
 
-- [Day 20 - Using the Device Code Flow to Authenticate Users](#day-using-the-device-code-flow-to-authenticate-users)
-    - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
-    - [Step 2: Enable your application for Device Code Flow](#step-2-enable-your-application-for-device-code-flow)
-    - [Step 3: Implement the Device Code Flow in the application](#step-3-implement-the-device-code-flow-in-the-application)
-        - [Create the DeviceCodeFlowAuthorizationProvider class](#create-the-devicecodeflowauthorizationprovider-class)
-        - [Extend program to leverage this new authentication flow](#extend-program-to-leverage-this-new-authentication-flow)
-        - [Update the reference to the MSAL library](#update-the-reference-to-the-msal-library)
+- [Day 20 - Using the Device Code Flow to Authenticate Users](#day-20---using-the-device-code-flow-to-authenticate-users)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+  - [Step 2: Enable your application for Device Code Flow](#step-2-enable-your-application-for-device-code-flow)
+  - [Step 3: Implement the Device Code Flow in the application](#step-3-implement-the-device-code-flow-in-the-application)
+    - [Create the DeviceCodeFlowAuthorizationProvider class](#create-the-devicecodeflowauthorizationprovider-class)
+    - [Extend program to leverage this new authentication flow](#extend-program-to-leverage-this-new-authentication-flow)
+    - [Update the reference to the MSAL library](#update-the-reference-to-the-msal-library)
 
 ## Prerequisites
 
@@ -29,11 +29,9 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 As this exercise requires new permissions the App Registration needs to be updated to include the **User.Read.All (delegated)** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
 
-1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
+1. Open a browser and navigate to the [Azure AD Portal](https://go.microsoft.com/fwlink/?linkid=2083908) app registrations page. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
     > **Note:** If you do not have permissions to create app registrations contact your Azure AD domain administrators.
-
-1. Click **Azure Active Directory** from the left-hand navigation menu.
 
 1. Click on the **.NET Core Graph Tutorial** item in the list
 
@@ -50,7 +48,7 @@ As this exercise requires new permissions the App Registration needs to be updat
     1. In the "Select permissions" search box type "\<Start of permission string\>".
     1. Select **User.Read.All** from the filtered list.
 
-        ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-01.PNG)
+        ![Screenshot of adding delegated permission for User.Read.All permission](Images/aad-create-app-01.PNG)
 
     1. Click **Add permissions** at the bottom of flyout.
 
@@ -88,10 +86,10 @@ In this step you will create a UserHelper class that encapsulates the logic for 
     namespace ConsoleGraphTest {
         public class DeviceCodeFlowAuthorizationProvider : IAuthenticationProvider
         {
-            private readonly PublicClientApplication _application;
+            private readonly IPublicClientApplication _application;
             private readonly List<string> _scopes;
             private string _authToken;
-            public DeviceCodeFlowAuthorizationProvider(PublicClientApplication application, List<string> scopes) {
+            public DeviceCodeFlowAuthorizationProvider(IPublicClientApplication application, List<string> scopes) {
                 _application = application;
                 _scopes = scopes;
             }
@@ -99,10 +97,10 @@ In this step you will create a UserHelper class that encapsulates the logic for 
             {
                 if(string.IsNullOrEmpty(_authToken))
                 {
-                    var result = await _application.AcquireTokenWithDeviceCodeAsync(_scopes, callback => {
+                    var result = await _application.AcquireTokenWithDeviceCode(_scopes, callback => {
                         Console.WriteLine(callback.Message);
                         return Task.FromResult(0);
-                    });
+                    }).ExecuteAsync();
                     _authToken = result.AccessToken;
                 }
                 request.Headers.Authorization = new AuthenticationHeaderValue("bearer", _authToken);
@@ -110,27 +108,33 @@ In this step you will create a UserHelper class that encapsulates the logic for 
         }
     }
     ```
+
 This class contains the code to implement the device code flow requests when the `GraphServiceClient` requires an access token.
 
 ### Extend program to leverage this new authentication flow
 
-1. Inside the `Program` class replace the last lines of the method `YourMethod` with the following lines.  This replaces references to leverage the Device Code Flow.
+1. Inside the `Program` class replace the lines of the method `CreateAuthorizationProvider` with the following lines.  This replaces references to leverage the Device Code Flow.
 
     ```cs
+        var clientId = config["applicationId"];
+        var redirectUri = config["redirectUri"];
         var authority = $"https://login.microsoftonline.com/{config["tenantId"]}";
 
         List<string> scopes = new List<string>();
         scopes.Add("https://graph.microsoft.com/.default");
 
-        var cca = new PublicClientApplication(clientId, authority);
-        return new DeviceCodeFlowAuthorizationProvider(cca, scopes);
+        var pca = PublicClientApplicationBuilder.Create(clientId)
+                                                .WithAuthority(authority)
+                                                .WithRedirectUri(redirectUri)
+                                                .Build();
+        return new DeviceCodeFlowAuthorizationProvider(pca, scopes);
     ```
 
 ### Update the reference to the MSAL library
 
-At the time of the writing, the Device Code Flow flow is only implemented in preview versions of the library.
+At the time of the writing, the Device Code Flow flow is now implemented in GA versions of the library.
 
-1. Inside the `ConsoleGraphTest.csproj` file replace the following line
+1. Inside the `ConsoleGraphTest.csproj` file if you have a previous version of the Microsoft.Identity.Client PackageReference replace the following line:
 
     ```xml
     <PackageReference Include="Microsoft.Identity.Client" Version="2.1.0-preview" /> 
@@ -139,7 +143,7 @@ At the time of the writing, the Device Code Flow flow is only implemented in pre
     by
 
     ```xml
-    <PackageReference Include="Microsoft.Identity.Client" Version="2.4.0-preview" /> 
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.0.0" /> 
     ```
 
 1. In a command line type the following command `dotnet restore`.
