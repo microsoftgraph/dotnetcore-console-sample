@@ -130,7 +130,7 @@ This class contains the code to implement the device code flow requests when the
 
 ### Update the reference to the MSAL library
 
-At the time of the writing, the Device Code Flow flow is only implemented in preview versions of the library.
+~~At the time of the writing, the Device Code Flow flow is only implemented in preview versions of the library.~~
 
 1. Inside the `ConsoleGraphTest.csproj` file replace the following line
 
@@ -141,7 +141,7 @@ At the time of the writing, the Device Code Flow flow is only implemented in pre
     by
 
     ```xml
-    <PackageReference Include="Microsoft.Identity.Client" Version="2.4.0-preview" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.0.0" />
     ```
 
 1. In a command line type the following command `dotnet restore`.
