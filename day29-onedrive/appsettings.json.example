@@ -3,4 +3,5 @@
   "applicationSecret": "YOUR_APP_SECRET_HERE",
   "tenantId": "YOUR_TENANT_ID_HERE",
   "redirectUri": "YOUR_REDIRECT_URI_HERE"
+  "uploadToSharePoint": "<true|false>"
 }
