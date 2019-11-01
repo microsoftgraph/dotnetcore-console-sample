@@ -1,13 +1,15 @@
-# Day 20 - Using the Device Code Flow to Authenticate Users
+# Day 29 - Uploading Files to OneDrive
 
-- [Day 20 - Using the Device Code Flow to Authenticate Users](#day-using-the-device-code-flow-to-authenticate-users)
-    - [Prerequisites](#prerequisites)
-    - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
-    - [Step 2: Enable your application for Device Code Flow](#step-2-enable-your-application-for-device-code-flow)
-    - [Step 3: Implement the Device Code Flow in the application](#step-3-implement-the-device-code-flow-in-the-application)
-        - [Create the DeviceCodeFlowAuthorizationProvider class](#create-the-devicecodeflowauthorizationprovider-class)
-        - [Extend program to leverage this new authentication flow](#extend-program-to-leverage-this-new-authentication-flow)
-        - [Update the reference to the MSAL library](#update-the-reference-to-the-msal-library)
+**Note:** This sample for uploading files to OneDrive via .Net Core APIs is a "bonus" and as such does not have complete documentation and possible inaccuracies.  Please excuse the incompleteness and enjoy the sample as it appears.
+
+- [Day 29 - Uploading Files to OneDrive](#day-29---uploading-files-to-onedrive)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Update the App Registration permissions](#step-1-update-the-app-registration-permissions)
+  - [Step 2: Enable your application for Device Code Flow](#step-2-enable-your-application-for-device-code-flow)
+  - [Step 3: Implement the Device Code Flow in the application](#step-3-implement-the-device-code-flow-in-the-application)
+    - [Create the DeviceCodeFlowAuthorizationProvider class](#create-the-devicecodeflowauthorizationprovider-class)
+    - [Extend program to leverage this new authentication flow](#extend-program-to-leverage-this-new-authentication-flow)
+    - [Update the reference to the MSAL library](#update-the-reference-to-the-msal-library)
 
 ## Prerequisites
 
@@ -24,10 +26,9 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 - You can [sign up for a new personal Microsoft account](https://signup.live.com/signup?wa=wsignin1.0&rpsnv=12&ct=1454618383&rver=6.4.6456.0&wp=MBI_SSL_SHARED&wreply=https://mail.live.com/default.aspx&id=64855&cbcxt=mai&bk=1454618383&uiflavor=web&uaid=b213a65b4fdc484382b6622b3ecaa547&mkt=E-US&lc=1033&lic=1).
 - You can [sign up for the Office 365 Developer Program](https://developer.microsoft.com/office/dev-program) to get a free Office 365 subscription.
 
-
 ## Step 1: Update the App Registration permissions
 
-As this exercise requires new permissions the App Registration needs to be updated to include the **User.Read.All (delegated)** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
+As this exercise requires new permissions the App Registration needs to be updated to include the **File.ReadWrite (delegated)** permission using the new Azure AD Portal App Registrations UI.
 
 1. Open a browser and navigate to the [Azure AD Portal](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
@@ -48,7 +49,7 @@ As this exercise requires new permissions the App Registration needs to be updat
 
     1. Select **Delegated permissions**.
     1. In the "Select permissions" search box type "\<Start of permission string\>".
-    1. Select **User.Read.All** from the filtered list.
+    1. Select **Files.ReadWrite.All** from the filtered list.
 
         ![Screenshot of adding application permission for User.Read.All permission](Images/aad-create-app-01.PNG)
 
@@ -110,6 +111,7 @@ In this step you will create a UserHelper class that encapsulates the logic for 
         }
     }
     ```
+
 This class contains the code to implement the device code flow requests when the `GraphServiceClient` requires an access token.
 
 ### Extend program to leverage this new authentication flow
@@ -133,13 +135,13 @@ At the time of the writing, the Device Code Flow flow is only implemented in pre
 1. Inside the `ConsoleGraphTest.csproj` file replace the following line
 
     ```xml
-    <PackageReference Include="Microsoft.Identity.Client" Version="2.1.0-preview" /> 
+    <PackageReference Include="Microsoft.Identity.Client" Version="2.1.0-preview" />
     ```
 
     by
 
     ```xml
-    <PackageReference Include="Microsoft.Identity.Client" Version="2.4.0-preview" /> 
+    <PackageReference Include="Microsoft.Identity.Client" Version="2.4.0-preview" />
     ```
 
 1. In a command line type the following command `dotnet restore`.
