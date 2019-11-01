@@ -2,13 +2,14 @@
 
 This repository will contain several samples showing how to interact with Microsoft Graph using the .Net core SDK.
 These samples have been created as part of the [30 days of Microsoft Graph](https://aka.ms/30DaysMSGraph) blog series.
-Each of the samples builds from a common base project, in order to sucessfully build a sample you must first complete the setup required in the base project for that application type.
+Each of the samples builds from a common base project, in order to successfully build a sample you must first complete the setup required in the base project for that application type.
 
 ## Table of Contents
 
 ### Console Applications
 
 - [Base console application setup](./base-console-app)
+  - [Base console application setup with cert auth](./base-console-app-cert)
 - [Day 16 - Create a new user](./day16-create-user)
 - [Day 17 - Assign Licenses](./day17-assign-license)
 - [Day 18 - Update Exchange Online Mailbox](./day18-mailbox)
@@ -27,7 +28,7 @@ Each of the samples builds from a common base project, in order to sucessfully b
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.microsoft.com.
+the rights to use your contribution. For details, visit [https://cla.microsoft.com](https://cla.microsoft.com).
 
 When you submit a pull request, a CLA-bot will automatically determine whether you need to provide
 a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the instructions
