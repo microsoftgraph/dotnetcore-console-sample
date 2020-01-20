@@ -132,18 +132,6 @@ This class contains the code to implement the device code flow requests when the
 
 ~~At the time of the writing, the Device Code Flow flow is only implemented in preview versions of the library.~~
 
-1. Inside the `ConsoleGraphTest.csproj` file replace the following line
-
-    ```xml
-    <PackageReference Include="Microsoft.Identity.Client" Version="2.1.0-preview" />
-    ```
-
-    by
-
-    ```xml
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.0.0" />
-    ```
-
 1. In a command line type the following command `dotnet restore`.
 
 The console application is now able to leverage the Device Code Flow which will allow the user to be identified and the context to bear a delegated context. In order to test the console application run the following commands from the command line:

@@ -31,7 +31,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 ## Step 1: Update the App Registration permissions
 
-As this exercise requires new permissions the App Registration needs to be updated to include the **Calendar.Read** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
+As this exercise requires new permissions the App Registration needs to be updated to include the **Calendar.Read** permission using the new Azure AD Portal App Registrations UI.
 
 1. Open a browser and navigate to the [App registrations page](https://go.microsoft.com/fwlink/?linkid=2083908) within the Azure AD Portal. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
@@ -88,7 +88,7 @@ Create a folder called `GraphWebhooks` for the console application.
     Run the following commands to install these NuGet packages:
 
     ```bash
-    dotnet add package Microsoft.Identity.Client --version 2.3.1-preview
+    dotnet add package Microsoft.Identity.Client --version 4.7.1
     dotnet add package Microsoft.Graph
     dotnet add package Microsoft.Extensions.Configuration
     dotnet add package Microsoft.Extensions.Configuration.Json
@@ -98,7 +98,7 @@ Create a folder called `GraphWebhooks` for the console application.
 
 In this step you will set up the classes and configuration that will be used to authenticate requests to Microsoft Graph
 
-### Set configuration values from Azure AD App regisrtration
+### Set configuration values from Azure AD App registration
 
 1. On the command line from Step 2, run the following command inside the project folder to open Visual Studio Code with the project folder opened:
 
