@@ -14,8 +14,8 @@
 To complete this sample you need the following:
 
 - Complete the [Base Console Application Setup](../base-console-app/)
-- [Visual Studio Code](https://code.visualstudio.com/) installed on your development machine. If you do not have Visual Studio Code, visit the previous link for download options. (**Note:** This tutorial was written with Visual Studio Code version 1.28.2. The steps in this guide may work with other versions, but that has not been tested.)
-- [.Net Core SDK](https://www.microsoft.com/net/download/dotnet-core/2.1#sdk-2.1.403). (**Note** This tutorial was written with .Net Core SDK 2.1.403.  The steps in this guide may work with other versions, but that has not been tested.)
+- [Visual Studio Code](https://code.visualstudio.com/) installed on your development machine. If you do not have Visual Studio Code, visit the previous link for download options. (**Note:** This tutorial was written with Visual Studio Code version 1.41.1. The steps in this guide may work with other versions, but that has not been tested.)
+- [.Net Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1#sdk-3.1.100). (**Note** This tutorial was written with .Net Core SDK 3.1.100.  The steps in this guide may work with other versions, but that has not been tested.)
 - [C# extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp)
 - Either a personal Microsoft account with a mailbox on Outlook.com, or a Microsoft work or school account.
 
@@ -27,7 +27,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 ## Step 1: Update the App Registration permissions
 
-As this exercise requires new permissions the App Registration needs to be updated to include the **User.Read.All (delegated)** permission using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
+As this exercise requires new permissions the App Registration needs to be updated to include the **User.Read.All (delegated)** permission using the new Azure AD Portal App Registrations UI.
 
 1. Open a browser and navigate to the [Azure AD Portal](https://go.microsoft.com/fwlink/?linkid=2083908) app registrations page. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
@@ -133,18 +133,6 @@ This class contains the code to implement the device code flow requests when the
 ### Update the reference to the MSAL library
 
 At the time of the writing, the Device Code Flow flow is now implemented in GA versions of the library.
-
-1. Inside the `ConsoleGraphTest.csproj` file if you have a previous version of the Microsoft.Identity.Client PackageReference replace the following line:
-
-    ```xml
-    <PackageReference Include="Microsoft.Identity.Client" Version="2.1.0-preview" /> 
-    ```
-
-    by
-
-    ```xml
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.0.0" /> 
-    ```
 
 1. In a command line type the following command `dotnet restore`.
 

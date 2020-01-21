@@ -13,8 +13,8 @@
 
 To complete this sample you need the following:
 
-- [Visual Studio Code](https://code.visualstudio.com/) installed on your development machine. If you do not have Visual Studio Code, visit the previous link for download options. (**Note:** This tutorial was written with Visual Studio Code version 1.28.2. The steps in this guide may work with other versions, but that has not been tested.)
-- [.Net Core SDK](https://www.microsoft.com/net/download/dotnet-core/2.1#sdk-2.1.403). (**Note** This tutorial was written with .Net Core SDK 2.1.403.  The steps in this guide may work with other versions, but that has not been tested.)
+- [Visual Studio Code](https://code.visualstudio.com/) installed on your development machine. If you do not have Visual Studio Code, visit the previous link for download options. (**Note:** This tutorial was written with Visual Studio Code version 1.41.1. The steps in this guide may work with other versions, but that has not been tested.)
+- [.Net Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1#sdk-3.1.100). (**Note** This tutorial was written with .Net Core SDK 3.1.100.  The steps in this guide may work with other versions, but that has not been tested.)
 - [C# extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp)
 - Either a personal Microsoft account with a mailbox on Outlook.com, or a Microsoft work or school account.
 
@@ -31,7 +31,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 1. Open the command line and navigate to this folder.  Run the following command:
 
-    ```
+    ```cmd
     dotnet new console
     ```
 
@@ -46,7 +46,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
     Run the following commands to install these NuGet packages:
 
     ```
-    dotnet add package Microsoft.Identity.Client --version 3.0.8
+    dotnet add package Microsoft.Identity.Client --version 4.7.1
     dotnet add package Microsoft.Graph
     dotnet add package Microsoft.Extensions.Configuration
     dotnet add package Microsoft.Extensions.Configuration.FileExtensions
@@ -55,15 +55,13 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 ## Step 2: Register a web application with the new Azure AD Portal App Registration
 
-In this exercise, you will create an Azure AD app registration using the new Azure AD Portal App Registrations UI (in preview as of the time of publish Nov 2018).
+In this exercise, you will create an Azure AD app registration using the new Azure AD Portal App Registrations UI.
 
 1. Open a browser and navigate to the [Azure AD Portal](https://go.microsoft.com/fwlink/?linkid=2083908) app registration page. Login using a **personal account** (aka: Microsoft Account) or **Work or School Account** with permissions to create app registrations.
 
     > **Note:** If you do not have permissions to create app registrations contact your Azure AD domain administrators.
 
 1. Click **New registration** from the current page.
-
-    > **Note:** All information and example screenshots are using the preview versions of this registration portal and are subject to change.  We will attempt to update this documentation to match after the new app registration UI is generally available (GA).
 
 1. On the **Register an application** page, specify the following values:
 
@@ -88,7 +86,7 @@ In this exercise, you will create an Azure AD app registration using the new Azu
     1. Click **New client secret**.
     1. On the **Add a client secret** dialog, specify the following values:
 
-        - **Description** = Secret1
+        - **Description** = ConsoleGraphTest App Secret
         - **Expires** = In 1 year
 
     1. Click **Add**.
@@ -400,4 +398,4 @@ Consider what this code is doing.
 - The `GetAuthenticatedGraphClient` function initializes a `GraphServiceClient` with an authentication provider that calls `AcquireTokenForClient(<scopes>).ExecuteAsync()`.
 - In the `Main` function:
   - The graph endpoint that will be called is `/v1.0/users/$top=1`.
-- The `HttpClient` call with a manually constructed url and the `GraphServiceClient` sdk call are functionaly equivalent, which you choose to use in your applications will depend on your team practices, coding styles and target languages.
+- The `HttpClient` call with a manually constructed url and the `GraphServiceClient` SDK call are functionally equivalent. Which you choose to use in your applications will depend on your team practices, coding styles, and target languages.
