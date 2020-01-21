@@ -162,13 +162,13 @@ In this step you will set up the classes and configuration that will be used to 
 1. Configure the ngrok tunnel and settings:
 
     1. Open a separate command line window.
-    1. Run the folowing to start your ngrok tunnel
+    1. Run the following to start your ngrok tunnel
 
         ```bash
         ngrok http 5000
         ```
 
-        > **Note:** If you did not yet install the [ngrok](https://ngrok.com/) tool from the prerequisites please do so now.  Be sure to place the `ngrok.exe` tool in an accesible location or update your PATH environment variable to include the containing folder.
+        > **Note:** If you did not yet install the [ngrok](https://ngrok.com/) tool from the prerequisites please do so now.  Be sure to place the `ngrok.exe` tool in an accessible location or update your PATH environment variable to include the containing folder.
 
     1. Copy the https Forwarding url shown
         ![Screenshot of ngrok running](Images/ngrok.png)
@@ -178,7 +178,7 @@ In this step you will set up the classes and configuration that will be used to 
 
 1. Add a folder called `Helpers`
 
-1. In the `Helpers` folder create a file called `AuthHander.cs` with this listing:
+1. In the `Helpers` folder create a file called `AuthHandler.cs` with this listing:
 
     ```cs
     using System;
@@ -691,7 +691,7 @@ The Web API is now able to register subscriptions and handle incoming notificati
     dotnet run
     ```
 
-1. From the command line running ngrok copy the https forwading url.
+1. From the command line running ngrok copy the https forwarding url.
 
 1. Open a web browser at `<ngrokUrl>/api/subscriptions/<known-upn>`, ex. <https://891b8419.ngrok.io/api/subscriptions/sdt_test@contoso.com.>
 
@@ -703,4 +703,4 @@ The Web API is now able to register subscriptions and handle incoming notificati
 1. You will see another api request to the NotificationsController with an http 202 result and some information logged to the console.
     ![Screenshot of notification request in ngrok](Images/ngrok-03.png)
 
-This completes the exercise to set up a Web API for registering subscriptions and handing notifications. The overall flow and chain of actions shown here is the same pattern no matter what notifications you wish to recieve or which language you use to implement your solution.
+This completes the exercise to set up a Web API for registering subscriptions and handing notifications. The overall flow and chain of actions shown here is the same pattern no matter what notifications you wish to receive or which language you use to implement your solution.
