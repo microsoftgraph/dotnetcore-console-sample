@@ -78,7 +78,7 @@ namespace ConsoleGraphTest
                 var readBuffer = new byte[maxSizeChunk];
                 foreach (var request in chunkRequests)
                 {
-                    var result = await uploadProvider.GetChunkRequestResponseAsync(request, readBuffer, exceptions);
+                    var result = await uploadProvider.GetChunkRequestResponseAsync(request, exceptions);
 
                     if (result.UploadSucceeded)
                     {
