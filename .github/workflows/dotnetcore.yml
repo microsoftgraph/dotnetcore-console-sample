@@ -1,4 +1,4 @@
-name: dotnet core build projects
+name: build
 
 on: 
   push:
