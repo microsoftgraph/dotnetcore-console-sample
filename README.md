@@ -1,7 +1,5 @@
 # dotnetcore-console-sample
 
-![build status for all sample projects](https://github.com/briantjackett/dotnetcore-console-sample/workflows/build/badge.svg)
-
 This repository will contain several samples showing how to interact with Microsoft Graph using the .Net core SDK.
 These samples have been created as part of the [30 days of Microsoft Graph](https://aka.ms/30DaysMSGraph) blog series.
 Each of the samples builds from a common base project, in order to successfully build a sample you must first complete the setup required in the base project for that application type.
