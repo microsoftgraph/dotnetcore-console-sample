@@ -1,6 +1,10 @@
-name: .NET Core
+name: .NET Core build projects
 
-on: [push]
+on: 
+  push:
+    branches: 
+      - master
+      - dev
 
 jobs:
   build:
@@ -12,7 +16,41 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.100
+        dotnet-version: 3.1.X
+
     - name: Build with dotnet
       working-directory: ./base-console-app
+      run: dotnet build --configuration Release
+    - name: Build with dotnet - base-console-app-cert
+      working-directory: ./base-console-app-cert
+      run: dotnet build --configuration Release
+    - name: Build with dotnet - day16-create-user
+      working-directory: ./day16-create-user
+      run: dotnet build --configuration Release
+    - name: Build with dotnet - day17-assign-license
+      working-directory: ./day17-assign-license
+      run: dotnet build --configuration Release
+    - name: Build with dotnet - day18-mailbox
+      working-directory: ./day18-mailbox
+      run: dotnet build --configuration Release
+    - name: Build with dotnet - day19-assign-permissions
+      working-directory: ./day19-assign-permissions
+      run: dotnet build --configuration Release
+    - name: Build with dotnet - day20-devicecode
+      working-directory: ./day20-devicecode
+      run: dotnet build --configuration Release
+    - name: Build with dotnet - day21-planner
+      working-directory: ./day21-planner
+      run: dotnet build --configuration Release
+    - name: Build with dotnet - day22-intune
+      working-directory: ./day22-intune
+      run: dotnet build --configuration Release
+    - name: Build with dotnet - day25-onenote
+      working-directory: ./day25-onenote
+      run: dotnet build --configuration Release
+    - name: Build with dotnet - day28-webhooks
+      working-directory: ./day28-webhooks
+      run: dotnet build --configuration Release
+    - name: Build with dotnet - day29-onedrive
+      working-directory: ./day29-onedrive
       run: dotnet build --configuration Release
