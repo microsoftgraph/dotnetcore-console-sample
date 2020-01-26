@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Graph;
@@ -47,7 +46,8 @@ namespace GraphWebhooks.Controllers
                 Resource = $"users/{upn}/events",
                 NotificationUrl = _notificationUrl.Url
             };
-            var response = await _graphClient.PostAsJsonAsync(_subscriptionsResource, request);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var response = await _graphClient.PostAsync(_subscriptionsResource, content);
             string responseBody = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
