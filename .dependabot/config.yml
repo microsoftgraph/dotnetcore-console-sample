@@ -3,4 +3,73 @@ version: 1
 update_configs:
   - package_manager: "dotnet:nuget"
     directory: "/base-console-app/" # ConsoleGraphTest.csproj
-    update_schedule: "live"
+    update_schedule: "weekly"
+    target_branch: "develop"
+    default_reviewers: 
+      - "briantjackett"
+  - package_manager: "dotnet:nuget"
+    directory: "/base-console-app-cert/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "develop"
+    default_reviewers: 
+      - "briantjackett"
+  - package_manager: "dotnet:nuget"
+    directory: "/day16-create-user/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "develop"
+    default_reviewers: 
+      - "briantjackett"
+  - package_manager: "dotnet:nuget"
+    directory: "/day17-assign-license/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "develop"
+    default_reviewers: 
+      - "briantjackett"
+  - package_manager: "dotnet:nuget"
+    directory: "/day18-mailbox/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "develop"
+    default_reviewers: 
+      - "briantjackett"
+  - package_manager: "dotnet:nuget"
+    directory: "/day19-assign-permissions/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "develop"
+    default_reviewers: 
+      - "briantjackett"
+  - package_manager: "dotnet:nuget"
+    directory: "/day20-devicecode/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "develop"
+    default_reviewers: 
+      - "briantjackett"
+  - package_manager: "dotnet:nuget"
+    directory: "/day21-planner/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "develop"
+    default_reviewers: 
+      - "briantjackett"
+  - package_manager: "dotnet:nuget"
+    directory: "/day22-intune/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "develop"
+    default_reviewers: 
+      - "briantjackett"
+  - package_manager: "dotnet:nuget"
+    directory: "/day25-onenote/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "develop"
+    default_reviewers: 
+      - "briantjackett"
+  - package_manager: "dotnet:nuget"
+    directory: "/day29-onedrive/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "develop"
+    default_reviewers: 
+      - "briantjackett"
+  - package_manager: "dotnet:nuget"
+    directory: "/dayNN-template/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "develop"
+    default_reviewers: 
+      - "briantjackett"
