@@ -4,4 +4,4 @@ update_configs:
   - package_manager: "dotnet:nuget"
     directory: "/base-console-app/" # ConsoleGraphTest.csproj
     update_schedule: "weekly"
-    target_branch: "develop"
+    target_branch: "dev"
