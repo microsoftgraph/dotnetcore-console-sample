@@ -41,3 +41,7 @@ update_configs:
     directory: "/dayNN-template/" # ConsoleGraphTest.csproj
     update_schedule: "weekly"
     target_branch: "dev"
+    automerged_updates:
+      - match:
+        dependency_type: "all"
+        update_type: "semver:patch"
