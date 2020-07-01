@@ -43,5 +43,5 @@ update_configs:
     target_branch: "dev"
     automerged_updates:
       - match:
-        dependency_type: "all"
-        update_type: "semver:patch"
+          dependency_type: "all"
+          update_type: "semver:patch"
