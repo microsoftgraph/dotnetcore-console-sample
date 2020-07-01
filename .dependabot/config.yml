@@ -5,3 +5,19 @@ update_configs:
     directory: "/base-console-app/" # ConsoleGraphTest.csproj
     update_schedule: "weekly"
     target_branch: "dev"
+  - package_manager: "dotnet:nuget"
+    directory: "/base-console-app-cert/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "dev"
+  - package_manager: "dotnet:nuget"
+    directory: "/day18-mailbox/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "dev"
+  - package_manager: "dotnet:nuget"
+    directory: "/day19-assign-permissions/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "dev"
+  - package_manager: "dotnet:nuget"
+    directory: "/day20-devicecode/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "dev"
