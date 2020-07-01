@@ -21,3 +21,23 @@ update_configs:
     directory: "/day20-devicecode/" # ConsoleGraphTest.csproj
     update_schedule: "weekly"
     target_branch: "dev"
+  - package_manager: "dotnet:nuget"
+    directory: "/day21-planner/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "dev"
+  - package_manager: "dotnet:nuget"
+    directory: "/day22-intune/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "dev"
+  - package_manager: "dotnet:nuget"
+    directory: "/day25-onenote/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "dev"
+  - package_manager: "dotnet:nuget"
+    directory: "/day29-onedrive/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "dev"
+  - package_manager: "dotnet:nuget"
+    directory: "/dayNN-template/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "dev"
