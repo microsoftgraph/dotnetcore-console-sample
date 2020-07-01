@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
     <PackageReference Include="Microsoft.Graph" Version="3.4.0" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.13.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.15.0" />
   </ItemGroup>
 
 </Project>
