@@ -3,7 +3,7 @@
 ![build status for all sample projects](/../../workflows/build/badge.svg)
 
 This repository will contain several samples showing how to interact with Microsoft Graph using the .Net core SDK.
-These samples have been created as part of the [30 days of Microsoft Graph](https://aka.ms/30DaysMSGraph) blog series.
+These samples have been created as part of the [30 Days of Microsoft Graph](https://aka.ms/30DaysMSGraph) blog series.
 Each of the samples builds from a common base project, in order to successfully build a sample you must first complete the setup required in the base project for that application type.
 
 ## Table of Contents
@@ -20,11 +20,8 @@ Each of the samples builds from a common base project, in order to successfully 
 - [Day 21 - Create plans, buckets, and tasks in Planner](./day21-planner)
 - [Day 22 - Intune](./day22-intune)
 - [Day 25 - OneNote](./day25-onenote)
-- [Day 29 - OneDrive](./day29-onedrive)
-
-### WebApi
-
 - [Day 28 - Webhooks](./day28-webhooks)
+- [Day 29 - OneDrive](./day29-onedrive)
 
 ## Contributing
 
