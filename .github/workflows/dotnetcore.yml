@@ -1,7 +1,10 @@
-name: build
+name: Build pre-check
 
 on: 
   push:
+    branches:
+      - master
+  pull_request:
     branches: 
       - master
 
@@ -46,9 +49,6 @@ jobs:
       run: dotnet build --configuration Release
     - name: Build with dotnet - day25-onenote
       working-directory: ./day25-onenote
-      run: dotnet build --configuration Release
-    - name: Build with dotnet - day28-webhooks
-      working-directory: ./day28-webhooks
       run: dotnet build --configuration Release
     - name: Build with dotnet - day29-onedrive
       working-directory: ./day29-onedrive
