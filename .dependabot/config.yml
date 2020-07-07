@@ -10,6 +10,14 @@ update_configs:
     update_schedule: "weekly"
     target_branch: "dev"
   - package_manager: "dotnet:nuget"
+    directory: "/day16-create-user/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "dev"
+  - package_manager: "dotnet:nuget"
+    directory: "/day17-assign-license/" # ConsoleGraphTest.csproj
+    update_schedule: "weekly"
+    target_branch: "dev"
+  - package_manager: "dotnet:nuget"
     directory: "/day18-mailbox/" # ConsoleGraphTest.csproj
     update_schedule: "weekly"
     target_branch: "dev"
