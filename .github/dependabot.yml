@@ -1,0 +1,86 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/day16-create-user"
+  schedule:
+    interval: weekly
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: dev
+- package-ecosystem: nuget
+  directory: "/day17-assign-license"
+  schedule:
+    interval: weekly
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: dev
+- package-ecosystem: nuget
+  directory: "/dayNN-template"
+  schedule:
+    interval: weekly
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: dev
+- package-ecosystem: nuget
+  directory: "/day29-onedrive"
+  schedule:
+    interval: weekly
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: dev
+- package-ecosystem: nuget
+  directory: "/day25-onenote"
+  schedule:
+    interval: weekly
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: dev
+- package-ecosystem: nuget
+  directory: "/day22-intune"
+  schedule:
+    interval: weekly
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: dev
+- package-ecosystem: nuget
+  directory: "/day21-planner"
+  schedule:
+    interval: weekly
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: dev
+- package-ecosystem: nuget
+  directory: "/day20-devicecode"
+  schedule:
+    interval: weekly
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: dev
+- package-ecosystem: nuget
+  directory: "/day19-assign-permissions"
+  schedule:
+    interval: weekly
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: dev
+- package-ecosystem: nuget
+  directory: "/day18-mailbox"
+  schedule:
+    interval: weekly
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: dev
+- package-ecosystem: nuget
+  directory: "/base-console-app-cert"
+  schedule:
+    interval: weekly
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: dev
+- package-ecosystem: nuget
+  directory: "/base-console-app"
+  schedule:
+    interval: weekly
+    time: "10:00"
+  open-pull-requests-limit: 10
+  target-branch: dev
