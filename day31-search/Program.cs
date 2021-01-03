@@ -26,23 +26,28 @@ namespace ConsoleGraphTest
             //Query using Graph SDK (preferred when possible)
             GraphServiceClient graphClient = GetAuthenticatedGraphClient(config);
 
-            SearchHelperCall();
+            SearchHelperCall(config);
         }
 
         // Add a private method to do any necessary setup and make calls to your helper
-        private static void SearchHelperCall()
+        private static void SearchHelperCall(IConfigurationRoot config)
         {
-            //TODO - move keyword text to a central location
-            const string keyword = "Contoso";
+            string keyword = config["queryKeyword"];
             var searchHelper = new SearchHelper(_graphServiceClient);
-            var messageResult = searchHelper.SearchMessage(keyword).Result;
-            
+            var messageResult = searchHelper.SearchEntityByKeyword(keyword, EntityType.Message).Result;
+            //var eventResult = searchHelper.SearchEntityByKeyword(keyword, EntityType.Event).Result;
+            //var siteResult = searchHelper.SearchEntityByKeyword(keyword, EntityType.Site).Result;
+            //var driveItemResult = searchHelper.SearchEntityByKeyword(keyword, EntityType.DriveItem).Result;
+
             var hitsContainerEnumerator = messageResult[0].HitsContainers.GetEnumerator();
             hitsContainerEnumerator.MoveNext();
             var hitsEnumerator = hitsContainerEnumerator.Current.Hits.GetEnumerator();
             hitsEnumerator.MoveNext();
-            
-            Console.WriteLine(hitsEnumerator.Current.Resource.ToString());
+
+            // cast the result resource to the Microsoft Graph type for easier access to properties
+            Message message = (Message)hitsEnumerator.Current.Resource;
+
+            Console.WriteLine(message.Subject);
         }
 
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
@@ -82,7 +87,8 @@ namespace ConsoleGraphTest
                     string.IsNullOrEmpty(config["applicationSecret"]) ||
                     string.IsNullOrEmpty(config["redirectUri"]) ||
                     string.IsNullOrEmpty(config["tenantId"]) ||
-                    string.IsNullOrEmpty(config["domain"]))
+                    string.IsNullOrEmpty(config["domain"]) ||
+                    string.IsNullOrEmpty(config["queryKeyword"]))
                 {
                     return null;
                 }

@@ -15,99 +15,27 @@ namespace ConsoleGraphTest
             _graphClient = graphClient;
         }
 
-        //search message
-        public async Task<ISearchEntityQueryCollectionPage> SearchMessage(string keyword)
+        public async Task<ISearchEntityQueryCollectionPage> SearchEntityByKeyword(string queryKeyword, EntityType queryEntityType, int? from = 0, int? size = 25)
         {
             List<SearchRequestObject> sro = new List<SearchRequestObject>
             {
                 new SearchRequestObject{
                     EntityTypes = new List<EntityType>
                     {
-                        EntityType.Message
+                        queryEntityType
                     },
                     Query = new SearchQuery{
-                        QueryString = keyword
+                        QueryString = queryKeyword
                     },
-                    From = 0,
-                    Size = 25
+                    From = from,
+                    Size = size
                 }
             };
 
-            var messageResult = await _graphClient.Search.Query(sro).Request().PostAsync();
-            if (messageResult.Count == 0) throw new ApplicationException($"Unable to find a message with the keyword {keyword}");
+            var queryResult = await _graphClient.Search.Query(sro).Request().PostAsync();
+            if (queryResult.Count == 0) throw new ApplicationException($"Unable to find a {queryEntityType.ToString()} with the keyword {queryKeyword}");
 
-            return messageResult;
-        }
-
-        //search event
-        public async Task<ISearchEntityQueryCollectionPage> SearchEvent(string keyword)
-        {
-            List<SearchRequestObject> sro = new List<SearchRequestObject>
-            {
-                new SearchRequestObject{
-                    EntityTypes = new List<EntityType>
-                    {
-                        EntityType.Event
-                    },
-                    Query = new SearchQuery{
-                        QueryString = keyword
-                    },
-                    From = 0,
-                    Size = 25
-                }
-            };
-
-            var messageResult = await _graphClient.Search.Query(sro).Request().PostAsync();
-            if (messageResult.Count == 0) throw new ApplicationException($"Unable to find a event with the keyword {keyword}");
-
-            return messageResult;
-        }
-
-        //search site
-        public async Task<ISearchEntityQueryCollectionPage> SearchSite(string keyword)
-        {
-            List<SearchRequestObject> sro = new List<SearchRequestObject>
-            {
-                new SearchRequestObject{
-                    EntityTypes = new List<EntityType>
-                    {
-                        EntityType.Site
-                    },
-                    Query = new SearchQuery{
-                        QueryString = keyword
-                    },
-                    From = 0,
-                    Size = 25
-                }
-            };
-
-            var messageResult = await _graphClient.Search.Query(sro).Request().PostAsync();
-            if (messageResult.Count == 0) throw new ApplicationException($"Unable to find a site with the keyword {keyword}");
-
-            return messageResult;
-        }
-        //search driveItem
-        public async Task<ISearchEntityQueryCollectionPage> SearchDriveItem(string keyword)
-        {
-            List<SearchRequestObject> sro = new List<SearchRequestObject>
-            {
-                new SearchRequestObject{
-                    EntityTypes = new List<EntityType>
-                    {
-                        EntityType.DriveItem
-                    },
-                    Query = new SearchQuery{
-                        QueryString = keyword
-                    },
-                    From = 0,
-                    Size = 25
-                }
-            };
-
-            var messageResult = await _graphClient.Search.Query(sro).Request().PostAsync();
-            if (messageResult.Count == 0) throw new ApplicationException($"Unable to find a driveItem with the keyword {keyword}");
-
-            return messageResult;
+            return queryResult;
         }
     }
 }
