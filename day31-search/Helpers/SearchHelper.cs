@@ -6,63 +6,108 @@ using Microsoft.Graph;
 
 namespace ConsoleGraphTest
 {
-    /**
-     * Please rename your helper class to match it's purpose
-     */
     public class SearchHelper
     {
-
-        /**
-         * Inject either a GraphServiceClient or an HttpClient (with Authentiation supplied)
-         * Which you choose to use will depend on your scenario but the GraphServiceClient should be used where practical
-         * Please delete the constructor you don't use
-         */
         private GraphServiceClient _graphClient;
-        private HttpClient _httpClient;
         public SearchHelper(GraphServiceClient graphClient)
         {
             if (null == graphClient) throw new ArgumentNullException(nameof(graphClient));
             _graphClient = graphClient;
         }
 
-        public SearchHelper(HttpClient httpClient)
+        //search message
+        public async Task<ISearchEntityQueryCollectionPage> SearchMessage(string keyword)
         {
-            if (null == httpClient) throw new ArgumentNullException(nameof(httpClient));
-            _httpClient = httpClient;
+            List<SearchRequestObject> sro = new List<SearchRequestObject>
+            {
+                new SearchRequestObject{
+                    EntityTypes = new List<EntityType>
+                    {
+                        EntityType.Message
+                    },
+                    Query = new SearchQuery{
+                        QueryString = keyword
+                    },
+                    From = 0,
+                    Size = 25
+                }
+            };
+
+            var messageResult = await _graphClient.Search.Query(sro).Request().PostAsync();
+            if (messageResult.Count == 0) throw new ApplicationException($"Unable to find a message with the keyword {keyword}");
+
+            return messageResult;
         }
 
-        // Add Public methods to provide functionality for your scenario.
-
-        public async Task<User> FindByAlias(string alias)
+        //search event
+        public async Task<ISearchEntityQueryCollectionPage> SearchEvent(string keyword)
         {
-            List<QueryOption> queryOptions = new List<QueryOption>
+            List<SearchRequestObject> sro = new List<SearchRequestObject>
             {
-                new QueryOption("$filter", $@"mailNickname eq '{alias}'")
+                new SearchRequestObject{
+                    EntityTypes = new List<EntityType>
+                    {
+                        EntityType.Event
+                    },
+                    Query = new SearchQuery{
+                        QueryString = keyword
+                    },
+                    From = 0,
+                    Size = 25
+                }
             };
 
-            var userResult = await _graphClient.Users.Request(queryOptions).GetAsync();
-            if (userResult.Count != 1) throw new ApplicationException($"Unable to find a user with the alias {alias}");
-            return userResult[0];
+            var messageResult = await _graphClient.Search.Query(sro).Request().PostAsync();
+            if (messageResult.Count == 0) throw new ApplicationException($"Unable to find a event with the keyword {keyword}");
+
+            return messageResult;
         }
 
-        // Add private methods to encapsulate housekeeping work away from public methods
-
-        private static User BuildUserToAdd(string displayName, string alias, string domain, string password)
+        //search site
+        public async Task<ISearchEntityQueryCollectionPage> SearchSite(string keyword)
         {
-            var passwordProfile = new PasswordProfile
+            List<SearchRequestObject> sro = new List<SearchRequestObject>
             {
-                Password = password,
-                ForceChangePasswordNextSignIn = true
+                new SearchRequestObject{
+                    EntityTypes = new List<EntityType>
+                    {
+                        EntityType.Site
+                    },
+                    Query = new SearchQuery{
+                        QueryString = keyword
+                    },
+                    From = 0,
+                    Size = 25
+                }
             };
-            var user = new User
+
+            var messageResult = await _graphClient.Search.Query(sro).Request().PostAsync();
+            if (messageResult.Count == 0) throw new ApplicationException($"Unable to find a site with the keyword {keyword}");
+
+            return messageResult;
+        }
+        //search driveItem
+        public async Task<ISearchEntityQueryCollectionPage> SearchDriveItem(string keyword)
+        {
+            List<SearchRequestObject> sro = new List<SearchRequestObject>
             {
-                DisplayName = displayName,
-                UserPrincipalName = $@"{alias}@{domain}",
-                MailNickname = alias,
-                AccountEnabled = true,
-                PasswordProfile = passwordProfile
+                new SearchRequestObject{
+                    EntityTypes = new List<EntityType>
+                    {
+                        EntityType.DriveItem
+                    },
+                    Query = new SearchQuery{
+                        QueryString = keyword
+                    },
+                    From = 0,
+                    Size = 25
+                }
             };
-            return user;
+
+            var messageResult = await _graphClient.Search.Query(sro).Request().PostAsync();
+            if (messageResult.Count == 0) throw new ApplicationException($"Unable to find a driveItem with the keyword {keyword}");
+
+            return messageResult;
         }
     }
 }

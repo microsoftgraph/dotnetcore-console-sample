@@ -32,12 +32,17 @@ namespace ConsoleGraphTest
         // Add a private method to do any necessary setup and make calls to your helper
         private static void SearchHelperCall()
         {
-            const string alias = "sdk_test";
-            var userHelper = new SearchHelper(_graphServiceClient);
-            var user = userHelper.FindByAlias(alias).Result;
-            // Add some console writes for demo purposes if necessary
-            Console.WriteLine(user.DisplayName);
-            Console.WriteLine(user.UserPrincipalName);
+            //TODO - move keyword text to a central location
+            const string keyword = "Contoso";
+            var searchHelper = new SearchHelper(_graphServiceClient);
+            var messageResult = searchHelper.SearchMessage(keyword).Result;
+            
+            var hitsContainerEnumerator = messageResult[0].HitsContainers.GetEnumerator();
+            hitsContainerEnumerator.MoveNext();
+            var hitsEnumerator = hitsContainerEnumerator.Current.Hits.GetEnumerator();
+            hitsEnumerator.MoveNext();
+            
+            Console.WriteLine(hitsEnumerator.Current.Resource.ToString());
         }
 
         private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
@@ -50,19 +55,17 @@ namespace ConsoleGraphTest
         private static IAuthenticationProvider CreateAuthorizationProvider(IConfigurationRoot config)
         {
             var clientId = config["applicationId"];
-            var clientSecret = config["applicationSecret"];
             var redirectUri = config["redirectUri"];
-            var authority = $"https://login.microsoftonline.com/{config["tenantId"]}/v2.0";
+            var authority = $"https://login.microsoftonline.com/{config["tenantId"]}";
 
             List<string> scopes = new List<string>();
             scopes.Add("https://graph.microsoft.com/.default");
 
-            var cca = ConfidentialClientApplicationBuilder.Create(clientId)
+            var pca = PublicClientApplicationBuilder.Create(clientId)
                                                     .WithAuthority(authority)
                                                     .WithRedirectUri(redirectUri)
-                                                    .WithClientSecret(clientSecret)
                                                     .Build();
-            return new MsalAuthenticationProvider(cca, scopes.ToArray());
+            return new DeviceCodeFlowAuthorizationProvider(pca, scopes);
         }
 
         private static IConfigurationRoot LoadAppSettings()
