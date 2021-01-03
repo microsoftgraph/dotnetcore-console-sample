@@ -13,8 +13,8 @@
 
 To complete this sample you need the following:
 
-- [Visual Studio Code](https://code.visualstudio.com/) installed on your development machine. If you do not have Visual Studio Code, visit the previous link for download options. (**Note:** This tutorial was written with Visual Studio Code version 1.41.1. The steps in this guide may work with other versions, but that has not been tested.)
-- [.Net Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1#sdk-3.1.100). (**Note** This tutorial was written with .Net Core SDK 3.1.100.  The steps in this guide may work with other versions, but that has not been tested.)
+- [Visual Studio Code](https://code.visualstudio.com/) installed on your development machine. If you do not have Visual Studio Code, visit the previous link for download options. (**Note:** This tutorial was written with Visual Studio Code version 1.52.1. The steps in this guide may work with other versions, but that has not been tested.)
+- [.Net Core SDK](https://dotnet.microsoft.com/download/dotnet/5.0#sdk-5.0.101). (**Note** This tutorial was written with .Net Core SDK 5.0.101.  The steps in this guide may work with other versions, but that has not been tested.)
 - [C# extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp)
 - Either a personal Microsoft account with a mailbox on Outlook.com, or a Microsoft work or school account.
 
@@ -46,7 +46,7 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
     Run the following commands to install these NuGet packages:
 
     ```
-    dotnet add package Microsoft.Identity.Client --version 4.7.1
+    dotnet add package Microsoft.Identity.Client --version 4.22.0
     dotnet add package Microsoft.Graph
     dotnet add package Microsoft.Extensions.Configuration
     dotnet add package Microsoft.Extensions.Configuration.FileExtensions
