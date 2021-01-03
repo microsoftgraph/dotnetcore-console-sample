@@ -22,6 +22,7 @@ Each of the samples builds from a common base project, in order to successfully 
 - [Day 25 - OneNote](./day25-onenote)
 - [Day 28 - Webhooks](./day28-webhooks)
 - [Day 29 - OneDrive](./day29-onedrive)
+- [Extra Day 1 - Microsoft Search](./extraday1-search)
 
 ## Contributing
 
