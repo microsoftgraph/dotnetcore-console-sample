@@ -53,3 +53,6 @@ jobs:
     - name: Build with dotnet - day29-onedrive
       working-directory: ./day29-onedrive
       run: dotnet build --configuration Release
+    - name: Build with dotnet - extraday1-search
+      working-directory: ./extraday1-search
+      run: dotnet build --configuration Release
