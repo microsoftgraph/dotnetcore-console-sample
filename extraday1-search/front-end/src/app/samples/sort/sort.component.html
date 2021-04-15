@@ -1,0 +1,118 @@
+
+  <nz-spin [nzSpinning]="isSpinning" [nzDelay]="500">
+
+
+    <nz-tabset>
+
+        <nz-tab nzTitle="Search With Sort">
+            <!-- Input Box -->
+            <div nz-row >
+              <div nz-col nzSpan="12" >
+  
+                  <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                      <input type="text" nz-input placeholder="input search text" [(ngModel)]="searchInput1" />
+                    </nz-input-group>
+                    
+                    <ng-template #suffixIconButton>
+                      <button nz-button nzType="primary" nzSearch (click)="executeSearch1()" ><i nz-icon nzType="search"></i></button>
+                      <button nz-button nzType="primary" nzSearch (click)="configOpen()" style="margin-left: 3px;" > <i nz-icon nzType="right"></i> </button>
+
+                    </ng-template>
+
+              </div>
+          </div>
+
+
+
+            <br>
+
+            <!-- Search Result -->
+
+            <nz-list nzItemLayout="vertical" [nzLoading]="loading" *ngIf="data">
+
+                  
+
+
+                  <nz-list-item *ngFor="let item of data.value[0].hitsContainers[0].hits">
+                      <nz-list-item-meta>
+                        <nz-list-item-meta-avatar [nzSrc]="item.avatar"> </nz-list-item-meta-avatar>
+                        <nz-list-item-meta-title>
+                          <a href="{{ encodeUri(item.resource.webUrl) }}">{{ item.resource.name }}</a>
+                
+       
+                        </nz-list-item-meta-title>
+                        <nz-list-item-meta-description>
+                          {{ encodeUri(item.resource.webUrl) }}
+                            <div *ngIf="item.resource.lastModifiedBy">
+                              Last modified by {{item.resource.lastModifiedBy.user.displayName}} 
+                              <br>
+                              <span *ngIf="item.resource.lastModifiedDateTime">in {{item.resource.lastModifiedDateTime}}</span>
+                              
+                            </div>
+
+                        </nz-list-item-meta-description>
+                      </nz-list-item-meta>
+                      
+                    </nz-list-item>
+
+            </nz-list>
+        </nz-tab>
+    
+    
+  
+    
+    
+      </nz-tabset>
+    
+
+    
+    
+    
+      </nz-spin>
+
+                <!--  Meeting Detail right side bar-->
+                <nz-drawer [nzClosable]="false" [nzVisible]="showConfiguration" nzPlacement="right" nzTitle="Search Configuration" [nzWidth]="600"  (nzOnClose)="configClose()">
+                  <ng-container *nzDrawerContent>
+                      
+              
+                    <div *ngIf="showConfiguration!=null">
+                            
+                  <nz-checkbox-wrapper style="width: 100%; min-width: 1000px;" (nzOnChange)="setEntityTypes($event)">
+
+
+                    <b>Entity Types</b>
+                      <div nz-row>
+                        <div nz-col nzSpan="2"><label nz-checkbox nzValue="list" [ngModel]="true">List</label></div>
+                        <div nz-col nzSpan="2"><label nz-checkbox nzValue="listItem">ListItem</label></div>
+                        <div nz-col nzSpan="2"><label nz-checkbox nzValue="site">Site</label></div>
+                        <div nz-col nzSpan="2"><label nz-checkbox nzValue="drive">Drive</label></div>
+                        <div nz-col><label nz-checkbox nzValue="driveItem" [ngModel]="true">DriveItem</label></div>
+                      </div>
+                    </nz-checkbox-wrapper>
+    
+
+                    <div style="margin-bottom: 40px;"></div>
+
+                    <b >Sort Properties</b>
+
+                    <div style="margin-bottom: 5px;"></div>
+                    <span style="color: darkgrey;" >ASC</span> <nz-select style="width: 100%;" nzMode="multiple" nzPlaceHolder="Please select" [nzOptions]="sortPropertiesList" [(ngModel)]="selectedASCSortPropertiesList"> </nz-select>
+                    <span style="color: darkgrey;" >DESC</span> <nz-select style="width: 100%;" nzMode="multiple" nzPlaceHolder="Please select" [nzOptions]="sortPropertiesList" [(ngModel)]="selectedDESCSortPropertiesList"> </nz-select>
+
+                    <div style="margin-top: 5px; color: chocolate;">
+                      <span>These fields just some sample fields, not all fields.</span>
+                      <br>
+                      <span>The select order determine the sort order</span>
+                      
+                    </div>
+                    <br>
+
+                      </div>
+                    
+
+
+                          
+                  </ng-container>
+      </nz-drawer>
+          
+    
