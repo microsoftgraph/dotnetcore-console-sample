@@ -7,9 +7,6 @@ This sample was added after the 30 Days of Microsoft Graph blog series and as su
   - [Step 1: Start Backend](#step-1-Start-Backend)
   - [Step 2: Start Frontend](#step-2-Start-Frontend)
   - [Step 3: Try the demo](#step-3-implement-the-device-code-flow-in-the-application)
-    - [Create the DeviceCodeFlowAuthorizationProvider class](#create-the-devicecodeflowauthorizationprovider-class)
-    - [Extend program to leverage this new authentication flow](#extend-program-to-leverage-this-new-authentication-flow)
-    - [Update the reference to the MSAL library](#update-the-reference-to-the-msal-library)
 ## Prerequisites
 
 - Permissions required
