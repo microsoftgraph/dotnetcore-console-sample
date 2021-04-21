@@ -67,5 +67,5 @@ This sample was added after the 30 Days of Microsoft Graph blog series and as su
 ### **Set a token in welcome page**, [Graph Explorer](https://developer.microsoft.com/graph/graph-explorer) and got a token from there. 
    ![Screenshot of getting a token from graph explorer](Images/Token.PNG)
 
-### For each single page under the dashboard, 
-   -**>** button config search.
+### Config Search by this button
+  ![Screenshot of configuration button](Images/RightArrow.PNG)
