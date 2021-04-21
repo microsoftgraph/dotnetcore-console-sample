@@ -29,6 +29,7 @@ import { NzTransferModule } from 'ng-zorro-antd/transfer';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { SortV2Component } from './samples/sort-v2/sort-v2.component';
+import { WelcomeComponent } from './samples/welcome/welcome.component';
 
 registerLocaleData(en);
 
@@ -38,7 +39,8 @@ registerLocaleData(en);
     MeetingComponent,
     SortComponent,
     CommonComponent,
-    SortV2Component
+    SortV2Component,
+    WelcomeComponent
   ],
   imports: [
     BrowserModule,

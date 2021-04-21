@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
 
-namespace ConsoleGraphTest {
+namespace day30Sample.helpers
+{
     public class DeviceCodeFlowAuthorizationProvider : IAuthenticationProvider
     {
         private readonly IPublicClientApplication _application;

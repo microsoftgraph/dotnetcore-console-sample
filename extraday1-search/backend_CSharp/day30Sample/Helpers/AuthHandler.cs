@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using System.Linq;
 using System.Threading;
 
-namespace ConsoleGraphTest
+namespace day30Sample.helpers
 {
     // This class allows an implementation of IAuthenticationProvider to be inserted into the DelegatingHandler
     // pipeline of an HttpClient instance.  In future versions of GraphSDK, many cross-cutting concernts will
