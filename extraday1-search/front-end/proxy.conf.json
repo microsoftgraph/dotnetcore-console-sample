@@ -1,0 +1,11 @@
+{
+    "/proxy": {
+      "target": "https://localhost:44383",
+      "logLevel": "debug",
+      "secure":false,
+      "changeOrigin": true, 
+      "pathRewrite": { 
+        "^/api": ""
+      }
+    }
+  }

@@ -1,1 +1,147 @@
-<p>sort-v2 works!</p>
+<nz-spin [nzSpinning]="isSpinning" [nzDelay]="500">
+
+
+  <nz-tabset>
+
+    <nz-tab nzTitle="Search With Sort">
+      <!-- Input Box -->
+      <div nz-row>
+        <div nz-col nzSpan="12">
+
+          <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+            <input type="text" nz-input placeholder="input search text" [(ngModel)]="searchInput1" />
+          </nz-input-group>
+
+          <ng-template #suffixIconButton>
+            <button nz-button nzType="primary" nzSearch (click)="executeSearch()"><i nz-icon
+                nzType="search"></i></button>
+            <button nz-button nzType="primary" nzSearch (click)="configOpen()" style="margin-left: 3px;"> <i nz-icon
+                nzType="right"></i> </button>
+            <button nz-button nzType="primary" nzSearch (click)="codeOpen()" style="margin-left: 3px;"> <i nz-icon
+                nzType="menu-unfold"></i> </button>
+          </ng-template>
+
+        </div>
+      </div>
+
+
+
+      <br>
+
+      <!-- Search Result -->
+
+
+    </nz-tab>
+
+
+
+
+
+  </nz-tabset>
+
+
+
+
+
+</nz-spin>
+
+
+<!-- Sort Result Detail right side bar-->
+<nz-drawer [nzClosable]="false" [nzVisible]="showConfiguration" nzPlacement="right" nzTitle="Search Configuration"
+  [nzWidth]="600" (nzOnClose)="configClose()">
+  <ng-container *nzDrawerContent>
+
+
+    <div *ngIf="showConfiguration!=null">
+
+      <nz-checkbox-wrapper style="width: 100%; min-width: 1000px;" (nzOnChange)="setEntityTypes($event)">
+
+
+        <b>Entity Types</b>
+        <div nz-row>
+          <div nz-col nzSpan="2"><label nz-checkbox nzValue="list" [ngModel]="true">List</label></div>
+          <div nz-col nzSpan="2"><label nz-checkbox nzValue="listItem" [ngModel]="true">ListItem</label></div>
+          <div nz-col nzSpan="2"><label nz-checkbox nzValue="site" [ngModel]="true">Site</label></div>
+          <div nz-col nzSpan="2"><label nz-checkbox nzValue="drive" [ngModel]="true">Drive</label></div>
+          <div nz-col><label nz-checkbox nzValue="driveItem" [ngModel]="true">DriveItem</label></div>
+        </div>
+      </nz-checkbox-wrapper>
+      <div style="margin-bottom: 40px;"></div>
+
+      <b>Sort Properties</b>
+      <div class="sort-item-list">
+        <div>
+          <b>Field:</b><input nz-input placeholder="Basic usage" class="fieldInput" nzBorderless=true
+            [(ngModel)]="fieldInput" />
+        </div>
+        <div>
+          <b>IsDescending: </b>
+          <nz-radio-group [(ngModel)]="isDescending">
+            <label nz-radio nzValue="true">true</label>
+            <label nz-radio nzValue="false">false</label>
+          </nz-radio-group>
+        </div>
+        <div>
+          <i nz-icon nzType="down" (click)="AddToselectedSortPropertiesList()" nzTheme="outline"></i>
+        </div>
+      </div>
+      <div style="margin-bottom: 5px;"></div>
+      <nz-select style="width: 100%;" nzMode="multiple" nzPlaceHolder="Selected Sort Properties"
+        [nzOptions]="sortPropertiesList" [(ngModel)]="selectedSortPropertiesList"> </nz-select>
+      <br>
+      <br>
+      <button nz-button nzType="primary" (click)="submitAndGetSortResult()">submit</button>
+    </div>
+  </ng-container>
+</nz-drawer>
+
+<nz-drawer [nzClosable]="false" [nzVisible]="showCode" nzPlacement="right" nzTitle="Code Snipets" [nzWidth]="600"
+  (nzOnClose)="codeClose()">
+  <ng-container *nzDrawerContent>
+    <div *ngIf="showCode!=null">
+      <pre>
+                    <code [innerHTML]="highlight()"></code>
+                  </pre>
+    </div>
+  </ng-container>
+</nz-drawer>
+
+<nz-list nzItemLayout="horizontal" *ngIf="data">
+  <nz-list-item>
+    <nz-list-item-meta>
+      <nz-list-item-meta-title>
+        <li class="item-list">
+          <div>Name</div>
+          <div>LastModifiedDateTime</div>
+          <div>CreatedDateTime</div>
+          <div>Description</div>
+          <div>LastModifiedBy</div>
+        </li>
+      </nz-list-item-meta-title>
+    </nz-list-item-meta>
+  </nz-list-item>
+  <nz-list-item *ngFor="let hitObject of data.value[0].hitsContainers[0].hits">
+    <nz-list-item-meta>
+      <nz-list-item-meta-title class="content">
+        <li class="item-list">
+          <div>
+            <a href="{{encodeUri(hitObject.resource.webUrl)}}">{{returnWebUrlIfNameIsnull(hitObject)}}</a>
+          </div>
+          <div>
+            {{formatEmptyOrNullString(hitObject.resource.lastModifiedDateTime)}}
+          </div>
+          <div>
+            {{formatEmptyOrNullString(hitObject.resource.createdDateTime)}}
+          </div>
+          <div>
+            {{formatEmptyOrNullString(hitObject.resource.description)}}
+          </div>
+          <div>
+            {{formatEmptyOrNullString(hitObject.resource.lastModifiedBy?.user?.displayName)}}
+          </div>
+        </li>
+      </nz-list-item-meta-title>
+    </nz-list-item-meta>
+  </nz-list-item>
+  <nz-list-empty *ngIf="data.length === 0"></nz-list-empty>
+</nz-list>

@@ -1,0 +1,54 @@
+.sort-item-list {
+  width: 500px;
+  div {
+    max-width: 240px;
+    float: left;
+    height: 40px;
+    line-height: 40px;
+    //border: solid 1px black;
+    /* px em rem vh vw cal() */
+  }
+}
+
+.sort-options {
+  width: 500px;
+  div {
+    max-width: 240px;
+    height: 40px;
+    line-height: 40px;
+    //border: solid 1px black;
+    /* px em rem vh vw cal() */
+  }
+}
+
+.item-list {
+  width: 1000px;
+  div {
+    font-size: 13px;
+    width: 20%;
+    max-width: 240px;
+    float: left;
+    //height: 80px;
+    //line-height: 40px;
+    display: flex;
+    //border: solid 1px black;
+    /* px em rem vh vw cal() */
+    position: relative;
+  }
+  clear: both;
+}
+
+.fieldInput {
+  width: 200px;
+}
+
+.dynamic-add-button:hover {
+  color: #777;
+  border: solid 1px black;
+  height: 40px;
+  line-height: 40px;
+}
+
+.highlightText {
+  background: yellow;
+}

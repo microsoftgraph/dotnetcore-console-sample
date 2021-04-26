@@ -2,14 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NzDatePickerComponent } from 'ng-zorro-antd/date-picker';
 import { CommonService } from 'src/app/service/common.service';
 
-
 @Component({
   selector: 'app-meeting',
   templateUrl: './meeting.component.html',
-  styleUrls: ['./meeting.component.scss']
+  styleUrls: ['./meeting.component.scss'],
 })
 export class MeetingComponent implements OnInit {
-
   SearchEvent1 = true;
 
   // Control
@@ -17,64 +15,72 @@ export class MeetingComponent implements OnInit {
 
   peopleLoading = false;
 
-  mockEventdata1:any[] = []
+  mockEventdata1: any[] = [];
 
-  mockMeetingDetails:any={}
+  mockMeetingDetails: any = {};
 
-  constructor( private commonService:CommonService) { }
+  constructor(private commonService: CommonService) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   isSpinning = false;
-  searchTerms:string="";
+  searchTerms: string = '';
   showConfiguration = false;
 
-  public getMonthAndDay(date:string):string{
-    return date.substr(0,10);
+  public getMonthAndDay(date: string): string {
+    return date.substr(0, 10);
   }
 
-  public getHourAndMinutes(date:string):string{
-  
-    return date.substring(11,16);
+  public getHourAndMinutes(date: string): string {
+    return date.substring(11, 16);
   }
 
-  meetingOpen(data:any): void {
-
+  meetingOpen(data: any): void {
     this.isSpinning = true;
-    this.commonService.getMeetingDetails(data.hitId).subscribe(data=>{
-      
-      this.isSpinning = false;
-      this.showMeetingParticipates = true;
-      this.mockMeetingDetails = data;
-    });
+    this.commonService.getMeetingDetails(data.hitId).subscribe(
+      (data) => {
+        this.isSpinning = false;
+        this.showMeetingParticipates = true;
+        this.mockMeetingDetails = data;
+      },
+      (error) => {
+        this.isSpinning = false;
+        alert(error['message']);
+      }
+    );
   }
 
   meetingClose(): void {
     this.showMeetingParticipates = false;
   }
 
-  executeSearchEvent1():void{
-    if(this.searchTerms == ""){
-      alert("Search term cannot be empty");
+  executeSearchEvent(): void {
+    if (this.searchTerms == '') {
+      alert('Search term cannot be empty');
       return;
     }
     this.isSpinning = true;
-    this.commonService.SearchMeeting(this.searchTerms, this.startValue, this.endValue).subscribe(data=>{
-      this.mockEventdata1 = data["value"][0]["hitsContainers"][0]["hits"];
-      this.isSpinning = false;
-   
-    })
+    this.commonService
+      .SearchMeeting(this.searchTerms, this.startValue, this.endValue)
+      .subscribe(
+        (data) => {
+          this.mockEventdata1 = data['value'][0]['hitsContainers'][0]['hits'];
+          this.isSpinning = false;
+        },
+        (error) => {
+          this.isSpinning = false;
+          alert(error['message']);
+        }
+      );
   }
 
   configOpen(): void {
     this.showConfiguration = true;
   }
-  
+
   configClose(): void {
     this.showConfiguration = false;
   }
-
 
   startValue: Date | null = null;
   endValue: Date | null = null;
@@ -105,8 +111,7 @@ export class MeetingComponent implements OnInit {
     console.log('handleEndOpenChange', open);
   }
 
-  showDateRange(){
+  showDateRange() {
     console.log(this.startValue, this.endValue);
   }
-
 }

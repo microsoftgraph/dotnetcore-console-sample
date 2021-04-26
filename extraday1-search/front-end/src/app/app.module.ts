@@ -40,7 +40,7 @@ registerLocaleData(en);
     SortComponent,
     CommonComponent,
     SortV2Component,
-    WelcomeComponent
+    WelcomeComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,9 +63,10 @@ registerLocaleData(en);
     NzCheckboxModule,
     NzTransferModule,
     NzSelectModule,
-    NzDatePickerModule
+    NzDatePickerModule,
+    NzSelectModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }, DatePipe],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

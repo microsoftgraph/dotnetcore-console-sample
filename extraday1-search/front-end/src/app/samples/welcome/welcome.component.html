@@ -1,11 +1,13 @@
 <nz-spin [nzSpinning]="isSpinning" [nzDelay]="500">
-<b>Please go to <a href="https://developer.microsoft.com/en-us/graph/graph-explorer">Graph Explorer</a> get a token here.</b>
-<br>
-<b>Then set the token here.</b>
-<br>
-<b>It will help you run the demo quickly.</b>
-<br>
-<b style="color: red;">It's only for test, please follow the guide config your authentication.</b>
-<textarea rows="25" nz-input [(ngModel)]="tokenValue"></textarea>
-<button nz-button nzType="primary" style="margin-top: 5px; display: block;" (click)="setToken()">Set Mock Token</button>
+    <b>Please go to <a href="https://developer.microsoft.com/en-us/graph/graph-explorer">Graph Explorer</a> get a token
+        here.</b>
+    <br>
+    <b>Then set the token here.</b>
+    <br>
+    <b>It will help you run the demo quickly.</b>
+    <br>
+    <b style="color: red;">It's only for test, please follow the guide config your authentication.</b>
+    <textarea rows="25" nz-input [(ngModel)]="tokenValue"></textarea>
+    <button nz-button nzType="primary" style="margin-top: 5px; display: block;" (click)="setToken()">Set Mock
+        Token</button>
 </nz-spin>
