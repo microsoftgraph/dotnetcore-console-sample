@@ -13,6 +13,8 @@ export class MeetingComponent implements OnInit {
   // Control
   showMeetingParticipates;
 
+  showCode = false;
+
   peopleLoading = false;
 
   mockEventdata1: any[] = [];
@@ -113,5 +115,13 @@ export class MeetingComponent implements OnInit {
 
   showDateRange() {
     console.log(this.startValue, this.endValue);
+  }
+
+  codeOpen(): void {
+    this.showCode = true;
+  }
+
+  codeClose(): void {
+    this.showCode = false;
   }
 }

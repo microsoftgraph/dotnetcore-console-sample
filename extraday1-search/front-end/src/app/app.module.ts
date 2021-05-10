@@ -7,7 +7,7 @@ import { en_US } from 'ng-zorro-antd/i18n';
 import { registerLocaleData, DatePipe } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IconsProviderModule } from './icons-provider.module';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
@@ -30,6 +30,20 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { SortV2Component } from './samples/sort-v2/sort-v2.component';
 import { WelcomeComponent } from './samples/welcome/welcome.component';
+import { SpellerComponent } from './samples/speller/speller.component';
+import { SemanticLabelComponent } from './samples/semantic-label/semantic-label.component';
+import { DisplayTemplateComponent } from './samples/display-template/display-template.component';
+import { IconDefinition } from '@ant-design/icons-angular';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { MarkdownModule } from 'ngx-markdown';
+import { SecurityContext } from '@angular/core';
+
+// import icons
+import * as AllIcons from '@ant-design/icons-angular/icons';
+const antDesignIcons = AllIcons as {
+   [key: string]: IconDefinition;
+ };
+const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesignIcons[key])
 
 registerLocaleData(en);
 
@@ -41,6 +55,9 @@ registerLocaleData(en);
     CommonComponent,
     SortV2Component,
     WelcomeComponent,
+    SpellerComponent,
+    SemanticLabelComponent,
+    DisplayTemplateComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,7 +70,7 @@ registerLocaleData(en);
     NzMenuModule,
     NzInputModule,
     NzGridModule,
-    NzIconModule,
+    NzIconModule.forRoot(icons),
     NzTabsModule,
     NzButtonModule,
     NzCardModule,
@@ -65,6 +82,11 @@ registerLocaleData(en);
     NzSelectModule,
     NzDatePickerModule,
     NzSelectModule,
+    NzSwitchModule,
+    MarkdownModule.forRoot({ 
+      loader: HttpClient,
+      sanitize: SecurityContext.NONE 
+    }),
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }, DatePipe],
   bootstrap: [AppComponent],

@@ -103,6 +103,51 @@ export class CommonService {
       headers: this.headers,
     });
   }
+
+
+// Speller Request
+SearchWithSpeller(query:string, entityTypes: string[], enableModification:boolean){
+  this.headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Custom-Token': this.getMockToken(),
+  });
+
+  var requestBody: any = {
+    requests: [
+      {
+        entityTypes: entityTypes,
+        query: {
+          queryString: query,
+        },
+        size: 10,
+      },
+    ],
+    "queryAlterationOptions":{
+      "enableSuggestion":true,
+      "enableModification":enableModification
+    }
+  };
+
+  console.log("request body:",requestBody);
+
+  return this.http.post(
+    this.searchUri,
+     requestBody, {
+    headers: this.headers,
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
   // get meeting details
   getMeetingDetails(eventId: String) {
     eventId = eventId.replace(new RegExp('/', 'g'), '-');

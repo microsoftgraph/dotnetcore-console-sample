@@ -17,9 +17,8 @@
           <ng-template #suffixIconButton>
             <button nz-button nzType="primary" nzSearch (click)="executeSearch()"><i nz-icon
                 nzType="search"></i></button>
-            <button nz-button nzType="primary" nzSearch (click)="configOpen()" style="margin-left: 3px;"> <i nz-icon
-                nzType="right"></i> </button>
-
+            <button nz-button nzType="primary" nzSearch (click)="configOpen()" style="margin-left: 3px;"> <i nz-icon nzType="setting" nzTheme="outline"></i> </button>
+            <button nz-button nzType="primary" nzSearch (click)="codeOpen()" style="margin-left: 3px;"> <i nz-icon nzType="menu-unfold"></i> </button>
           </ng-template>
 
         </div>
@@ -89,5 +88,17 @@
       </nz-checkbox-wrapper>
     </div>
 
+  </ng-container>
+</nz-drawer>
+
+
+<!--
+  Show Codes
+-->
+
+<nz-drawer [nzClosable]="false" [nzVisible]="showCode" nzPlacement="right" nzTitle="Code Snipets" [nzWidth]="600"
+  (nzOnClose)="codeClose()">
+  <ng-container *nzDrawerContent>
+    <markdown src="../../assets/markdown/common.cs" lineNumbers></markdown>
   </ng-container>
 </nz-drawer>

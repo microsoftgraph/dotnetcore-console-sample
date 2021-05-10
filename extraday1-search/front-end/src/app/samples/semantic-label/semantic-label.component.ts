@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonService } from 'src/app/service/common.service';
 
 @Component({
-  selector: 'app-common',
-  templateUrl: './common.component.html',
-  styleUrls: ['./common.component.scss'],
+  selector: 'app-semantic-label',
+  templateUrl: './semantic-label.component.html',
+  styleUrls: ['./semantic-label.component.scss']
 })
-export class CommonComponent implements OnInit {
+export class SemanticLabelComponent implements OnInit {
   isSpinning = false;
   entityTypes = ['list', 'driveItem'];
 
@@ -15,8 +15,6 @@ export class CommonComponent implements OnInit {
   ngOnInit(): void {}
 
   loading = false;
-
-  showCode = false;
 
   searchInput1 = '';
 
@@ -57,11 +55,5 @@ export class CommonComponent implements OnInit {
     this.showConfiguration = false;
   }
 
-  codeOpen(): void {
-    this.showCode = true;
-  }
-
-  codeClose(): void {
-    this.showCode = false;
-  }
+  getMockData(){}
 }

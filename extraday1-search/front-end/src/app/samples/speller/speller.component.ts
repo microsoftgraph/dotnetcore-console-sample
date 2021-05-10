@@ -1,14 +1,15 @@
+import { stringify } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from 'src/app/service/common.service';
 
 @Component({
-  selector: 'app-common',
-  templateUrl: './common.component.html',
-  styleUrls: ['./common.component.scss'],
+  selector: 'app-speller',
+  templateUrl: './speller.component.html',
+  styleUrls: ['./speller.component.scss']
 })
-export class CommonComponent implements OnInit {
+export class SpellerComponent implements OnInit {
   isSpinning = false;
-  entityTypes = ['list', 'driveItem'];
+  entityTypes = ['message'];
 
   constructor(private commonService: CommonService) {}
 
@@ -18,31 +19,50 @@ export class CommonComponent implements OnInit {
 
   showCode = false;
 
-  searchInput1 = '';
+  searchInput = '';
+
+  spellerSuggestion = "";
+
+  showCorrect = false;
+
+  enableModification = true;
 
   showConfiguration = false;
 
   data: any;
 
   encodeUri(input: string): string {
+    if(input == 'undefined' || input == ""  ) return null;
     return encodeURI(input);
   }
 
   executeSearch(input: string) {
-    if (this.searchInput1 == '') {
+    if (this.searchInput == '') {
       alert('Search term cannot be empty');
       return;
     }
     this.isSpinning = true;
     this.commonService
-      .Search(this.searchInput1, this.entityTypes)
+      .SearchWithSpeller(this.searchInput, this.entityTypes, this.enableModification)
       .subscribe((data) => {
         this.data = data;
         this.isSpinning = false;
+        console.log(data);
+        this.spellerSuggestion = this.data["queryAlterationResponse"]["queryAlteration"]["alteredQueryString"];
+        if(this.spellerSuggestion.toLocaleLowerCase() != this.searchInput.toLocaleLowerCase()){
+          this.showCorrect = true;
+        }else{
+          this.showCorrect = false;
+        }
+
       }, error=>{
         this.isSpinning = false;
         alert(error["message"]);
       });
+  }
+
+  excuteRawSearch(){
+    this.enableModification = false;
   }
 
   setEntityTypes(value: string[]): void {
@@ -64,4 +84,7 @@ export class CommonComponent implements OnInit {
   codeClose(): void {
     this.showCode = false;
   }
+
+
+
 }

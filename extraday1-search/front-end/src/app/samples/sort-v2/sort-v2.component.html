@@ -15,10 +15,8 @@
           <ng-template #suffixIconButton>
             <button nz-button nzType="primary" nzSearch (click)="executeSearch()"><i nz-icon
                 nzType="search"></i></button>
-            <button nz-button nzType="primary" nzSearch (click)="configOpen()" style="margin-left: 3px;"> <i nz-icon
-                nzType="right"></i> </button>
-            <button nz-button nzType="primary" nzSearch (click)="codeOpen()" style="margin-left: 3px;"> <i nz-icon
-                nzType="menu-unfold"></i> </button>
+            <button nz-button nzType="primary" nzSearch (click)="configOpen()" style="margin-left: 3px;"><i nz-icon nzType="setting" nzTheme="outline"></i></button>
+            <button nz-button nzType="primary" nzSearch (click)="codeOpen()" style="margin-left: 3px;"> <i nz-icon nzType="menu-unfold"></i> </button>
           </ng-template>
 
         </div>
@@ -76,13 +74,10 @@
         </div>
         <div>
           <b>IsDescending: </b>
-          <nz-radio-group [(ngModel)]="isDescending">
-            <label nz-radio nzValue="true">true</label>
-            <label nz-radio nzValue="false">false</label>
-          </nz-radio-group>
+          <nz-switch [(ngModel)]="isDescending"></nz-switch>
         </div>
         <div>
-          <i nz-icon nzType="down" (click)="AddToselectedSortPropertiesList()" nzTheme="outline"></i>
+          <i nz-icon nzType="plus-circle" (click)="AddToselectedSortPropertiesList()" class="plus-icon" nzTheme="outline"></i>
         </div>
       </div>
       <div style="margin-bottom: 5px;"></div>
@@ -95,16 +90,22 @@
   </ng-container>
 </nz-drawer>
 
+
+<!--
+  Show Codes
+-->
+
 <nz-drawer [nzClosable]="false" [nzVisible]="showCode" nzPlacement="right" nzTitle="Code Snipets" [nzWidth]="600"
   (nzOnClose)="codeClose()">
   <ng-container *nzDrawerContent>
-    <div *ngIf="showCode!=null">
-      <pre>
-                    <code [innerHTML]="highlight()"></code>
-                  </pre>
-    </div>
+    <markdown src="../../assets/markdown/sort.cs" lineNumbers></markdown>
   </ng-container>
 </nz-drawer>
+
+
+<!--
+  Search Results
+-->
 
 <nz-list nzItemLayout="horizontal" *ngIf="data">
   <nz-list-item>

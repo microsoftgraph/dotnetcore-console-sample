@@ -23,7 +23,7 @@ namespace day30Sample.Controllers
         public async Task<SearchResponse> PostAsync(SearchRequest searchRequest)
         {
             Request.Headers.TryGetValue("Custom-Token", out StringValues token);
-            SearchResponse response = await SearchHelper.Search(searchRequest.Requests, token.ToString());
+            SearchResponse response = await SearchHelper.Search(searchRequest, token.ToString());
             return response;
         }
 

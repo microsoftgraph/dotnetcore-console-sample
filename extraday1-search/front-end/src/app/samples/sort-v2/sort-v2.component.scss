@@ -52,3 +52,15 @@
 .highlightText {
   background: yellow;
 }
+
+.plus-icon{
+  color: #66ccff;
+  font-size: 20px;
+  font-weight: 600;
+  margin-left: 15px;
+  padding-top: 13px;
+  &:hover{
+    cursor: pointer;
+    color: orange;
+  }
+}
