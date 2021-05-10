@@ -66,6 +66,11 @@ This sample was added after the 30 Days of Microsoft Graph blog series and as su
 ## Step 3: Try the demo
 ### **Set a token in welcome page**, [Graph Explorer](https://developer.microsoft.com/graph/graph-explorer) and got a token from there. 
    ![Screenshot of getting a token from graph explorer](Images/Token.PNG)
-
-### Config Search by this button
-  ![Screenshot of configuration button](Images/RightArrow.PNG)
+   
+  ![Screenshot of setting a token in welcome page](Images/SetToken.PNG)
+   
+### **Click Search Button**, 
+  ![Screenshot of search result](Images/SearchResult.PNG)
+   
+    
+   
