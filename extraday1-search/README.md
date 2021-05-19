@@ -16,7 +16,7 @@ This sample was added after the 30 Days of Microsoft Graph blog series and as su
 - [Visual Studio](https://visualstudio.microsoft.com/). (**Note** This tutorial was written with Visual Studio 2019. The steps in this guide may work with other versions, but that has not been tested.), when start installation, please:
   - Make sure you installed the **ASP.NET & web development** under the **Web & Cloud**
   - Make sure you installed **.Net desktop development** under the **Desktop & Mobile**
-- If you want to extend authentication, please refer the guides before or go to [Azure Document](https://docs.microsoft.com/azure/active-directory/fundamentals/auth-oidc) for getting auth helps. In this guide, please ensure you have a way to get a token for accessing graph endpoint. Try [Graph Explorer](https://developer.microsoft.com/graph/graph-explorer) and got a token from there.
+- If you want to extend authentication, please refer [the guides](/day29-onedrive) before or try to use this [MSAL sample](https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/samples/msal-angular-v2-samples/angular11-sample-app) or go to [Azure Document](https://docs.microsoft.com/azure/active-directory/fundamentals/auth-oidc) for getting auth helps. In this guide, please ensure you have a way to get a token for accessing graph endpoint. Try [Graph Explorer](https://developer.microsoft.com/graph/graph-explorer) and got a token from there.
    ![Screenshot of getting a token from graph explorer](Images/Token.PNG)
    
 - [Nodejs](https://nodejs.org/en/)  This tutorial was written with NodeJS version 14.15.4. Please click the link then install the nodeJS
