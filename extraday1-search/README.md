@@ -24,7 +24,7 @@ This sample was added after the 30 Days of Microsoft Graph blog series and as su
    
 ## Step 1: Start Backend
 
-### Double click **day30Sample.sln** under the **extraday1-search/backend_CSharp/day30Sample**
+### Double click **day30Sample.sln** under the **extraday1-search**
 ### Open Package Manager 
 ![Screenshot of opening package manager](Images/VisualStudio_PackageManager.PNG), type below and enter
   ```
