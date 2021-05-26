@@ -1,21 +1,21 @@
-  GraphServiceClient graphClient = new GraphServiceClient( authProvider );
+GraphServiceClient graphClient = new GraphServiceClient( authProvider );
 
-  var requests = new List()
-  {
-    new SearchRequestObject
-    {
+SearchRequestObject searchRequestObject = new SearchRequestObject
+{
       EntityTypes = new List<EntityType>()
       {
-        EntityType.Event,
+        EntityType.Event
       },
       Query = new SearchQuery
       {
         QueryString = "*"
-      },
-    }
-  };
+      }
+};
+
+
+var requests = new List<SearchRequestObject>() { searchRequestObject };
   
-  await graphClient.Search
+await graphClient.Search
     .Query(requests,null)
     .Request()
     .PostAsync();

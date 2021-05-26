@@ -1,18 +1,16 @@
-  GraphServiceClient graphClient = new GraphServiceClient( authProvider );
+GraphServiceClient graphClient = new GraphServiceClient(authProvider);
 
-  var requests = new List()
-  {
-    new SearchRequestObject
-    {
-      EntityTypes = new List<EntityType>()
+SearchRequestObject searchRequestObject = new SearchRequestObject
+{
+  EntityTypes = new List<EntityType>()
       {
         EntityType.DriveItem
       },
-      Query = new SearchQuery
-      {
-        QueryString = "*"
-      },
-      SortProperties = new List()
+  Query = new SearchQuery
+  {
+    QueryString = "*"
+  },
+  SortProperties = new List()
       {
         new SortProperty
         {
@@ -20,10 +18,12 @@
           IsDescending = true
         }
       }
-    }
-  };
-  
-  await graphClient.Search
-    .Query(requests,null)
-    .Request()
-    .PostAsync();
+};
+
+
+var requests = new List<SearchRequestObject>() { searchRequestObject };
+
+await graphClient.Search
+  .Query(requests, null)
+  .Request()
+  .PostAsync();
