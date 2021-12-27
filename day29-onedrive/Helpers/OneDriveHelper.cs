@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -34,15 +33,15 @@ namespace ConsoleGraphTest
             DriveItem uploadedFile = null;
             FileStream fileStream = new FileStream(fileToUpload, FileMode.Open);
 
-            if(uploadToSharePoint)
+            if (uploadToSharePoint)
             {
                 uploadedFile = await _graphClient.Sites["root"].Drive.Root.ItemWithPath(fileToUpload).Content.Request().PutAsync<DriveItem>(fileStream);
             }
             else
             {
-                uploadedFile = (await _graphClient.Me.Drive.Root.ItemWithPath(fileToUpload).Content.Request().PutAsync<DriveItem>(fileStream ));
-            } 
- 
+                uploadedFile = (await _graphClient.Me.Drive.Root.ItemWithPath(fileToUpload).Content.Request().PutAsync<DriveItem>(fileStream));
+            }
+
             return uploadedFile;
         }
 
@@ -72,18 +71,31 @@ namespace ConsoleGraphTest
             {
                 // Chunk size must be divisible by 320KiB, our chunk size will be slightly more than 1MB
                 int maxSizeChunk = (320 * 1024) * 4;
-                ChunkedUploadProvider uploadProvider = new ChunkedUploadProvider(uploadSession, _graphClient, fileStream, maxSizeChunk);
-                var chunkRequests = uploadProvider.GetUploadChunkRequests();
-                var exceptions = new List<Exception>();
-                var readBuffer = new byte[maxSizeChunk];
-                foreach (var request in chunkRequests)
-                {
-                    var result = await uploadProvider.GetChunkRequestResponseAsync(request, exceptions);
+                var fileUploadTask = new LargeFileUploadTask<DriveItem>(uploadSession, fileStream, maxSizeChunk);
 
-                    if (result.UploadSucceeded)
+                // Create a callback that is invoked after each slice is uploaded
+                IProgress<long> progress = new Progress<long>(prog =>
+                {
+                    Console.WriteLine($"Uploaded {prog} bytes of {fileStream.Length} bytes");
+                });
+
+                try
+                {
+                    // Upload the file
+                    var uploadResult = await fileUploadTask.UploadAsync(progress);
+
+                    if (uploadResult.UploadSucceeded)
                     {
-                        uploadedFile = result.ItemResponse;
+                        uploadedFile = uploadResult.ItemResponse;
                     }
+                    else
+                    {
+                        Console.WriteLine("Upload failed");
+                    }
+                }
+                catch (ServiceException ex)
+                {
+                    Console.WriteLine($"Error uploading: {ex.ToString()}");
                 }
             }
 
