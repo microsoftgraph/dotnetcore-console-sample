@@ -114,7 +114,7 @@ In this step you will create a LicenseHelper class that encapsulates the logic f
 
 This class contains the code to get a user, get a license, and assign the license to user.
 
-### Extend program to assing a license to a user
+### Extend program to assigning a license to a user
 
 1. Inside the `Program` class add a new method `AddLicenseToUser` with the following definition.  This method adds an Office 365 license to a user using the LicenseHelper class.
 
